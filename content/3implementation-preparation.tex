@@ -1,0 +1,128 @@
+I used a number of libraries to help with concepts as described in the subsections below.
+
+\subsection{Graph representation and algorithms}
+
+I reviewed the most developed and maintained libraries that allow representing graphs.
+
+\begin{itemize}
+    \item \textbf{JGraphT} (\url{https://jgrapht.org})
+
+    \enquote{a Java library of graph theory data structures and algorithms}
+
+    Probably the most popular Java library for working with graphs.
+    It is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not for evaluating graph metrics.
+    JGraphT also does doesn't come with visualisations.
+
+    \item \textbf{GraphStream} (\url{http://graphstream-project.org/})
+
+    \enquote{Java library for the modeling and analysis of dynamic graphs.
+    You can generate, import, export, measure, layout and visualize them}
+
+    Although the graphs this project works with are static (do not dynamically change over time as the library allows), the library provides a solid base for numerous features built in this project such as loading graph files, storing them in various formats, and visualisations.
+    The library also contains an implementation of some of the most common graph metrics.
+
+    Another benefit of GraphStream is that each node and edge implicitly has a unique identifier within the graph.
+    This makes evaluation of robustness more straightforward as ranks of nodes in regard to a given metric can be compared across multiple graphs generated from the same source graph.
+
+    \item \textbf{Graphviz} (\url{https://www.graphviz.org/})
+
+    \enquote{open source graph visualization software}
+
+    Graphviz is specifically made for creating visual graphs, diagrams and abstract networks, for visual interfaces.
+    Not suitable for this project.
+\end{itemize}
+
+Taking pros and cons of the above-mentioned graph libraries into account, I chose to use \textbf{GraphStream}.
+
+GraphStream consists of 3 modules:
+
+\begin{enumerate}
+    \item \texttt{gs-core} Core implementation of the graph library
+    \item \texttt{gs-algo} Various algorithms from graph theory
+    \item \texttt{gs-ui} Components for visualising graphs
+\end{enumerate}
+
+\subsection{Batch Job processing framework}
+
+As evaluation of metrics on a huge number of generated graphs takes a lot of computational resources, \texttt{graffs} runs on a framework that supports distributed computations.
+
+\begin{itemize}
+    \item Apache Flink (\url{https://flink.apache.org})
+
+    \enquote{Stateful Computations over Data Streams}
+
+    Slightly less popular framework for distributed streaming and data processing.
+    \item Apache Samza (\url{http://samza.apache.org/})
+
+    \enquote{open-source near-realtime, asynchronous computational framework for stream processing}
+
+    The usage seems to be relatively heavyweight and relies on Apache Kafka and Zookeeper.
+    \item Apache Storm (\url{https://storm.apache.org/}) *
+
+    \enquote{open source distributed realtime computation system}
+
+    (a good possible alternative.
+    See \url{https://storm.apache.org/releases/2.1.0/Tutorial.html})
+    \item Apache Akka (\url{https://akka.io/})
+
+    \enquote{toolkit and runtime simplifying the construction of concurrent and distributed applications on the JVM}
+    \item Apache Hadoop (\url{https://hadoop.apache.org/})
+
+    \enquote{framework that allows for the distributed processing of large data sets across clusters}
+    \item Apache Heron (\url{https://apache.github.io/incubator-heron/})
+
+    \enquote{realtime, distributed, fault-tolerant stream processing engine from Twitter}
+    \item Apache Beam (\url{https://beam.apache.org/})
+
+    \enquote{open source unified programming model to define and execute data processing pipelines}
+    \item Apache NiFi (\url{https://nifi.apache.org/})
+
+    \enquote{supports powerful and scalable directed graphs of data routing, transformation, and system mediation logic}
+    \item Spring Boot (\url{https://spring.io/projects/spring-boot})
+
+    \enquote{makes it easy to create stand-alone, production-grade Spring based Applications}
+    \item Apache Apex (\url{https://apex.apache.org/})
+
+    \enquote{Enterprise-grade unified stream and batch processing engine} (now a retired project)
+    \item Apache Spark™
+
+    \enquote{unified analytics engine for large-scale data processing}
+
+    Spark is one of the most maintained framework for computation-heavy tasks
+\end{itemize}
+
+\subsection{Database}
+
+\subsubsection{Database backend}
+
+For simplicity, the H2 database system will be used, which can store a database in a single file.
+A good alternative would be a MySQL installation.
+
+\subsubsection{Object-relational mapping (ORM) library}
+
+For robustness and simplicity of usage, \texttt{graffs} uses Java Persistence API (JPA) to help persist Java objects in the database as well as query them.
+The API is Java classes and methods, so it abstracts away any queries in the native language of the database (such as SQL).
+
+The \texttt{Hibernate} library (\url{http://hibernate.org/}) is an implementation of JPA that I used for the project.
+It hides the underlying data storage system, as well as creating schema for the underlying database.
+Schema is derived from Java classes (entities) defined in the source code.
+
+Hibernate can also seamlessly connect to the H2 backend.
+
+\subsection{CLI processing}
+
+The \texttt{Clikt} library helps write the command line interface classes in a structured way.
+Clikt is written in Kotlin and works especially well with Kotlin code as it leverages many of its features.
+Further details of how I developed the command-line interface is in the~\nameref{ch:implementation} chapter.
+
+\subsection{Apache Libraries}
+
+\begin{itemize}
+    \item Apache Commons Configuration: \url{https://commons.apache.org/proper/commons-configuration/}
+    \item Apache Commons Compress: \url{https://commons.apache.org/proper/commons-compress/}
+    \item Apache Commons CSV: \url{https://commons.apache.org/proper/commons-csv/}
+    \item Apache Commons Logging: \url{https://commons.apache.org/proper/commons-logging/}
+    \item Apache Commons Math: \url{https://commons.apache.org/proper/commons-math/}
+    \item Apache Commons Pool: \url{https://commons.apache.org/proper/commons-pool/}
+    \item Apache Commons Statistics: \url{https://commons.apache.org/proper/commons-statistics/}
+\end{itemize}

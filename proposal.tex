@@ -1,13 +1,8 @@
 \documentclass[12pt,a4paper,twoside]{article}
-\usepackage[pdfborder={0 0 0}]{hyperref}
-\usepackage[margin=25mm]{geometry}
 \usepackage[english]{babel}
-\usepackage{graphicx}
 \usepackage{parskip}
 \usepackage{bibentry}
-\usepackage{changepage}
 \usepackage{afterpage}
-\usepackage{amsmath}
 
 \begin{document}
 
@@ -19,9 +14,9 @@
 	
 	\large
 	Juraj~Mi\v{c}ko, Jesus College
-	
+
 	Originator: Dr Timothy Griffin
-	
+
 	25 October 2019
 \end{center}
 
@@ -53,7 +48,7 @@
     
     I have theoretical knowledge of Java, algorithms, data science and other relevant topics from respective courses from the Computer Science Tripos. I also have some practical and software engineering skills from the Part IB project, my internships and other personal projects. I will need to study a lot of materials about graphs, networks, graph metrics, algorithms and similar topics.
     
-    This project will also use graph datasets from sources mentioned in \nameref{resourceDeclaration}.
+    This project will also use graph datasets from sources mentioned in~\nameref{resourceDeclaration}.
 
 \section*{Work to be done}
 
@@ -77,13 +72,13 @@
     	
     	Furthermore, on a given graph, robustness measure of each metric may be compared to the absolute value of some (possibly other) metrics, to find out whether there is any correlation between the robustness of a metric and values of some metrics. We hope to see to see some interesting patterns in the statistical analysis.
     	
-    	The specific evaluation scheme will mainly depend on the robustness function, which may output more than just a single numerical value. Figure \ref{fig:example_eval} shows an illustration of how the whole evaluation process may look like.
+    	The specific evaluation scheme will mainly depend on the robustness function, which may output more than just a single numerical value. Figure~\ref{fig:example_eval} shows an illustration of how the whole evaluation process may look like.
     	
         	\begin{figure}[p!]
         	\centering
             \includegraphics[width=16cm]{images/proposal_diagram1.png}
             \caption{An example of the evaluation process}
-            \label{fig:example_eval}
+			\label{fig:example_eval}
             \end{figure}
 	
 	%I intend to use the programming language \textbf{Kotlin}, mainly for the following reasons. It is by nature similar to Java and can be used together with other Java code in a single project. Performance-wise, Kotlin is comparable to Java.
@@ -134,7 +129,7 @@
 	
 	\begin{enumerate}
 	    \item Implement the experimental framework outlined above, using interesting datasets
-	    \item Complete statistical analysis, as described in the \nameref{evaluation} section
+	    \item Complete statistical analysis, as described in the~\nameref{evaluation} section
 	    \item Deduce empirical observations about graph metrics
 	\end{enumerate}
 	
@@ -253,7 +248,7 @@
     This project requires the use of a high-performance computing resource, to run algorithms of evaluating metrics and their robustness on large (real-world or derived) graphs.
     
     Based on the paper by Bozhilova et al., calculating natural connectivity for a single node for a graph with ~7000 nodes takes ~88 seconds on a standard computer. Based on my toy example, calculating average betweenness centrality of ~2500 nodes takes ~8 minutes on my computer. Thus, assuming that computing a metric for an input graph of average size 5000 nodes takes ~1 hour, the pure computation time suggested by this Project Proposal would take the following time on a standard personal computer (approximated in the order of magnitude)
-    $$(\sim 6\ \text{datasets}) \times (\sim 6\ \text{metrics}) \times (\sim 50\ \text{derived graphs}) \times (\sim 1\ \text{hour}) \approx 75\ \text{days}$$
+    \[(\sim 6\ \text{datasets}) \times (\sim 6\ \text{metrics}) \times (\sim 50\ \text{derived graphs}) \times (\sim 1\ \text{hour}) \approx 75\ \text{days}\]
     
     The following resource has been granted permission for and will be used to parallelise the process and thus significantly speed up the computation time:
     

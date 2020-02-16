@@ -9,16 +9,19 @@
 \usepackage[font=footnotesize,labelfont=bf]{caption}
 %\usepackage{cite}
 \PassOptionsToPackage{obeyspaces}{url}
-\usepackage{hyperref}
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{changepage}
 \usepackage{amsmath}
 \usepackage{csquotes}
+\usepackage[nottoc]{tocbibind}
 
-\makeatletter
-\g@addto@macro{\UrlBreaks}{\UrlOrds}
-\makeatother
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+%\makeatletter
+%\g@addto@macro{\UrlBreaks}{\UrlOrds}
+%\makeatother
 %\usepackage{bashful}
 %\bash[stdoutFile=wordcount.tex]
 %LC_NUMERIC="en_GB.UTF-8"
@@ -41,9 +44,7 @@
 \newcommand{\fntext}[1]{\stepcounter{footnoteInNote}\setcounter{footnote}{\value{footnoteInNote}}\footnotetext{#1}}
 
 \begin{document}
-	
-	\bibliographystyle{ieeetr}
-	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Title
 	
@@ -71,14 +72,14 @@
 	
 	{\large
 		\begin{tabular}{ll}
-			Name:               & \bf Juraj Mi\v{c}ko							\\
-			College:            & \bf Jesus College										\\
-			Project Title:      & \bf Framework for empirical analysis \\ & \bf of graph metric robustness					\\
-			Examination:        & \bf Computer Science Tripos -- Part II Project, 
-			\\ & \bf June 2018		\\
-			Word Count:         & \bf X\fnmark 									\\
+			Name:               & \textbf{Juraj Mi\v{c}ko}							\\
+			College:            & \textbf{Jesus College}										\\
+			Project Title:		& \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}					\\
+			Examination:        & \textbf{Computer Science Tripos -- Part II Project},
+			\\ & \textbf{June 2020}		\\
+			Word Count:			& \textbf{X\fnmark} 									\\
 			Project Originator: & Dr Timothy Griffin	  							\\
-			Supervisor:         & Dr Timothy Griffin										\\ 
+			Supervisor:			& Dr Timothy Griffin										\\
 		\end{tabular}
 	}
 	\fntext{This word count was computed using \texttt{script}}
@@ -119,36 +120,33 @@
 	
 	\input{content/0scratch.tex}
 	
-	\chapter{Introduction}
+	\chapter{Introduction}\label{ch:introduction}
 	\input{content/1introduction.tex}
 	
-	\chapter{Preparation}
+	\chapter{Preparation}\label{ch:preparation}
 	\input{content/2preparation.tex}
 	
-	\chapter{Implementation}
-	\label{chap:implementation}
+	\chapter{Implementation}\label{ch:implementation}
 	\input{content/3implementation.tex}
 	
-	\chapter{Evaluation}
+	\chapter{Evaluation}\label{ch:evaluation}
 	\input{content/4evaluation.tex}
 	
-    \chapter{Conclusion}
+    \chapter{Conclusion}\label{ch:conclusion}
     \input{content/5conclusion.tex}
 
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the bibliography
-	\addcontentsline{toc}{chapter}{Bibliography}
-	\bibliography{refs}{}
+	%\addcontentsline{toc}{chapter}{Bibliography}
 	\bibliographystyle{ieeetr}
-
+	\bibliography{refs}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the appendices
 	\appendix
 			
-	\chapter{Project Proposal}
-	\label{appendix:proposal}
+	\chapter{Project Proposal}\label{ch:proposal}
 	
 	\input{proposal.tex}
 
