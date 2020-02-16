@@ -1,0 +1,28 @@
+\setcounter{chapter}{-1}
+\chapter{Scratch}
+
+\section{Terms and definitions}
+
+    I will loosely clarify, concretise or define the following terms:
+
+    \begin{description}
+        \item[Graph]
+        By graph, I mean a mathematical model of nodes connected by edges, from graph theory. Graphs is this work are implicitly \textbf{undirected}, if not stated otherwise. Nodes and edges may possibly have values.
+        
+        \item[Metric of a graph]
+        or graph metric, or just metric (in some contexts: measure), is a function of graphs. A metric may return a single value, or multiple values, such as for each node or each edge. Values are not necessarily numerical.
+        
+        \item [Dataset]
+        In the context of this work, a dataset is a graph (alternatively a collection of graphs) that has a semantic meaning. For example, it may be known what source the graph came from, such as a social network.
+    
+        \item[Perturbation of a graph]
+        Any change to the input graph resulting in a new graph (such as deleting a small percentage of edges), along with a mapping between nodes and edges of the original graph that have been preserved in the produced graph.
+        
+        \item[Generated graph]
+        A graph that was produced by perturbing a dataset
+    
+        \item[Robustness of graph metric]
+        A property of a graph metric, determining how sensitive to some perturbations in the input graph the metric is, i.e. how much the metric value(s) will change with small changes in the input graph. Robustness of a metric may depend on the kind of graph it is used on.
+    \end{description}
+    
+    Terms \textbf{graph perturbations}, \textbf{metric value change} as well as \textbf{robustness} in detail are explained further in the \nameref{chap:implementation} chapter.

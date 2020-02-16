@@ -1,0 +1,116 @@
+\section{Problem background}
+
+    \subsection{Graphs}
+    
+    By graph, I mean a mathematical model of nodes connected by edges, from graph theory. Graphs in this work are implicitly \textbf{undirected}, if not stated otherwise. Nodes and edges may possibly have values.
+    
+    \subsection{Metrics}
+    
+        \subsubsection{Degree centrality}
+        \subsubsection{Eigenvector centrality}
+        \subsubsection{Katz centrality}
+        - not used much recently
+        \subsubsection{PageRank}
+        = Katz centrality, but divide each vertex's contribution by its out-degree
+        \subsubsection{Hyperlink-induced topic search (HITS)}
+        Hubs and authorities. by Kleinberg
+        \subsubsection{Closeness centrality}
+        
+        % from GraphStream
+        \subsubsection{CommunityMeasure}
+        - Modularity\\
+        - Community Distribution\\
+        - CommunityRelativeMeasure $\rightarrow$ NormalizedMutualInformation $\rightarrow$ VariationOfInformation
+        \subsubsection{Eccentricity}
+        \subsubsection{Surprise measure}
+        \subsubsection{Degree measure}
+
+
+
+    
+    \subsection{Robustness (The Paper)}
+    
+    \subsection{Datasets}
+
+        Although the framework built is universal and is not bound to any datasets, a number of datasets were chosen for evaluation.
+        
+        \subsubsection{Stanford Large Network Dataset Collection}
+        
+            The \textit{Stanford Large Network Dataset Collection}\cite{Large2016} provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
+        
+        \subsubsection{STRING database}
+        
+            \textit{STRING}\cite{Szklarczyk2019} is an open database of interactions between proteins. At the time of writing, the database contains over 24M different proteins from over 5K organisms.
+            
+            Considering the whole graph as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
+            
+            Note that, generally, one cannot just consider a sub-graph of a source graph (such as sub-graph of a social network), because the generated sub-graph doesn't have a semantical meaning, and its characteristic heavily depend on how the graph was generated (for example, $n$ friends of one person would result in a more connected graph than $n$ random people in the world). However, sub-graphs of the STRING database built from proteins of concrete organism can be used, because such graphs alone have a semantical meaning.
+        
+        \subsubsection{Generating graphs}
+        
+            Possible algorithms to use: \url{https://jgrapht.org/javadoc/org/jgrapht/generate/package-summary.html}
+
+    
+\section{Implementation preparation}
+
+    \subsection{Project requirements}
+    
+        This section will describe in detail what technical requirements I set for the project.
+        
+        The main objective was to build a framework that can help study graph metrics, and their robustness in particular. A single command-line tool \texttt{graffs} was built to facilitate the following:
+        
+        \begin{enumerate}
+            \item Store, load and represent input graphs
+            \item Run algorithms that compute metrics on graphs
+            \item Generate graphs by applying perturbations to given input graphs
+            \item Run experiments by evaluating metrics on generated graphs in a systematic manner
+            \item Calculate robustness of metrics based on experiments
+            \item (Possibly, produce visual results directly from the program)
+        \end{enumerate}
+        
+        In addition, the tool can be run on a supercomputer or a distributed cluster of computers.
+    
+    \subsection{Programming language}
+    
+        I used the programming language \textbf{Kotlin}, mainly for the following reasons. It is by nature similar to Java and can be used together with other Java code in a single project. Performance-wise, Kotlin is comparable to Java.
+    	\begin{itemize}
+    	    \item Concise, reducing the amount of boilerplate code
+    	    \item Safer, preventing a significant number of errors
+    	    \item IDE-friendly, allowing the IDE to help with software engineering
+    	    \item Allows more functional constructs than Java
+    	    \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, platform-independent, extensible.
+    	\end{itemize}
+    	
+    	Using Kotlin in the project still allows including any libraries written in Java, as the Kotlin \texttt{.kt} files are compiled to standard bytecode in \texttt{.class} files.
+    
+    \subsection{Version control system}
+    
+        The source code of the \texttt{graffs} tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
+        
+        The repository can be found at \url{https://github.com/jjurm/graffs}.
+
+    \subsection{Build automation}
+    
+        The project uses Gradle for project management. Gradle is set up using the \texttt{build.gradle} configuration file with a number of plugins to facilitate the following and more:
+        \begin{enumerate}
+            \item Defines the structure of the project, such as source and build directories
+            \item Automates the process of compiling the code, running tests and producing deployable \texttt{jar}s
+            \item Manages and automatically downloads dependencies
+            \item Helps with version numbering
+            \item Generates HTML API documentation for Kotlin and Java classes
+        \end{enumerate}
+        
+    \subsection{Documentation}
+        
+        The Kotlin code is documented using the \texttt{KDoc} language and a HTML documentation is generated using the \texttt{Dokka} tool (similar to \texttt{JavaDoc}).
+        
+        The documentation in code is written mostly thoroughly for public classes and their members that need clarification on their behaviour or usage.
+            
+    \subsection{Testing}
+        
+        \subsubsection{Unit testing}
+            Using JUnit 5
+            
+        \subsubsection{Continuous Integration}
+            CircleCI
+

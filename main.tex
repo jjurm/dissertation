@@ -1,0 +1,155 @@
+% Computer Science Tripos Part II project dissertation
+\documentclass[12pt,a4paper,twoside,openany]{report}
+\usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
+\usepackage[margin=25mm]{geometry}  % adjusts page layout
+\usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
+\usepackage{verbatim}
+\usepackage{docmute}   % only needed to allow inclusion of proposal.tex
+\usepackage{fancyvrb}
+\usepackage[font=footnotesize,labelfont=bf]{caption}
+%\usepackage{cite}
+\PassOptionsToPackage{obeyspaces}{url}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{changepage}
+\usepackage{amsmath}
+\usepackage{csquotes}
+
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
+\makeatother
+%\usepackage{bashful}
+%\bash[stdoutFile=wordcount.tex]
+%LC_NUMERIC="en_GB.UTF-8"
+%printf "%'d" "$(texcount -1 -utf8 -sum Part\ II\ Dissertation\ Draft.tex | tr -d '\n')"
+%\END
+
+
+\raggedbottom                           % try to avoid widows and orphans
+\sloppy
+\clubpenalty1000%
+\widowpenalty1000%
+
+\renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make
+                                        % more readable
+
+% Better footnote handling
+\newcounter{footnoteInText}
+\newcounter{footnoteInNote}
+\newcommand{\fnmark}{\stepcounter{footnoteInText}\setcounter{footnote}{\value{footnoteInText}}\addtocounter{footnote}{-1}\footnotemark}
+\newcommand{\fntext}[1]{\stepcounter{footnoteInNote}\setcounter{footnote}{\value{footnoteInNote}}\footnotetext{#1}}
+
+\begin{document}
+	
+	\bibliographystyle{ieeetr}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Title
+	
+	\pagestyle{empty}
+	
+	\begin{center}
+	    \LARGE \textbf{Juraj Mi\v{c}ko}
+	\end{center}
+	
+	\vspace*{60mm}
+	\begin{center}
+		\Huge
+		\textbf{Framework for empirical analysis of graph metric robustness} \\[5mm]
+		Computer Science Tripos -- Part II \\[5mm]
+		Jesus College \\[5mm]
+		\today  % today's date
+	\end{center}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Proforma, table of contents and list of figures
+	
+	\pagestyle{plain}
+	
+	\chapter*{Proforma}
+	
+	{\large
+		\begin{tabular}{ll}
+			Name:               & \bf Juraj Mi\v{c}ko							\\
+			College:            & \bf Jesus College										\\
+			Project Title:      & \bf Framework for empirical analysis \\ & \bf of graph metric robustness					\\
+			Examination:        & \bf Computer Science Tripos -- Part II Project, 
+			\\ & \bf June 2018		\\
+			Word Count:         & \bf X\fnmark 									\\
+			Project Originator: & Dr Timothy Griffin	  							\\
+			Supervisor:         & Dr Timothy Griffin										\\ 
+		\end{tabular}
+	}
+	\fntext{This word count was computed using \texttt{script}}
+	
+	\section*{Original aims of the project}
+	
+		
+	
+	\section*{Work completed}
+	
+		
+		\newpage
+		
+	\section*{Special difficulties}
+	
+		
+		
+	\section*{Declaration of originality}
+	
+		I, Juraj Mi\v{c}ko of Jesus College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
+	
+		\bigskip
+		\leftline{Signed: \textit{Juraj Mi\v{c}ko}}
+		
+		\medskip
+		\leftline{Date: \today}
+	
+	\tableofcontents
+	
+	\listoffigures
+	
+	\listoftables
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% now for the chapters
+	
+	\pagestyle{headings}
+	
+	\input{content/0scratch.tex}
+	
+	\chapter{Introduction}
+	\input{content/1introduction.tex}
+	
+	\chapter{Preparation}
+	\input{content/2preparation.tex}
+	
+	\chapter{Implementation}
+	\label{chap:implementation}
+	\input{content/3implementation.tex}
+	
+	\chapter{Evaluation}
+	\input{content/4evaluation.tex}
+	
+    \chapter{Conclusion}
+    \input{content/5conclusion.tex}
+
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% the bibliography
+	\addcontentsline{toc}{chapter}{Bibliography}
+	\bibliography{refs}{}
+	\bibliographystyle{ieeetr}
+
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% the appendices
+	\appendix
+			
+	\chapter{Project Proposal}
+	\label{appendix:proposal}
+	
+	\input{proposal.tex}
+
+\end{document}
