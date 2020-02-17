@@ -1,5 +1,94 @@
-\section{Preparation / libraries / frameworks}
-\input{content/3implementation-preparation}
+\section{Design goals}\label{sec:design-goals}
+
+This section describes in detail what technical requirements I set for the project.
+
+
+\subsection{Supported features}
+
+The main objective was to build a framework that can help study graph metrics, and their robustness in particular.
+
+
+\begin{enumerate}
+    \item Store, load and represent input graphs
+    \item Run algorithms that compute metrics on graphs
+    \item Generate graphs by applying perturbations to given input graphs
+    \item Run experiments by evaluating metrics on generated graphs in a systematic manner
+    \item Calculate robustness of metrics based on experiments
+    \item (Possibly, produce visual results directly from the program)
+\end{enumerate}
+
+
+\subsection{Scalability}
+
+According to~\cite{Bozhilova2019}, calculating natural connectivity for a single node for a graph with ~7000 nodes takes ~88 seconds on a standard computer.
+Based on my toy example, calculating average betweenness centrality of ~2500 nodes takes ~8 minutes on my computer.
+Thus, assuming computing a (computation-heavy) metric for an input graph of average size 5000 nodes takes ~1 hour, the pure computation time suggested by the~\nameref{ch:proposal} would take the following time on a standard personal computer (approximated in the order of magnitude)
+\[(\sim 6\ \text{datasets}) \times (\sim 6\ \text{metrics}) \times (\sim 50\ \text{derived graphs}) \times (\sim 1\ \text{hour}) \approx 75\ \text{days}\]
+
+
+In addition, the tool can be run on a supercomputer or a distributed cluster of computers.
+
+
+\subsection{Reproducibility}
+
+\subsection{Flexibility}
+
+
+\section{Project set-up}
+
+\subsection{Programming language}
+
+I used the programming language \textbf{Kotlin}, mainly for the following reasons.
+It is by nature similar to Java and can be used together with other Java code in a single project.
+Performance-wise, Kotlin is comparable to Java.
+\begin{itemize}
+    \item Concise, reducing the amount of boilerplate code
+    \item Safer, preventing a significant number of errors
+    \item IDE-friendly, allowing the IDE to help with software engineering
+    \item Allows more functional constructs than Java
+    \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, platform-independent, extensible.
+\end{itemize}
+
+Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiles the \texttt{.kt} files to Java-bytecode \texttt{.class} files.
+
+\subsection{Version control system}
+
+The source code of the \texttt{graffs} tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
+
+The repository can be found at \url{https://github.com/jjurm/graffs}.
+
+\subsection{Build automation}
+
+The project uses Gradle for project management.
+Gradle is set up using the \texttt{build.gradle} configuration file with a number of plugins to facilitate the following and more:
+\begin{enumerate}
+    \item Defines the structure of the project, such as source and build directories
+    \item Automates the process of compiling the code, running tests and producing deployable \texttt{jar}s
+    \item Manages and automatically downloads dependencies
+    \item Helps with version numbering
+    \item Generates HTML API documentation for Kotlin and Java classes
+\end{enumerate}
+
+\subsection{Documentation}
+
+The Kotlin code is documented using the \texttt{KDoc} language and an HTML documentation is generated using the \texttt{Dokka} tool (similar to \texttt{JavaDoc}).
+
+I wrote the documentation in code most thoroughly for public classes, and their members that need clarification on their behaviour or usage.
+
+\subsection{Testing}
+
+\subsubsection{Unit testing}
+Using JUnit 5
+
+\subsubsection{Continuous Integration}
+CircleCI
+
+
+
+\section{Libraries / frameworks}
+\input{content/3implementation-libraries.tex}
+
+
 
 \section{Data model}
 

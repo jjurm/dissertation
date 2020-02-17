@@ -2,13 +2,90 @@
 
 \subsection{Graphs}
 
-By graph, I mean a mathematical model of nodes connected by edges, from graph theory.
-Graphs in this work are implicitly \textbf{undirected}, if not stated otherwise.
-Nodes and edges may have values.
+Graphs (or networks) from graph theory usually consist of \textit{components} (or nodes, vertices) and \textit{links} between them (edges).
+Some of the definitions in this subsection are based on the book \textsl{A first course in network theory}\cite{Estrada2017}.
 
-\subsection{Metrics}
+\begin{definition}[Graph]
+    Let $V$ be a finite set of $n$ nodes (or vertices), and let $E \subseteq V \times V$ be a set of edges.\\
+    A \textbf{graph} $G$ is a pair $(V, E)$, also called a \textbf{network}.\\
+    $V$ is the \textbf{node set} of $G$, and $E$ is the \textbf{edge set} of $G$.
+\end{definition}
+
+\noindent
+I also define the following graph
+
+\begin{definition}[Graph properties]
+    \begin{itemize}[leftmargin=*]
+        \item $G$ is \textbf{reflexive} iff $\forall v \in V.\ (v, v) \in E$
+        \item $G$ is \textbf{anti-reflexive} iff $\forall v \in V.\ (v, v) \notin E$
+        \item $G$ is \textbf{undirected} (or \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Leftrightarrow (v_2, v_1) \in E$
+        \item $G$ is \textbf{directed} iff it is not undirected
+        \item $G$ is a \textbf{simple graph} iff it is anti-reflexive and undirected
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Relations on graphs]
+    \begin{itemize}[leftmargin=*]
+        \item $G' = (V', E')$ is a \textbf{subgraph} of $G = (V, E)$ iff $V' \subseteq V$ and $E' \subseteq E$
+        \item Let $G_1 = (V_1, E_1)$ and $G_2 = (v_2, E_2)$, then $G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2)$ is the \textbf{union} of the two graphs, and $G_1 \cap G_2 = (V_1 {\cap} V_2, E_1 {\cap} E_2)$ is the \textbf{intersection} of the two graphs.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Node adjacency]
+    \begin{itemize}[leftmargin=*]
+        \item In an undirected graph, $v_1$ is \textbf{adjacent} to $v_2$ iff $(v_1, v_2) \in E$
+        \item A \textbf{loop} is an edge of the form $(v, v)$.
+        Note that simple graphs have no loops.
+        \item Define $\deg^-(v) = \left| \Set{v' \in V}{(v', v) \in E} \right|$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left| \Set{v' \in V}{(v, v') \in E} \right|$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
+        If the graph is undirected, then $\deg^-(v) = \deg^+(v) = \deg(v)$ is called \textbf{degree}.
+        \item For $G = (V, E)$ with $V = {1, 2, \dots, n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
+        \[ a_{ij} = \begin{cases}
+                        1, & \textnormal{if}\ (i, j) \in E \\
+                        0, & \textnormal{if}\ (i, j) \notin E
+        \end{cases} \]
+        for $1 \leq i, j \leq n$.
+        Note that adjacency matrix of undirected graph is symmetric.
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Networks}
+
+Moving towards real-world data, graphs often emerge from a certain source in the world.
+Just a few examples of the data possibly represented by graphs include social networks, road networks, computer networks, protein interaction networks, citation networks, web networks and so on.
+In this work I distinguish graphs and networks, although I may sometimes interchange these two.
+
+\begin{definition}[Network]
+    A \textbf{network} is a graph whose nodes or edges can have attributes $\textnormal{attr}_v, \textnormal{attr}_e : \Sigma^* \rightarrow \mathbb{U}$ for some set of possible identifiers $\Sigma^*$ (such as a language over an alphabet $\Sigma$) and a value domain $\mathbb{U}$ (such as $\mathbb{R}$ or $\mathbb{R}^2$)
+\end{definition}
+
+Graphs and networks allow capturing the same structure, however, the main difference is that nodes of a network are \textit{identifiable}, while we rarely consider \textit{identity} of graph nodes.
+%This is because nodes and edges of graphs coming from real-world are often (nearly) isomorphic to real-world objects and relations between them.
+There may be either an exact or inexact matching between nodes/edges in the graph and objects/relations in the real world where the data came from (depending on whether the dataset is an approximation of the world).
+I will often use networks when describing knowledge of the world.
+
+\begin{definition}[Graph matching]
+    Given two graphs $G = (V, E)$ and $G' = (V', E')$ derived from the same network, define \textbf{graph matching}, $M$, to be a bijection $V \leftrightarrow V'$ such that $(v, v') \in M$ iff $v, v'$ correspond to, or come from the same node in the network.
+\end{definition}
+
+For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
+
+
+\subsection{Graph metrics}
+
+Metrics are essentially functions of graphs that assign a value to each node.
+Metrics allow quantifying various properties of graphs, identifying \textit{important} nodes in different contexts, describing graph structures, comparing different graphs and more.
+I am studying metrics as they are prominent and becoming even more crucial in analysing graphs of ever-growing real-world data.
+With the increasing scale of emerging network datasets, it is becoming less possible to comprehend network structures just by visualisations.
+Hence metrics are used to quantify properties of networks or their nodes.
 
 \subsubsection{Degree centrality}
+
+One of the simplest metrics, degree centrality, assigns to each node its degree in the graph.
+
+\begin{definition}
+    For a graph $G = (V, E)$, define \textbf{degree centrality} $DC : V \rightarrow \mathbb{N}$ to be
+    \[ DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right| \]
+\end{definition}
 
 \subsubsection{Eigenvector centrality}
 
@@ -56,75 +133,12 @@ Considering the whole graph as an input for this project would be unsuitable bec
 Note that, generally, one cannot just consider a sub-graph of a source graph (such as sub-graph of a social network), because the generated sub-graph doesn't have a semantic meaning, and its characteristic heavily depend on how the graph was generated (for example, $n$ friends of one person would result in a more connected graph than $n$ random people in the world).
 However, sub-graphs of the STRING database built from proteins of concrete organism can be used, because such graphs alone have a semantic meaning.
 
+\subsubsection{KONECT}
+
+KONECT - The koblenz network collection\cite{Kunegis2013}
+
 \subsubsection{Generating graphs}
 
 Possible algorithms to use: \url{https://jgrapht.org/javadoc/org/jgrapht/generate/package-summary.html}
 
-
-\section{Implementation preparation}
-
-\subsection{Project requirements}
-
-This section will describe in detail what technical requirements I set for the project.
-
-The main objective was to build a framework that can help study graph metrics, and their robustness in particular.
-A single command-line tool \texttt{graffs} was built to facilitate the following:
-
-\begin{enumerate}
-    \item Store, load and represent input graphs
-    \item Run algorithms that compute metrics on graphs
-    \item Generate graphs by applying perturbations to given input graphs
-    \item Run experiments by evaluating metrics on generated graphs in a systematic manner
-    \item Calculate robustness of metrics based on experiments
-    \item (Possibly, produce visual results directly from the program)
-\end{enumerate}
-
-In addition, the tool can be run on a supercomputer or a distributed cluster of computers.
-
-\subsection{Programming language}
-
-I used the programming language \textbf{Kotlin}, mainly for the following reasons.
-It is by nature similar to Java and can be used together with other Java code in a single project.
-Performance-wise, Kotlin is comparable to Java.
-\begin{itemize}
-    \item Concise, reducing the amount of boilerplate code
-    \item Safer, preventing a significant number of errors
-    \item IDE-friendly, allowing the IDE to help with software engineering
-    \item Allows more functional constructs than Java
-    \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, platform-independent, extensible.
-\end{itemize}
-
-Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiles the \texttt{.kt} files to Java-bytecode \texttt{.class} files.
-
-\subsection{Version control system}
-
-The source code of the \texttt{graffs} tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
-
-The repository can be found at \url{https://github.com/jjurm/graffs}.
-
-\subsection{Build automation}
-
-The project uses Gradle for project management.
-Gradle is set up using the \texttt{build.gradle} configuration file with a number of plugins to facilitate the following and more:
-\begin{enumerate}
-    \item Defines the structure of the project, such as source and build directories
-    \item Automates the process of compiling the code, running tests and producing deployable \texttt{jar}s
-    \item Manages and automatically downloads dependencies
-    \item Helps with version numbering
-    \item Generates HTML API documentation for Kotlin and Java classes
-\end{enumerate}
-
-\subsection{Documentation}
-
-The Kotlin code is documented using the \texttt{KDoc} language and an HTML documentation is generated using the \texttt{Dokka} tool (similar to \texttt{JavaDoc}).
-
-I wrote the documentation in code most thoroughly for public classes, and their members that need clarification on their behaviour or usage.
-
-\subsection{Testing}
-
-\subsubsection{Unit testing}
-Using JUnit 5
-
-\subsubsection{Continuous Integration}
-CircleCI
 

@@ -1,0 +1,16 @@
+
+% Definition
+
+\makeatletter
+\def\@begintheorem#1#2{\trivlist
+    \item[\hskip \labelsep{\bfseries #1\ #2}]\mbox\newline\quote\itshape}
+\def\@opargbegintheorem#1#2#3{\trivlist
+    \item[\hskip \labelsep{\bfseries #1\ #2\ (#3)}]\mbox\newline\quote\itshape}
+\def\@endtheorem{\endquote\endtrivlist}
+\makeatother
+
+\newtheorem{definition}{Definition}[section]
+
+% Math mode
+\newcommand{\Set}[2]{\{\, #1 \mid #2 \, \}}
+\newcommand\eqdef{\ \stackrel{\mathclap{\normalfont\mbox{def}}}{=}\ }

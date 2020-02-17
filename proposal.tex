@@ -48,7 +48,7 @@
     
     I have theoretical knowledge of Java, algorithms, data science and other relevant topics from respective courses from the Computer Science Tripos. I also have some practical and software engineering skills from the Part IB project, my internships and other personal projects. I will need to study a lot of materials about graphs, networks, graph metrics, algorithms and similar topics.
     
-    This project will also use graph datasets from sources mentioned in~\nameref{resourceDeclaration}.
+    This project will also use graph datasets from sources mentioned in~\nameref{sec:resourcedeclaration}.
 
 \section*{Work to be done}
 
@@ -60,7 +60,7 @@
     	
     	In order to test the robustness, a metric has to be evaluated over a set of similar graphs that are 'derived' from the same source dataset. In the abovementioned paper by Bozhilova, L. V. et al., the source datasets contained weights indicating the amount of evidence for each protein interaction, and so an arbitrary number of similar graphs could be produced by thresholding on different confidence values. Not all datasets contain this information and so I will need to devise a way to take an input dataset and generate similar datasets with small perturbations. The procedure may be as simple as pseudo-randomly deleting a small percentage ($\sim 5\%$) of edges, to not destruct the structure of the original graph; or taking a pseudo-random subset ($\sim 95\%$) of the nodes; or pseudo-randomly generating a confidence value for each edge and then thresholding on this value.
 	
-	\subsection*{Evaluation} \label{evaluation}
+	\subsection*{Evaluation}\label{subsec:evaluation}
 	
     	As values of node metrics in derived graphs may be affected by the derivation process (e.g. node degrees decrease with decreasing graph density), it is unhelpful to compare absolute values of the metrics. Instead, it is reasonable to compare ranks of nodes between derived graphs, thus implicitly taking into account the relative value of the metric. The authors Bozhilova et al. used a robustness analysis based on a rank similarity measure proposed by the following paper
     	
@@ -129,7 +129,7 @@
 	
 	\begin{enumerate}
 	    \item Implement the experimental framework outlined above, using interesting datasets
-	    \item Complete statistical analysis, as described in the~\nameref{evaluation} section
+	    \item Complete statistical analysis, as described in the~\nameref{subsec:evaluation} section
 	    \item Deduce empirical observations about graph metrics
 	\end{enumerate}
 	
@@ -237,7 +237,7 @@
 	    
 	    \textit{Milestone \textbf{8 May}: Submit the dissertation}
 
-\section*{Resource Declaration} \label{resourceDeclaration}
+\section*{Resource Declaration}\label{sec:resourcedeclaration}
 
     \subsection*{Personal resources}
 

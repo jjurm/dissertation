@@ -1,5 +1,7 @@
 % Computer Science Tripos Part II project dissertation
 \documentclass[12pt,a4paper,twoside,openany]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
 \usepackage[margin=25mm]{geometry}  % adjusts page layout
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
@@ -7,7 +9,6 @@
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
 \usepackage{fancyvrb}
 \usepackage[font=footnotesize,labelfont=bf]{caption}
-%\usepackage{cite}
 \PassOptionsToPackage{obeyspaces}{url}
 \usepackage{float}
 \usepackage{enumitem}
@@ -15,9 +16,8 @@
 \usepackage{amsmath}
 \usepackage{csquotes}
 \usepackage[nottoc]{tocbibind}
-
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{mathtools}
 
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
@@ -42,6 +42,11 @@
 \newcounter{footnoteInNote}
 \newcommand{\fnmark}{\stepcounter{footnoteInText}\setcounter{footnote}{\value{footnoteInText}}\addtocounter{footnote}{-1}\footnotemark}
 \newcommand{\fntext}[1]{\stepcounter{footnoteInNote}\setcounter{footnote}{\value{footnoteInNote}}\footnotetext{#1}}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\include{commands}
 
 \begin{document}
 
