@@ -2,6 +2,14 @@
 \documentclass[12pt,a4paper,twoside,openany]{report}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[
+	backend=biber,
+	natbib=true,
+	style=ieee,
+	url=false,
+	doi=true
+	%eprint=false
+]{biblatex}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
 \usepackage[margin=25mm]{geometry}  % adjusts page layout
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
@@ -15,9 +23,15 @@
 \usepackage{changepage}
 \usepackage{amsmath}
 \usepackage{csquotes}
-\usepackage[nottoc]{tocbibind}
+\usepackage[
+	%nottoc,
+	notlot,
+	notlof
+]{tocbibind}
 \usepackage{amsfonts}
 \usepackage{mathtools}
+
+\addbibresource{refs.bib}
 
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
@@ -144,8 +158,9 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the bibliography
 	%\addcontentsline{toc}{chapter}{Bibliography}
-	\bibliographystyle{ieeetr}
-	\bibliography{refs}
+	%\bibliographystyle{ieeetr}
+	%\bibliography{refs}
+	\printbibliography[heading=bibintoc]
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the appendices
