@@ -1,0 +1,61 @@
+%The total data (created, captured or replicated) in the world by 2018 was estimated to be 18 zettabytes in 2018 and is expected to reach 175 zettabytes by 2025~\cite{ReinselDigitizationWorldEdge2018}.
+Ever-increasing data sources and applications of data science force researchers and data scientists to use tools such as graph theory to model real-world problems.
+Graphs, or networks (nodes and edges), can capture many types of entities and their relations in the real world.
+Graph theory, believed to have been invented by L. Euler in 18th century~\cite{BiggsGraphTheory173619361986} has been since used to help solve problems in the field of information technology, engineering, biology, chemistry, social systems, geography, linguistics and many more ~\cite{FouldsGraphTheoryApplications2012}.
+A simple example is a social network in which nodes may represent people and edges represent existence of relationships between pairs of people.
+
+\subsubsection*{Graph metrics}
+
+Graph theory proved especially useful when analysing large structures of data that cannot simply be visualised or otherwise analysed by investigating individual entities.
+The word \textsl{network} is often used in this context to refer to large instances of graphs stemming from real systems, as opposed to graphs referring more to the mathematical concept itself.
+Graph \textsl{statistics} (e.g. size, average degree, diameter, radius) have been invented to help mathematically describe properties of arbitrarily large graphs, such as betweenness centrality.
+Further, graph \textsl{metrics} (such as betweenness centrality, closeness centrality, eccentricity) quantify properties of individual nodes.
+For example a person represented by a node with high closeness centrality score is considered to be \textsl{closer} to others in terms of number of hops needed, in other words can spread information in the network faster.
+
+Protein interaction networks is an example of a prominent research field relying on graph theory.
+Nodes in protein networks represent proteins present in cells of organisms and edges represent interactions between them, possibly labelled to convey additional information.
+Studying such networks helps in understanding physiology of biological cells and developing drugs as they generally affect protein interactions.
+
+\subsubsection*{Imperfect data}
+
+The problem is, networks constructed from real-world contain errors such as missing nodes or edges, false positives, uncertain nodes or edges, falsely aggregated nodes.
+Network errors may stem from measurement errors, approximations, lack of knowledge, lack of experimental evidence or thresholding of scored networks~\cite{Wang2012,MarsdenNetworkDataMeasurement1990,JonesChallengesLimitationsQuantifying2010}.
+These errors may then propagate and cause errors in graph metrics, which the user of the dataset may not be aware of. \todo{clarify}
+
+For example, the STRING database\cite{Szklarczyk2019} is an open collection that contains known and predicted protein-protein interactions.
+It provides confidence scores for edges, indicating how likely the dataset authors consider an interaction to be true, given the available evidence.
+A research paper by Bozhilova et al.~\cite{Bozhilova2019} demonstrates instability of some graph metrics on thresholded protein networks and proposes ways to assess robustness of graph metrics in such networks.
+
+\subsubsection*{Metric robustness}
+
+Although the field of investigating graph metric robustness is novel and recent, a number of attempts tried to assess robustness or stability properties of graph metrics.
+Examples are analysing impact of errors on centrality measures in random networks~\cite{BorgattiRobustnessCentralityMeasures2006} or, more specifically, evaluating reproducibility of metrics on multi-temporal scans of human brain using coefficient of variation (CV), the repeatability coefficient (RC) and the intra class correlation (ICC)~\cite{VaessenEffectReproducibilityDifferent2010,DennisTestRetestReliabilityGraph2012}.
+A significant amount of research analysing reproducibility of metrics in uncertain brain networks appeared around 2011, summarised in`\cite{TelesfordExplorationGraphMetric2013}.
+The latest research led to development of methods for analysis of such uncertain data, estimating a ground-truth network structure from imperfect data ~\cite{Martin2016,Newman2018}, and a method to mitigate sensitivity of metrics on the selection of a threshold in scored networks~\cite{Drakesmith2015}.
+
+One of the most recent researches on metric robustness is already mentioned work on protein interaction networks by Bozhilova et al.~\cite{Bozhilova2019}.
+In the study they use 3 ways to quantify metric robustness, focusing on comparing node rankings induced by each metric at different score thresholds instead of the calculated values, arguing that comparing ranks better assesses robustness of metrics.
+Those robustness measures are: Rank continuity (comparing sets of highly ranked nodes between graphs derived from similar confidence threshold), Rank identifiability (considering overall ranks of all nodes and quantifying how much these ranks differ from ranks observed in graphs derived from various confidence thresholds), Rank instability (quantifying variation of ranks of top 1\% of nodes over a certain confidence range).
+
+\subsubsection*{Framework}
+
+\todo{revise once done}
+
+In this dissertation I summarise the research done on this topic and build a software framework that helps generalise the research of graph metric robustness and allows application of the above mentioned methods to graphs of other kinds.
+\Cref{ch:preparation} revises the background material and proposes the method used in the framework.
+
+First, I generalise graph acquisition using different methods on different source datasets, such as edge score thresholding or random edge removal.
+Consequently, the framework applies a number of robustness measures on some of the most common node-level graph metrics, and tries to infer any correlation between graph classes and robustness of metrics used on them.
+\Cref{ch:implementation} describes implementation of the framework, which I then evaluate in \cref{ch:evaluation}.
+
+\todo{describe evaluation?}
+
+My work is significantly based on the following paper~\cite{Bozhilova2019} which inspired this dissertation topic.
+\begin{adjustwidth}{1cm}{}
+    \vspace*{0.5em}
+    Bozhilova, L. V., Whitmore, A. V., Wray, J., Reinert, G., \& Deane, C. M. (2019). Measuring rank robustness in scored protein interaction networks. BMC Bioinformatics, 20(1). \url{https://doi.org/10.1186/s12859-019-3036-6}
+    \vspace*{0.5em}
+\end{adjustwidth}
+
+I wrapped up the project and published it as an open-source library that can further be used by future projects in this research area.
+
