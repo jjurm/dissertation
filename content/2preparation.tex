@@ -54,7 +54,18 @@ I also define the following graph
                         0, & \textnormal{if}\ (i, j) \notin E
         \end{cases} \]
         for $1 \leq i, j \leq n$.
+        
         Note that adjacency matrix of undirected graph is symmetric.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Connectedness]
+    \begin{itemize}[leftmargin=*]
+        \item $u, v$ are \textbf{connected nodes} is there exists a path between $u, v$ in $G$, i.e. if $(A^k)_{uv} = 1$ for some $k\in \mathbb{N}$.
+        \item $G = (V, E)$ is \textbf{connected graph} if $\forall v_1, v_2 \in V. v_1, v_2$ are connected nodes.
+        \item A subgraph $G' \subseteq G$ is a \textbf{(connected) component} iff $G'$ is a maximal connected subgraph of $G$.
+        
+        Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
     \end{itemize}
 \end{definition}
 
@@ -82,19 +93,40 @@ For measuring metric robustness it will be beneficial to know matching between m
 \subsection{Graph metrics}
 
 Metrics are essentially functions of graphs that assign a value to each node.
-Metrics allow quantifying various properties of graphs, identifying \textit{important} nodes in different contexts, describing graph structures, comparing different graphs and more.
-I am studying metrics as they are prominent and becoming even more crucial in analysing graphs of ever-growing real-world data.
+Metrics allow quantifying various properties of graphs, identifying important nodes in different contexts, describing graph structures, comparing different graphs and more.
+I study graph metrics as they are prominent and becoming even more crucial in analysing graphs of ever-growing real-world data.
 With the increasing scale of emerging network datasets, it is becoming less possible to comprehend network structures just by visualisations.
 Hence metrics are used to quantify properties of networks or their nodes.
 
+In this chapter I describe the metrics that seem to be most significant for analysing protein interaction networks, and other graphs used in this project. The set of these metrics and their specific definition is based on The Paper\cite{Bozhilova2019}.
+
 \subsubsection{Degree centrality}
 
-One of the simplest metrics, degree centrality, assigns to each node its degree in the graph.
+One of the simplest metrics, degree centrality, calculates the degree of each node.
 
 \begin{definition}
     For a graph $G = (V, E)$, define \textbf{degree centrality} $DC : V \rightarrow \mathbb{N}$ to be
     \[ DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right| \]
 \end{definition}
+
+\subsubsection{Closeness centrality}
+
+Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
+
+\[CC(v) = \frac{1}{\sum_{i \neq v} d(v, i)}\]
+
+This is well defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph. For disconnected graphs, I set $d(v, i) = |V|$ to follow the approach in~\cite{Bozhilova2019}.
+
+Closeness centrality measures, for each node, its reciprocal of the \textsl{farness} of the node to other nodes. Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
+
+A common alternative for disconnected graphs is to compute Harmonic centrality.
+
+\subsubsection{Harmonic centrality}
+
+Has similar meaning to closeness centrality, and a similar definition.
+
+\[HC(v) = \sum_{i \neq v} \frac{1}{d(v, i)}\]
+with $1 / d(v, i) = 0$ for disconnected nodes $v, i$.
 
 \subsubsection{Eigenvector centrality}
 
@@ -106,8 +138,6 @@ One of the simplest metrics, degree centrality, assigns to each node its degree 
 
 \subsubsection{Hyperlink-induced topic search (HITS)}
 Hubs and authorities, by Kleinberg
-
-\subsubsection{Closeness centrality}
 
 % from GraphStream
 
