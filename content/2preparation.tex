@@ -1,3 +1,50 @@
+\section{Introduction to confidence}
+
+Statistical significance, confidence scores, confidence intervals, error ranges, all are used to signal or approximate the extent to which the observed result is reliable.
+Some of the confidence values are a direct probability that an error is made, given the available evidence, such as a statistical significance when rejecting a null hypothesis, or confidence intervals.
+Other error values such as error ranges or standard deviations estimate how much off a numerical value may be.
+These error measures are all important to state and assess how precise or confident an experiment or an observation is.
+
+A research result without assessing its precision or confidence can be considered incomplete.
+We need the assessment of possible error to derive any further guidance from the research.
+
+However, can we measure the precision, or the confidence or graph metrics?
+If research is based on evaluating metrics on graphs which are themselves imprecise or having possible errors in the structure, how can we assess the confidence or precision of such result?
+
+
+\section{The Paper}
+
+This project is based on, and extending the ideas from the paper by Bozhilova et al.: \textsl{Measuring rank robustness in scored protein interaction networks}\cite{Bozhilova2019}.
+From now on, I will refer to it as \textsl{The Paper}.
+
+Protein networks is a large research field with a plethora of uses, and investigating them is important for the future of bioinformatics~\todo{examples + citations}.
+
+Most graph datasets obtained from the real-world, including protein interaction networks (PINs), are a result of experiments or observations which possibly introduce measurement errors, either systematic or random errors.
+
+Also, protein networks have a specific structure: nodes represent proteins and weighted (or scored) edges represent the presence of interactions between proteins.
+It is assumed that such interactions are mutual, therefore the formed graph is undirected.
+The weight of each edge represents a confidence score which may be a value, or a set of values, describing some sort of \textsl{likelihood} that the given interaction is true, given the available evidence.
+They do \textsl{not} indicate the strength or intensity of the interaction (which would be a different property, usually not observed in such protein networks).
+
+For example, in the STRING database of protein networks used in The Paper, the main interaction score is an approximated \textbf{confidence} based on evidence such as scientific experiments, genetic observations (gene fusions, gene cooccurence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases)~\cite{Szklarczyk2019}.
+The database then contains score values for each type of evidence, as well as a combined overall confidence score.
+The Paper, as well as my dissertation, use only the combined confidence score and do not focus on the biological details of each evidence type.
+
+When researching protein interactions, researchers usually choose a \textbf{threshold} and then form a protein interaction network from the database considering only interactions (edges) whose confidence score is greater than the selected threshold, to only take into account interactions of sufficiently high quality.
+
+However, as The Paper notes, this type of analysis can be sensitive to the choice of the threshold.
+If a node metric is to be useful for extracting biological signal, it should lead to similar results across networks obtained at different reasonable confidence score thresholds.
+
+It is clear that numerical values of node metrics will depend on such threshold, for example the degree and the clustering coefficient of each node will indeed monotonically decline with declining density of the network, which monotonically declines as we increase the confidence threshold.
+For this reason, the point of The Paper is to assess a robustness of graph metrics based on the rankings of nodes induced by each metric (where ranking is just a total preorder of the nodes based on the metric values).
+
+The Paper introduces three different measures assessing robustness of node metrics (all will be explained later): rank continuity, rank identifiability, and rank instability.
+All three measures are based on rankings of nodes induced by node metrics, and not on the numerical values, to mitigate the density bias described above.
+
+While graph metrics are any functions of graphs, node metrics are more specifically functions of graphs that return one numerical value per each node.
+The Paper focuses on node metrics only.
+
+
 \section{Problem background}
 
 In this chapter I review background material on graph theory and examining graph metric robustness, and fix terms I will use later to avoid ambiguity in further chapters.
@@ -54,7 +101,7 @@ I also define the following graph
                         0, & \textnormal{if}\ (i, j) \notin E
         \end{cases} \]
         for $1 \leq i, j \leq n$.
-        
+
         Note that adjacency matrix of undirected graph is symmetric.
     \end{itemize}
 \end{definition}
@@ -64,7 +111,7 @@ I also define the following graph
         \item $u, v$ are \textbf{connected nodes} is there exists a path between $u, v$ in $G$, i.e. if $(A^k)_{uv} = 1$ for some $k\in \mathbb{N}$.
         \item $G = (V, E)$ is \textbf{connected graph} if $\forall v_1, v_2 \in V. v_1, v_2$ are connected nodes.
         \item A subgraph $G' \subseteq G$ is a \textbf{(connected) component} iff $G'$ is a maximal connected subgraph of $G$.
-        
+
         Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
     \end{itemize}
 \end{definition}
@@ -89,6 +136,16 @@ I will often use networks when describing knowledge of the world.
 \end{definition}
 
 For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
+
+\subsection{Ranking}
+
+\begin{definition}[Preorder]
+
+\end{definition}
+
+\begin{definition}[Total preorder]
+
+\end{definition}
 
 \subsection{Graph metrics}
 
