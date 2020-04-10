@@ -351,3 +351,5 @@ TSWLatexianTemp*
 *.glstex
 
 # End of https://www.gitignore.io/api/latex,intellij+iml
+
+main.pdf
