@@ -33,23 +33,23 @@ It is assumed that such interactions are mutual, therefore the formed graph is u
 
 \input{figures/protein_network_schematic1.tex}
 
-\subsubsection*{Confidence scores}
+\subsection{Confidence scores}
 
 The weight of each edge represents a confidence score which may be a value, or a set of values, describing some sort of \textsl{likelihood} that the given interaction is true, given the available evidence.
 They do \textsl{not} indicate the strength or intensity of the interaction (which would be a different property, usually not observed in such protein networks).
 
-For example, in the STRING database of protein networks used in The Paper, the main interaction score is an approximated \textsl{confidence} based on evidence such as scientific experiments, genetic observations (gene fusions, gene cooccurence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases)~\cite{Szklarczyk2019}.
+For example, in the STRING database of protein networks used in The Paper, the main interaction score is an approximated \textsl{confidence} based on evidence such as scientific experiments, genetic observations (gene fusions, gene co-occurrence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases)~\cite{Szklarczyk2019}.
 The database then contains score values for each type of evidence, as well as a combined overall confidence score.
 The Paper, as well as my dissertation, use only the combined confidence score and do not focus on the biological details of each evidence type.
 
-\input{figures_gen/ecoli_giant_at_900}
+\input{figures_gen/ecoli_giant_at_900.tex}
 
-When researching protein interactions, researchers usually choose a \textbf{threshold} and then form a protein interaction network from the database considering only interactions (edges) whose confidence score is greater than the selected threshold, to only take into account interactions of sufficiently high quality.
+When researching protein interactions, in practice, researchers choose a \textbf{threshold} and then form a protein interaction network from the database considering only interactions (edges) whose confidence score is greater than the selected threshold, to only take into account interactions of sufficiently high quality.
 Researchers then use tools such as graph metrics to identify important nodes or components of graphs, calculate statistics, or derive other results.
 
 \autoref{fig:ecoli_giant_at_900} shows an example of a protein network taken from the STRING database\cite{Szklarczyk2019}, of proteins of the \textit{Escherichia coli} organism.
 Only edges with score of $0.9$ corresponding to the ``highest confidence'' level (on the scale from $0$ to $1$) were retained, and only the giant connected component of it is shown.
-That yields a graph of 4144 nodes and 12917 edges.
+That yields a graph with 2382 nodes and 12071 edges.
 
 \subsection{Metric robustness}
 
@@ -59,6 +59,8 @@ Hence, the point of studying metric robustness or \textsl{stability} is a way to
 
 It is clear that numerical values of node metrics will depend on such threshold, for example the degree and the clustering coefficient of each node will indeed monotonically decline with declining density of the network, which monotonically declines as we increase the confidence threshold.
 For this reason, the point of The Paper is to assess a robustness of graph metrics based on the \textbf{rankings} of nodes induced by each metric (where ranking is just a total preorder of the nodes based on the metric values).
+
+\subsubsection{Rank robustness}
 
 The Paper introduces three different measures assessing robustness of node metrics (all will be explained later):
 \begin{itemize}
@@ -73,39 +75,51 @@ The Paper studies robustness of 25 different \textsl{node} metrics only, i.e. gr
 
 \section{Mathematical background}
 
-In this chapter I review background material on graph theory and examining graph metric robustness, and fix terms I will use later to avoid ambiguity in further chapters.
+In this section I review background material on graph theory and examining graph metric robustness, and fix terms I will use later to avoid ambiguity in further chapters.
 
-In particular, this chapter will discuss mainly the following, in the theoretical framework:
+In particular, this section will focus introducing high-level concepts of:
 \begin{itemize}
-    \item collecting source datasets
-    \item generating distorted graphs
-    \item common graph metrics that can evaluated on graphs
-    \item ways to quantify robustness of metrics
+    \item relevant bits of graph theory
+    \item graph metrics
+    \item ranking
+    \item metric robustness
 \end{itemize}
 
 \subsection{Graphs}
 
 Graphs (or networks) from graph theory usually consist of \textit{components} (or nodes, vertices) and \textit{links} between them (edges).
-Some of the definitions in this subsection are based on the book \textsl{A first course in network theory}\cite{Estrada2017}.
+Some definitions in this subsection are based on the book \textsl{A first course in network theory}\cite{Estrada2017}.
 
 \begin{definition}[Graph]
     Let $V$ be a finite set of $n$ nodes (or vertices), and let $E \subseteq V \times V$ be a set of edges.\\
-    A \textbf{graph} $G$ is a pair $(V, E)$, also called a \textbf{network}.\\
+    A \textbf{graph} $G$ is a pair $(V, E)$.\\
     $V$ is the \textbf{node set} of $G$, and $E$ is the \textbf{edge set} of $G$.
 \end{definition}
 
-\noindent
-I also define the following graph
+Real-world data (or datasets) in the form of graphs are also called \textbf{networks}.
+Still, I may interchange the words \textsl{graph}, \textsl{network} and \textsl{dataset}, but generally:
+\begin{itemize}
+    \item \textsl{dataset} is data stored in its raw form, such as a file downloaded from the Internet
+    \item \textsl{network} is the real-world graph-like data conveyed by a dataset
+    \item \textsl{graph} is a hypothetical structure, also a mathematical interface or representation that algorithms work with
+\end{itemize}
 
 \begin{definition}[Graph properties]
     \begin{itemize}[leftmargin=*]
         \item $G$ is \textbf{reflexive} iff $\forall v \in V.\ (v, v) \in E$
         \item $G$ is \textbf{anti-reflexive} iff $\forall v \in V.\ (v, v) \notin E$
-        \item $G$ is \textbf{undirected} (or \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Leftrightarrow (v_2, v_1) \in E$
+        \item $G$ is \textbf{undirected} (or equally \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Leftrightarrow (v_2, v_1) \in E$
         \item $G$ is \textbf{directed} iff it is not undirected
-        \item $G$ is a \textbf{simple graph} iff it is anti-reflexive and undirected
+        \item $G$ is a \textbf{simple graph} iff it is undirected and anti-reflexive
     \end{itemize}
 \end{definition}
+
+Graphs I use in this project are all \textsl{simple graphs} (unless stated otherwise), i.e. edges are undirected (or bi-directional), and always span two different nodes.
+
+\input{figures_gen/simple_graph.tex}
+
+\autoref{fig:simple_graph} is an illustration of a connected simple graph with 110 nodes and 151 edges.
+I used graphs like this for testing purposes when developing \graffs.
 
 \begin{definition}[Relations on graphs]
     \begin{itemize}[leftmargin=*]
@@ -140,7 +154,17 @@ I also define the following graph
 
         Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
     \end{itemize}
+
+        \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
+
+        Note that a giant component may not exist, if more components have maximum number of nodes.
 \end{definition}
+
+\input{figures_gen/disconnecting_graph.tex}
+
+Most of real-world networks (such as social networks, citation networks and even protein interaction networks) contain a single giant component, and some small isolated components.
+For example, in \autoref{fig:disconnecting_graph}, the red nodes form a giant component of the graph.
+
 
 \subsubsection{Networks}
 
@@ -264,3 +288,12 @@ KONECT - The koblenz network collection\cite{Kunegis2013}
 Possible algorithms to use: \url{https://jgrapht.org/javadoc/org/jgrapht/generate/package-summary.html}
 
 
+\section{Methods}
+
+In particular, this chapter will discuss mainly the following, in the theoretical framework:
+\begin{itemize}
+    \item collecting source datasets
+    \item generating distorted graphs
+    \item common graph metrics that can evaluated on graphs
+    \item ways to quantify robustness of metrics
+\end{itemize}
