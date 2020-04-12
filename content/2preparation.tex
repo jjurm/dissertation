@@ -155,9 +155,9 @@ I used graphs like this for testing purposes when developing \graffs.
         Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
     \end{itemize}
 
-        \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
+    \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
 
-        Note that a giant component may not exist, if more components have maximum number of nodes.
+    Note that a giant component may not exist, if more components have maximum number of nodes.
 \end{definition}
 
 \input{figures_gen/disconnecting_graph.tex}
@@ -166,52 +166,43 @@ Most of real-world networks (such as social networks, citation networks and even
 For example, in \autoref{fig:disconnecting_graph}, the red nodes form a giant component of the graph.
 
 
-\subsubsection{Networks}
-
-Moving towards real-world data, graphs often emerge from a certain source in the world.
-Just a few examples of the data possibly represented by graphs include social networks, road networks, computer networks, protein interaction networks, citation networks, web networks and so on.
-In this work I distinguish graphs and networks, although I may sometimes interchange these two.
-
-\begin{definition}[Network]
-    A \textbf{network} is a graph whose nodes or edges can have attributes $\textnormal{attr}_v, \textnormal{attr}_e : \Sigma^* \rightarrow \mathbb{U}$ for some set of possible identifiers $\Sigma^*$ (such as a language over an alphabet $\Sigma$) and a value domain $\mathbb{U}$ (such as $\mathbb{R}$ or $\mathbb{R}^2$)
-\end{definition}
-
-Graphs and networks allow capturing the same structure, however, the main difference is that nodes of a network are \textit{identifiable}, while we rarely consider \textit{identity} of graph nodes.
-%This is because nodes and edges of graphs coming from real-world are often (nearly) isomorphic to real-world objects and relations between them.
-There may be either an exact or inexact matching between nodes/edges in the graph and objects/relations in the real world where the data came from (depending on whether the dataset is an approximation of the world).
-I will often use networks when describing knowledge of the world.
-
-\begin{definition}[Graph matching]
-    Given two graphs $G = (V, E)$ and $G' = (V', E')$ derived from the same network, define \textbf{graph matching}, $M$, to be a bijection $V \leftrightarrow V'$ such that $(v, v') \in M$ iff $v, v'$ correspond to, or come from the same node in the network.
-\end{definition}
-
-For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
-
-\subsection{Ranking}
-
-\begin{definition}[Preorder]
-
-\end{definition}
-
-\begin{definition}[Total preorder]
-
-\end{definition}
+%\subsubsection{Networks}
+%
+%Moving towards real-world data, graphs often emerge from a certain source in the world.
+%Just a few examples of the data possibly represented by graphs include social networks, road networks, computer networks, protein interaction networks, citation networks, web networks and so on.
+%In this work I distinguish graphs and networks, although I may sometimes interchange these two.
+%
+%\begin{definition}[Network]
+%    A \textbf{network} is a graph whose nodes or edges can have attributes $\textnormal{attr}_v, \textnormal{attr}_e : \Sigma^* \rightarrow \mathbb{U}$ for some set of possible identifiers $\Sigma^*$ (such as a language over an alphabet $\Sigma$) and a value domain $\mathbb{U}$ (such as $\mathbb{R}$ or $\mathbb{R}^2$)
+%\end{definition}
+%
+%Graphs and networks allow capturing the same structure, however, the main difference is that nodes of a network are \textit{identifiable}, while we rarely consider \textit{identity} of graph nodes.
+%%This is because nodes and edges of graphs coming from real-world are often (nearly) isomorphic to real-world objects and relations between them.
+%There may be either an exact or inexact matching between nodes/edges in the graph and objects/relations in the real world where the data came from (depending on whether the dataset is an approximation of the world).
+%I will often use networks when describing knowledge of the world.
+%
+%\begin{definition}[Graph matching]
+%    Given two graphs $G = (V, E)$ and $G' = (V', E')$ derived from the same network, define \textbf{graph matching}, $M$, to be a bijection $V \leftrightarrow V'$ such that $(v, v') \in M$ iff $v, v'$ correspond to, or come from the same node in the network.
+%\end{definition}
+%
+%For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
 
 \subsection{Graph metrics}
 
 Metrics are essentially functions of graphs that assign a value to each node.
-Metrics allow quantifying various properties of graphs, identifying important nodes in different contexts, describing graph structures, comparing different graphs and more.
+Metrics are used to quantify various properties of graphs, identifying important nodes in different contexts, describing graph structures, comparing different graphs and more.
 I study graph metrics as they are prominent and becoming even more crucial in analysing graphs of ever-growing real-world data.
-With the increasing scale of emerging network datasets, it is becoming less possible to comprehend network structures just by visualisations.
-Hence metrics are used to quantify properties of networks or their nodes.
 
-In this chapter I describe the metrics that seem to be most significant for analysing protein interaction networks, and other graphs used in this project. The set of these metrics and their specific definition is based on The Paper\cite{Bozhilova2019}.
+In this section I describe some of the metrics that are most significant for analysing protein interaction networks, and other graphs used in this project.
+The set of these metrics and their specific definition is based on The Paper\cite{Bozhilova2019}, and on~\cite{MartinHernandez2011}.
 
-\subsubsection{Degree centrality}
+The metrics below are defined for \textsl{undirected} graphs.
 
-One of the simplest metrics, degree centrality, calculates the degree of each node.
+\subsubsection{Degree}
 
-\begin{definition}
+One of the simplest metrics calculates the degree of each node.
+
+\begin{definition}[Degree (centrality)]
     For a graph $G = (V, E)$, define \textbf{degree centrality} $DC : V \rightarrow \mathbb{N}$ to be
     \[ DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right| \]
 \end{definition}
@@ -220,44 +211,125 @@ One of the simplest metrics, degree centrality, calculates the degree of each no
 
 Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
 
-\[CC(v) = \frac{1}{\sum_{i \neq v} d(v, i)}\]
+\begin{definition}[Closeness centrality]
+    \[CC(v) = \frac{1}{\sum_{i \neq v} d(v, i)}\]
+\end{definition}
 
-This is well defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph. For disconnected graphs, I set $d(v, i) = |V|$ to follow the approach in~\cite{Bozhilova2019}.
+This is well-defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
+For disconnected graphs, I set $d(v, i) = |V|$ to follow the approach in The Paper.
 
-Closeness centrality measures, for each node, its reciprocal of the \textsl{farness} of the node to other nodes. Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
+Closeness centrality measures the reciprocal of the \textsl{farness} of each node to other nodes.
+Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
 
 A common alternative for disconnected graphs is to compute Harmonic centrality.
+
+\input{figures_gen/simplegraph_by_some_metrics.tex}
 
 \subsubsection{Harmonic centrality}
 
 Has similar meaning to closeness centrality, and a similar definition.
 
-\[HC(v) = \sum_{i \neq v} \frac{1}{d(v, i)}\]
-with $1 / d(v, i) = 0$ for disconnected nodes $v, i$.
+\begin{definition}[Harmonic centrality]
+    \[HC(v) = \sum_{i \neq v} \frac{1}{d(v, i)}\]
+    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$.
+\end{definition}
 
-\subsubsection{Eigenvector centrality}
-
-\subsubsection{Katz centrality}
-- not used much recently
-
-\subsubsection{PageRank}
-= Katz centrality, but divide each vertex's contribution by its out-degree
-
-\subsubsection{Hyperlink-induced topic search (HITS)}
-Hubs and authorities, by Kleinberg
+%\subsubsection{Eigenvector centrality}
+%
+%\subsubsection{Katz centrality}
+%- not used much recently
+%
+%\subsubsection{PageRank}
+%= Katz centrality, but divide each vertex's contribution by its out-degree
+%
+%\subsubsection{Hyperlink-induced topic search (HITS)}
+%Hubs and authorities, by Kleinberg
 
 % from GraphStream
+%
+%\subsubsection{CommunityMeasure}
+%- Modularity\\
+%- Community Distribution\\
+%- CommunityRelativeMeasure $\rightarrow$ NormalizedMutualInformation $\rightarrow$ VariationOfInformation
+%
+%\subsubsection{Eccentricity}
+%
+%\subsubsection{Surprise measure}
+%
 
-\subsubsection{CommunityMeasure}
-- Modularity\\
-- Community Distribution\\
-- CommunityRelativeMeasure $\rightarrow$ NormalizedMutualInformation $\rightarrow$ VariationOfInformation
+\subsection{Ranking}
 
-\subsubsection{Eccentricity}
+\begin{definition}[Preorder]
+    Binary relation $\sqsubseteq$ on some set $P$ is a \textbf{preorder} iff it is reflexive and transitive, i.e.:
+    \begin{itemize}
+        \item $\forall a, b \in P.\ a \sqsubseteq a$ \tabto{7.3cm}(reflexivity)
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+    \end{itemize}
+\end{definition}
 
-\subsubsection{Surprise measure}
+\begin{definition}[Total preorder]
+    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{total preorder} iff it is a preorder and a connex relation, i.e.:
+    \begin{itemize}
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+        \item $\forall a, b \in P.\ a \sqsubseteq b \vee b \sqsubseteq a$ \tabto{7.3cm}(connexity, implies reflexivity)
+    \end{itemize}
+\end{definition}
 
-\subsubsection{Degree measure}
+\begin{definition}[Partial order]
+    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{partial order} iff it is antisymmetric preorder, i.e.:
+    \begin{itemize}
+        \item $\forall a, b \in P.\ a \sqsubseteq a$ \tabto{7.3cm}(reflexivity)
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+        \item $\forall a, b \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq a) \implies a = b$ \tabto{7.3cm}(antisymmetry)
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Total order]
+    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{total order} iff it is a partial order and a connex relation, i.e.:
+    \begin{itemize}
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+        \item $\forall a, b \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq a) \implies a = b$ \tabto{7.3cm}(antisymmetry)
+        \item $\forall a, b \in P.\ a \sqsubseteq b \vee b \sqsubseteq a$ \tabto{7.3cm}(connexity, implies reflexivity)
+    \end{itemize}
+\end{definition}
+
+A less-than-or-equal relation ($\leq$) on real numbers $\mathbb{R}$ is an example of a total order.
+
+\begin{definition}[Ranking]
+    A binary relation $\preceq$ on the set of nodes $V$ of some graph $G = (V, E)$ is a \textbf{ranking of a graph $G$ with respect to a metric $M$} iff it is a total order satisfying:
+
+    \[ \forall v_1, v_2 \in V.\ M(v_1) < M(v_2) \implies v_1 \preceq v_2 \]
+\end{definition}
+
+By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\mathcal{R} = \left{ 1, 2, \dots |V| \right}$, with the associated integers being called \textbf{ranks}.
+This definition basically means that ranking with respect to a metric is \textsl{a} ordering of nodes such that nodes with high metric values correspond to high ranks.
+
+Note, there may be multiple valid rankings if multiple nodes have the same metric value, in which case any mutual order of such nodes is permitted in the ranking.
+A ranking just assigns each node a rank (or a position) such that it doesn't violate the ordering by metric values.
+Also, note that each node must be assigned a \textsl{unique} rank, due to the antisymmetry property.
+\todo{add graph figure with ranked nodes (either labels or node size by rank)}
+
+
+\subsubsection*{Why do we need rankings of nodes?}
+
+\todo{maybe move to Methods}
+
+When studying robustness of graph metrics, we ultimately aim to assess how stable an analysis using metrics is, on a network coming from an ``imprecise'' source.
+By an imprecise source I mean a way of obtaining datasets that may lead to different network each time it is obtained.
+Essentially, networks from the real-world may depend on the measurement environment or on hyper parameters.
+
+It is clear that values of most metrics will naturally change with changing graph structure.
+So to measure robustness of a metric on a higher level, The Paper uses robustness measures which only depend on \textbf{ranking} of nodes with respect to values of the given metric.
+This may then result in high stability of a metric which identifies similar sets of \textsl{most important} nodes (whatever that means for this metric) across more perturbed graphs, even if the exact values across those graphs are different.
+
+\parspace
+
+For example, in protein networks that we evaluate metrics on, the graph itself depends on the \textsl{confidence threshold}.
+In particular, higher confidence thresholds generally lead to more sparse graphs.
+Then, the degree of nodes will principally decrease with increasing confidence threshold, however, degree happens to be a relatively stable metric in general, which means the sets of highest-degree nodes will be relatively similar across perturbed graphs.
+
+For different datasets there may other hyper- or hidden parameters in the procedure of obtaining the graph.
+The difference between graphs obtained from the same imprecise source are always some small perturbations that stable metrics should ideally be resilient to.
 
 \subsection{Robustness (The Paper)}
 
@@ -288,6 +360,16 @@ KONECT - The koblenz network collection\cite{Kunegis2013}
 Possible algorithms to use: \url{https://jgrapht.org/javadoc/org/jgrapht/generate/package-summary.html}
 
 
+\section{Terms and definitions}
+
+I will loosely clarify, concretise or define the following terms:
+
+\begin{description}
+    \item[Imprecise source]
+    ...
+\end{description}
+
+
 \section{Methods}
 
 In particular, this chapter will discuss mainly the following, in the theoretical framework:
@@ -297,3 +379,4 @@ In particular, this chapter will discuss mainly the following, in the theoretica
     \item common graph metrics that can evaluated on graphs
     \item ways to quantify robustness of metrics
 \end{itemize}
+
