@@ -1,3 +1,8 @@
+This chapter describes first the overall structure of the project, its technical requirements (which can and later be used as part of the evaluation) and then dives into the implementation of individual modules.
+
+I refer to this project by its name \textsl{graffs}.
+A working version is published on GitHub\footnote{\url{https://github.com/jjurm/graffs}} along with its source code.
+
 \section{Design goals}\label{sec:design-goals}
 
 This section describes in detail what technical requirements I set for the project.
@@ -5,6 +10,7 @@ This section describes in detail what technical requirements I set for the proje
 
 \subsection{Supported features}
 
+%TODO change framework to toolset/application/tool/system
 The main objective was to build a framework that can help study graph metrics, and their robustness in particular.
 
 
@@ -53,7 +59,7 @@ Using Kotlin in the project still allows including any libraries written in Java
 
 \subsection{Version control system}
 
-The source code of the \texttt{graffs} tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
+The source code of the \graffs tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
 
 The repository can be found at \url{https://github.com/jjurm/graffs}.
 
@@ -92,6 +98,8 @@ CircleCI
 
 \section{Data model}
 
+\subsection{Java Persistence API}
+
 \subsection{Entities}
 \begin{enumerate}
     \item GeneratedGraph
@@ -113,6 +121,10 @@ I considered the following formats of storing graph:
 
 
 \section{Loading graphs}
+
+\subsection{Edge files}
+
+\subsection{RData files}
 
 
 \section{Generating graphs}
