@@ -26,7 +26,7 @@ From now on, I will refer to it as \textsl{The Paper}.
 
 Protein networks is a large research field with a plethora of uses, and investigating them is important for the future of bioinformatics~\todo{examples + citations}.
 
-Most graph datasets obtained from the real-world, including protein interaction networks (PINs), are a result of experiments or observations which possibly introduce measurement errors, either systematic or random errors.
+Protein interaction networks (PINs), also called protein-protein interaction (PPI) networks, as well as most graph datasets obtained from the real-world, are a result of experiments or observations which possibly introduce measurement errors, either systematic or random errors.
 
 Also, protein networks have a specific structure: nodes represent proteins and weighted (or scored) edges represent the presence of interactions between proteins.
 It is assumed that such interactions are mutual, therefore the formed graph is undirected.
@@ -73,7 +73,7 @@ All three measures are based on rankings of nodes induced by node metrics, and n
 The Paper studies robustness of 25 different \textsl{node} metrics only, i.e. graph metrics which return one numerical value per node.
 
 
-\section{Mathematical background}
+\section{Mathematical background}\label{sec:math_background}
 
 In this section I review background material on graph theory and examining graph metric robustness, and fix terms I will use later to avoid ambiguity in further chapters.
 
@@ -191,12 +191,29 @@ For example, in \autoref{fig:disconnecting_graph}, the red nodes form a giant co
 
 Metrics are essentially functions of graphs that assign a value to each node.
 Metrics are used to quantify various properties of graphs, identifying important nodes in different contexts, describing graph structures, comparing different graphs and more.
-I study graph metrics as they are prominent and becoming even more crucial in analysing graphs of ever-growing real-world data.
+Metrics are crucial in analysing graphs of ever-growing real-world data.
+
+Mathematically speaking, if $\mathbb{G}$ is the set of all graphs $G = (V, E)$ with $V \subset \mathbb{V}$, then we can define the domain of metrics to be generally functions of graphs:
+\begin{equation}
+    \label{eqn:metric_type_def}
+    \mathbb{M} \eqdef \mathbb{G} \Rightarrow (\mathbb{V} \Rightarrow \mathbb{R})
+\end{equation}
+
+Evaluation of a metric on a graph then results in a \textsl{mapping} of nodes to real numbers.
+Therefore, for some metric $M \in \mathbb{M}$, some graph $G = (V, E)$, and a node $v \in V$:
+\begin{align}
+    &M(G) : \mathbb{V} \rightarrow \mathbb{R}\\
+    &M(G)(v) \in \mathbb{R}
+\end{align}
+
+However, for convenience, in the notation the graph argument is often left out when it is understood which graph the metric is applied to, resulting in $M(v) \in \mathbb{R}$.
+
+\parspace
 
 In this section I describe some of the metrics that are most significant for analysing protein interaction networks, and other graphs used in this project.
 The set of these metrics and their specific definition is based on The Paper\cite{Bozhilova2019}, and on~\cite{MartinHernandez2011}.
 
-The metrics below are defined for \textsl{undirected} graphs.
+All metrics below are defined for \textsl{undirected} graphs.
 
 \subsubsection{Degree}
 
@@ -301,7 +318,7 @@ A less-than-or-equal relation ($\leq$) on real numbers $\mathbb{R}$ is an exampl
     \[ \forall v_1, v_2 \in V.\ M(v_1) < M(v_2) \implies v_1 \preceq v_2 \]
 \end{definition}
 
-By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\mathcal{R} = \left{ 1, 2, \dots |V| \right}$, with the associated integers being called \textbf{ranks}.
+By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\mathcal{N} = \left{ 1, 2, \dots |V| \right}$, with the associated integers being called \textbf{ranks}.
 This definition basically means that ranking with respect to a metric is \textsl{a} ordering of nodes such that nodes with high metric values correspond to high ranks.
 
 Note, there may be multiple valid rankings if multiple nodes have the same metric value, in which case any mutual order of such nodes is permitted in the ranking.
@@ -326,38 +343,171 @@ This may then result in high stability of a metric which identifies similar sets
 
 For example, in protein networks that we evaluate metrics on, the graph itself depends on the \textsl{confidence threshold}.
 In particular, higher confidence thresholds generally lead to more sparse graphs.
-Then, the degree of nodes will principally decrease with increasing confidence threshold, however, degree happens to be a relatively stable metric in general, which means the sets of highest-degree nodes will be relatively similar across perturbed graphs.
+Then, the degree of nodes will principally decrease with increasing confidence threshold, however, degree happens to be a relatively stable metric in general, which means the sets of highest-degree nodes will be relatively similar across graphs of similar thresholds.
 
 For different datasets there may other hyper- or hidden parameters in the procedure of obtaining the graph.
 The difference between graphs obtained from the same imprecise source are always some small perturbations that stable metrics should ideally be resilient to.
 
-\subsection{Robustness (The Paper)}
+\subsection{Robustness}
+
+At the highest level where metrics are functions (\autoref{eqn:metric_type_def}), robustness measures can be regarded as functions from $\mathbb{M}$ (the domain of all metrics) to real numbers.
+\begin{equation}
+    \mathcal{R} \eqdef \mathbb{M} \Rightarrow \mathbb{R}
+\end{equation}
+
+There are two important points to be made.
+
+\subsubsection*{Robustness is empirical}
+
+First, the point of this dissertation is not to analyse the metrics purely as functions and thus reason about their robustness (which would indeed be difficult and not generalisable), instead, I analyse robustness \textbf{empirically}, by evaluating metrics on many graphs and deducing clues about how stable the values are across these multiple graphs.
+More on this is in the~\nameref{sec:methods} section.
+
+\subsubsection*{Per-graph robustness}
+
+Secondly, as the robustness measures are calculated by evaluating metrics on graphs, the robustness values will inherently depend on the graphs chosen.
+To mitigate this, one could theoretically analyse a metric on a huge set of all kinds of graphs (such as social networks, road networks, internet networks, protein interaction networks, etc.), but the two drawbacks are:
+\begin{itemize}
+    \item We can perhaps never construct a set covering all \textsl{kinds} of graphs, and that is in no way the point of this dissertation
+    \item The robustness of metrics would be highly dependent on the particular set of graphs it is tested on, as one metric may be, in general, more stable on dense graphs, where another metric may be unstable.
+\end{itemize}
+
+For this reason, I will mainly consider and analyse \textbf{robustness} of a metric \textbf{on a certain graph}.
+Hence, I will rather use this concept:
+\begin{equation}
+    \mathcal{R} \eqdef \mathbb{M} \times \mathbb{G} \Rightarrow \mathbb{R}
+\end{equation}
+
+Per-graph robustness is, indeed, not helpful in answering the question ``Which metrics can I rely on when analysing my custom dataset X?'' which is one of the main problems this project attempts to solve.
+\begin{itemize}
+    \item The Paper only calculates robustness by experiments on protein interaction networks (which presumably follow a similar structure), and then even dares to calculate the averaged robustness measures across a number of PINs.
+    \item In my dissertation, instead of coming up with more-general results, I rather focused on designing a way to analyse robustness of metrics, and built a \textsl{tool} that can perform this analysis generally on any given graph.
+\end{itemize}
+
+
+\section{Methods}\label{sec:methods}
+
+Taking the concepts defined in the~\nameref{sec:math_background} section, here I introduce methods that are then used to build the \graffs tool.
+
+Firstly, I explain what kind of datasets I used and where I obtained them from.
+Secondly, I describe what \textsl{small perturbations} on graphs are, and outline various ways to generate \textsl{perturbed} from a given graph.
+Next, I briefly write about applying metrics (as functions of graphs) to the perturbed graphs.
+Finally, I explain how robustness of metrics is calculated, and define multiple robustness measures.
 
 \subsection{Datasets}
 
-Although the framework built is universal and is not bound to any datasets, I chose a number of datasets for evaluation.
+Later in this section I present different kinds of publicly available graph datasets used in this project.
+In my work I distinguish two types of networks: scored and unscored.
+
+\subsubsection{Scored networks}
+
+In scored networks, the edges are weighted, with each weight, also called the \textbf{score}, representing the likelihood that the edge is true in the real world.
+
+The score is usually a real value between $0$ and $1$.
+
+\input{figures_gen/graph_example_scored_edges.tex}
+
+Scored protein networks are a good example of scored networks.
+\autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{ecoli} dataset where edges in the figures are drawn with the width proportional to their weight.
+
+Scored networks are useful for metric robustness analysis, becuase they naturally provide a way to introduce perturbations to the networks -- by adjusting the confidence threshold.
+
+\subsubsection{Unscored networks}
+
+Unscored networks are just unweighted graphs, therefore not conveying the information about confidence of edges.
+
+When we apply a confidence threshold to a scored network, discarding the scores, the resulting subgraph with a filtered set of edges is an unscored network.
+
+\parspace
+
+Although the \graffs tool built is universal and is not bound to any kind of dataset, I chose a number of datasets to work with to demonstrate the concept.
+
+There are multiple online sources providing interesting network datasets.
+
+\subsubsection{STRING database}
+
+\textit{STRING}\cite{Szklarczyk2019} is an open database of interactions between proteins.
+At the time of writing, the database contains over 24M different proteins from over 5K organisms, accounting for over $2 * 10^9$ interactions.
+
+Considering the whole graph as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
+
+Note that, generally, one cannot just consider a subgraph of a source graph (such as sub-graph of a social network), because the generated sub-graph doesn't have a meaning, and its characteristic heavily depend on how the graph was generated (for example, in a social network with communities, taking $n$ random nodes adjacent to a certain node would likely result in a more dense graph than taking $n$ random nodes of the whole graph).
+However, we can generate subgraphs of the whole STRING database by considering only proteins of concrete organism.
+Such full-organism networks then describe interactions of proteins within that organism.
+
+In my work, I evaluate robustness on the following datasets taken from the STRING database:
+\begin{itemize}
+    \item Plasmodium vivax (\textsl{pvivax}) -- 3255 nodes, 344691 edges
+    \item Escherichia coli (\textsl{ecoli}) -- 4144 nodes, 583440 edges
+    \item Saccharomyces cerevisiae (\textsl{yeast}) -- 6418 nodes, 939998 edges
+\end{itemize}
+
+The datasets are too large to be visualised as graphs.
+\todo{Figure X} presents the degree distribution of the datasets.
+\todo{Figure Y} shows the effect of thresholding on the average degree.
 
 \subsubsection{Stanford Large Network Dataset Collection}
 
 The \textit{Stanford Large Network Dataset Collection}\cite{Large2016} provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
 
-\subsubsection{STRING database}
+\todo{list used datasets}
 
-\textit{STRING}\cite{Szklarczyk2019} is an open database of interactions between proteins.
-At the time of writing, the database contains over 24M different proteins from over 5K organisms.
+\subsubsection{KONECT datasets}
 
-Considering the whole graph as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
+Another dataset collection: The koblenz network collection (KONECT)\cite{Kunegis2013} provides access to hundreds of network datasets of various types.
+Its covers diverse areas such as `social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks'.
 
-Note that, generally, one cannot just consider a sub-graph of a source graph (such as sub-graph of a social network), because the generated sub-graph doesn't have a semantic meaning, and its characteristic heavily depend on how the graph was generated (for example, $n$ friends of one person would result in a more connected graph than $n$ random people in the world).
-However, sub-graphs of the STRING database built from proteins of concrete organism can be used, because such graphs alone have a semantic meaning.
+\todo{list used datasets}
 
-\subsubsection{KONECT}
+\subsection{Perturbing graphs}
 
-KONECT - The koblenz network collection\cite{Kunegis2013}
+The goal of the dissertation is to empirically study how resilient a graph metric is to small perturbations in an input graph.
+This only relates to graphs that ``approximate'' the observed real-world structures, and are not their exact representation.
+For example, thresholded protein networks are not exact due to measurements.
+An online social network may not represent all relationships between people exactly because not all people or relationships may be registered, or some may be obsolete.
+Analysing robustness of a metric then means studying how much different the metric values \textsl{could be} if we performed the same experiment on other datasets coming from the same source -- datasets possibly measured by different techniques, at different times, with different methodology, or in a different universe.
 
-\subsubsection{Generating graphs}
+However, when studying a graph, usually, we are only given one dataset to work with, i.e. exactly one ``inexact'' structure of the real world.
+To simulate having multiple similar graphs, we need ways to ``generate'' those new similar graphs from a given input graph.
+I will refer to them as \textbf{perturbed} graphs generated from a \textbf{base} graph.
+Here, ``similar'' means that they convey the same real-world structure.
 
-Possible algorithms to use: \url{https://jgrapht.org/javadoc/org/jgrapht/generate/package-summary.html}
+At the high level, a graph generator $\xi$ is a function that takes a graph $G$ and a number $n$ and generates a sequence of $n$ graphs based on $G$.
+\begin{equation}
+    \mathlarger{\xi}(G) \generates{n} G_1, G_2, \dots, G_n
+\end{equation}
+
+Note: the~\nameref{sub:rank_continuity} robustness measure compares pairs of consecutively generated graphs (e.g. graphs thresholded at consecutive confidence threshold), that is why we define graph generator to output a sequence of graphs instead of a set.
+
+\subsubsection{Thresholding scored networks}
+
+For scored networks, such as protein networks, we can generate perturbed graphs by considering different confidence thresholds of the same scored network.
+Resulting is a sequence of graphs.
+
+Define a \textbf{linear thresholding} generator, given a minimum threshold $t_0$ and a maximum threshold $t_1$ as follows:
+\begin{align}
+    &\mathlarger{^T \mathlarger{\xi}}_{t_0}^{t_1}(G) \ \overset{n}{\hookrightarrow}\  \Set{ (V, E') }{i\in\Bbb Z:i\in[1,N] }, \\[10pt]
+    \text{where}~&E' = \Set{(v_1, v_2)\in V}{ c(v_1, v_2) > t_0 + \frac{i}{n - 1}(t_1 - t_0) }, \nonumber \\
+    &G = (V, E)~\text{is the base graph}, \nonumber \\
+    &c(v_1, v_2)~\text{is the confidence score of the edge $v_1 \leftrightarrow v_2$} \nonumber
+\end{align}
+
+\todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
+
+
+\subsubsection{Randomly removing edges}\label{sub:randomly_removing_edges}
+
+
+
+
+\subsection{Evaluating metrics}
+
+\subsection{Robustness measures}
+
+\subsubsection{Rank continuity}\label{sub:rank_continuity}
+
+\subsubsection{rank identifiability}
+
+\subsubsection{rank instability}
 
 
 \section{Terms and definitions}
