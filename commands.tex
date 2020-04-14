@@ -1,3 +1,5 @@
+%! Suppress = DiscouragedUseOfDef
+%! Suppress = Makeatletter
 
 % Definition
 
@@ -12,9 +14,10 @@
 \newtheorem{definition}{Definition}[section]
 
 % Math mode
-\newcommand{\Set}[2]{\{\, #1 \mid #2 \, \}}
+\newcommand{\Set}[2]{\left\{\, #1 \mid #2 \, \right\}}
 \newcommand\eqdef{\ \,\stackrel{\mathclap{\normalfont\mbox{def}}}{=}\,\ }
-\newcommand\generates[1]{\ \overset{#1}{\hookrightarrow}\ }
+\newcommand\generates[1]{\ \,\overset{#1}{\hookrightarrow}\,\ }
+\newcommand\integersto[1]{\left\{1, \dots, #1\right\}}
 
 % Snippets
 \newcommand{\citeneeded}{\colorbox{Apricot}{[?]}}

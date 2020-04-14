@@ -135,7 +135,7 @@ I used graphs like this for testing purposes when developing \graffs.
         Note that simple graphs have no loops.
         \item Define $\deg^-(v) = \left| \Set{v' \in V}{(v', v) \in E} \right|$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left| \Set{v' \in V}{(v, v') \in E} \right|$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
         If the graph is undirected, then $\deg^-(v) = \deg^+(v) = \deg(v)$ is called \textbf{degree}.
-        \item For $G = (V, E)$ with $V = {1, 2, \dots, n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
+        \item For $G = (V, E)$ with $V = \integersto{n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
         \[ a_{ij} = \begin{cases}
                         1, & \textnormal{if}\ (i, j) \in E \\
                         0, & \textnormal{if}\ (i, j) \notin E
@@ -233,7 +233,7 @@ Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i
 \end{definition}
 
 This is well-defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
-For disconnected graphs, I set $d(v, i) = |V|$ to follow the approach in The Paper.
+For disconnected graphs, I set $d(v, i) = \left\| V \right\|$ to follow the approach in The Paper.
 
 Closeness centrality measures the reciprocal of the \textsl{farness} of each node to other nodes.
 Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
@@ -276,21 +276,23 @@ Has similar meaning to closeness centrality, and a similar definition.
 
 \subsection{Ranking}
 
-\begin{definition}[Preorder]
-    Binary relation $\sqsubseteq$ on some set $P$ is a \textbf{preorder} iff it is reflexive and transitive, i.e.:
-    \begin{itemize}
-        \item $\forall a, b \in P.\ a \sqsubseteq a$ \tabto{7.3cm}(reflexivity)
-        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
-    \end{itemize}
-\end{definition}
+\todo{maybe move to~\nameref{sec:methods}}
 
-\begin{definition}[Total preorder]
-    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{total preorder} iff it is a preorder and a connex relation, i.e.:
-    \begin{itemize}
-        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
-        \item $\forall a, b \in P.\ a \sqsubseteq b \vee b \sqsubseteq a$ \tabto{7.3cm}(connexity, implies reflexivity)
-    \end{itemize}
-\end{definition}
+%\begin{definition}[Preorder]
+%    Binary relation $\sqsubseteq$ on some set $P$ is a \textbf{preorder} iff it is reflexive and transitive, i.e.:
+%    \begin{itemize}
+%        \item $\forall a, b \in P.\ a \sqsubseteq a$ \tabto{7.3cm}(reflexivity)
+%        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+%    \end{itemize}
+%\end{definition}
+%
+%\begin{definition}[Total preorder]
+%    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{total preorder} iff it is a preorder and a connex relation, i.e.:
+%    \begin{itemize}
+%        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+%        \item $\forall a, b \in P.\ a \sqsubseteq b \vee b \sqsubseteq a$ \tabto{7.3cm}(connexity, implies reflexivity)
+%    \end{itemize}
+%\end{definition}
 
 \begin{definition}[Partial order]
     A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{partial order} iff it is antisymmetric preorder, i.e.:
@@ -312,24 +314,33 @@ Has similar meaning to closeness centrality, and a similar definition.
 
 A less-than-or-equal relation ($\leq$) on real numbers $\mathbb{R}$ is an example of a total order.
 
-\begin{definition}[Ranking]
-    A binary relation $\preceq$ on the set of nodes $V$ of some graph $G = (V, E)$ is a \textbf{ranking of a graph $G$ with respect to a metric $M$} iff it is a total order satisfying:
+\begin{definition}[Ranking relation]
+    A binary relation $\preceq$ on the set of nodes $V$ of some graph $G = (V, E)$ is a \textbf{ranking relation induced by a metric $M$ on a graph $G$} iff it is a total order satisfying:
 
     \[ \forall v_1, v_2 \in V.\ M(v_1) < M(v_2) \implies v_1 \preceq v_2 \]
 \end{definition}
 
-By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\mathcal{N} = \left{ 1, 2, \dots |V| \right}$, with the associated integers being called \textbf{ranks}.
+By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\integersto{\left\| V \right\|}$, with the associated integers being called \textbf{ranks}.
 This definition basically means that ranking with respect to a metric is \textsl{a} ordering of nodes such that nodes with high metric values correspond to high ranks.
+
+\begin{definition}[Ranking (vector)]
+    A \textbf{ranking vector} $A^{\preceq}$, or a \textbf{ranking}, induced by a metric $M$ on a graph $G$ is a bijection $V \leftrightarrow \integersto{\left\| V \right\|}$ such that
+    \[ \forall v_1, v_2 \in V.\ v_1 \preceq v_2 \implies A^{\preceq}(v_1) \leq A^{\preceq}(v_2), \]
+    where $\preceq$ is a ranking relation of graph $G = (V, E)$ with respect to metric $M$.
+
+    Also, allow $A^{M(G)}$ as a shortened notation of a ranking induced by the metric $M$ on the graph $G$.
+    Therefore,
+    \[ A^{M(G)} : V \leftrightarrow \integersto{\left\| V \right\|} \]
+\end{definition}
 
 Note, there may be multiple valid rankings if multiple nodes have the same metric value, in which case any mutual order of such nodes is permitted in the ranking.
 A ranking just assigns each node a rank (or a position) such that it doesn't violate the ordering by metric values.
 Also, note that each node must be assigned a \textsl{unique} rank, due to the antisymmetry property.
+
 \todo{add graph figure with ranked nodes (either labels or node size by rank)}
 
 
 \subsubsection*{Why do we need rankings of nodes?}
-
-\todo{maybe move to Methods}
 
 When studying robustness of graph metrics, we ultimately aim to assess how stable an analysis using metrics is, on a network coming from an ``imprecise'' source.
 By an imprecise source I mean a way of obtaining datasets that may lead to different network each time it is obtained.
@@ -386,12 +397,15 @@ Per-graph robustness is, indeed, not helpful in answering the question ``Which m
 
 \section{Methods}\label{sec:methods}
 
-Taking the concepts defined in the~\nameref{sec:math_background} section, here I introduce methods that are then used to build the \graffs tool.
-
-Firstly, I explain what kind of datasets I used and where I obtained them from.
-Secondly, I describe what \textsl{small perturbations} on graphs are, and outline various ways to generate \textsl{perturbed} from a given graph.
-Next, I briefly write about applying metrics (as functions of graphs) to the perturbed graphs.
-Finally, I explain how robustness of metrics is calculated, and define multiple robustness measures.
+Taking the concepts defined in the~\nameref{sec:math_background} section, here I introduce methods that I used to build the \graffs tool.
+In particular, this section will discuss mainly the following, in the theoretical framework:
+\begin{itemize}
+    \item discuss \textsl{datasets}, their kinds, and where to find them
+    \item \textsl{small perturbations} on graphs, and ways to generate \textsl{perturbed} graphs
+    \item applying metrics to perturbed graphs
+    \item define overall rank, $k$-similarity, $\alpha$-relaxed $k$-similarity
+    \item ways to quantify \textsl{robustness} of metrics
+\end{itemize}
 
 \subsection{Datasets}
 
@@ -409,7 +423,11 @@ The score is usually a real value between $0$ and $1$.
 Scored protein networks are a good example of scored networks.
 \autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{ecoli} dataset where edges in the figures are drawn with the width proportional to their weight.
 
-Scored networks are useful for metric robustness analysis, becuase they naturally provide a way to introduce perturbations to the networks -- by adjusting the confidence threshold.
+Scored networks are useful for metric robustness analysis because they naturally provide a way to introduce perturbations to the networks -- by adjusting the confidence threshold.
+
+Using a scored network as-is just by discarding the confidence score is often unacceptable as a large proportion of the network's edges with close-to-zero confidence are likely to be false positives.
+Obtaining a functional network from an almost fully connected clique needs starting with a reasonable confidence threshold.
+Scored databases often state what is the reasonable range of the confidence scores.
 
 \subsubsection{Unscored networks}
 
@@ -425,7 +443,7 @@ There are multiple online sources providing interesting network datasets.
 
 \subsubsection{STRING database}
 
-\textit{STRING}\cite{Szklarczyk2019} is an open database of interactions between proteins.
+\textit{STRING}\cite{Szklarczyk2019} is an open database of scored interactions between proteins.
 At the time of writing, the database contains over 24M different proteins from over 5K organisms, accounting for over $2 * 10^9$ interactions.
 
 Considering the whole graph as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
@@ -445,6 +463,14 @@ The datasets are too large to be visualised as graphs.
 \todo{Figure X} presents the degree distribution of the datasets.
 \todo{Figure Y} shows the effect of thresholding on the average degree.
 
+The STRING database also provides guidance on what the reasonable ranges of the score values are, with the score being `the approximate probability that a predicted link exists between two enzymes (proteins)':
+\begin{itemize}
+    \item low confidence -- 0.15 (or better)
+    \item medium confidence -- 0.4
+    \item high confidence -- 0.7
+    \item highest confidence -- 0.9
+\end{itemize}
+
 \subsubsection{Stanford Large Network Dataset Collection}
 
 The \textit{Stanford Large Network Dataset Collection}\cite{Large2016} provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
@@ -453,7 +479,7 @@ The \textit{Stanford Large Network Dataset Collection}\cite{Large2016} provides 
 
 \subsubsection{KONECT datasets}
 
-Another dataset collection: The koblenz network collection (KONECT)\cite{Kunegis2013} provides access to hundreds of network datasets of various types.
+Another dataset collection: The Koblenz Network Collection (KONECT)~\cite{Kunegis2013} provides access to hundreds of network datasets of various types.
 Its covers diverse areas such as `social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks'.
 
 \todo{list used datasets}
@@ -478,55 +504,165 @@ At the high level, a graph generator $\xi$ is a function that takes a graph $G$ 
 
 Note: the~\nameref{sub:rank_continuity} robustness measure compares pairs of consecutively generated graphs (e.g. graphs thresholded at consecutive confidence threshold), that is why we define graph generator to output a sequence of graphs instead of a set.
 
+The exact value of $n$ is conceptually unimportant and is discussed in the~\nameref{ch:evaluation} chapter.
+
 \subsubsection{Thresholding scored networks}
 
-For scored networks, such as protein networks, we can generate perturbed graphs by considering different confidence thresholds of the same scored network.
-Resulting is a sequence of graphs.
+Various methods were proposed to choose a good baseline threshold, from fixing the value upfront\cite{MeunierAgerelatedChangesModular2009} or after examining a range of values\cite{vanWijkComparingBrainNetworks2010,HorstmannStateDependentProperties2010}, through maximising the threshold given some constraints\cite{BassettAdaptiveReconfigurationFractal2006}, to choosing a value optimising some criterion such as classification rate\cite{ZaninOptimizingFunctionalNetwork2012}.
+However, the confidence threshold value is still a hyper-parameter of the graph-obtaining process and robust metrics should respond similarly to all reasonable values of the chosen threshold.
 
-Define a \textbf{linear thresholding} generator, given a minimum threshold $t_0$ and a maximum threshold $t_1$ as follows:
+For scored networks, such as protein networks, we can generate perturbed graphs by considering different confidence thresholds (in a reasonable range) of the same scored network.
+Resulting is a sequence of graphs with decreasing density as the threshold increases.
+
+Define a \textbf{linear thresholding} graph generator, given a minimum threshold $t_0$ and a maximum threshold $t_1$, as follows:
 \begin{align}
-    &\mathlarger{^T \mathlarger{\xi}}_{t_0}^{t_1}(G) \ \overset{n}{\hookrightarrow}\  \Set{ (V, E') }{i\in\Bbb Z:i\in[1,N] }, \\[10pt]
-    \text{where}~&E' = \Set{(v_1, v_2)\in V}{ c(v_1, v_2) > t_0 + \frac{i}{n - 1}(t_1 - t_0) }, \nonumber \\
+    &\mathlarger{^T \mathlarger{\xi}}_{t_0}^{t_1}(G) \generates{n} (V, E')~\text{for}~i\in \integersto{n}, \\[10pt]
+    \text{where}~&E' = \Set{(v_1, v_2)\in E}{ c(v_1, v_2) > t_0 + \frac{i}{n - 1}(t_1 - t_0) }, \nonumber \\
     &G = (V, E)~\text{is the base graph}, \nonumber \\
     &c(v_1, v_2)~\text{is the confidence score of the edge $v_1 \leftrightarrow v_2$} \nonumber
 \end{align}
 
 \todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
 
-
 \subsubsection{Randomly removing edges}\label{sub:randomly_removing_edges}
 
+For unscored networks, we need to devise another way to simulate the effect of obtaining multiple similar graphs of the same real-world structure.
 
+One study in a similar context~\cite{BorgattiRobustnessCentralityMeasures2006} proposes four kinds of random error:
+\begin{itemize}[topsep=5pt,bottomsep=5pt]
+    \item deleting edges,
+    \item deleting nodes,
+    \item adding edges,
+    \item adding nodes (and connecting them to the graph by random edges),
+\end{itemize}
+all with a given small percentage of nodes or edges to be affected.
 
+The two adding methods (adding edges and adding nodes) both depend on the particular distribution for sampling new edges.
+We cannot easily generalise this pattern as different graphs have various structures and so no general edge sampling distribution would likely suit all graphs.
+Hence, I will stick to random deletion.
+
+Further, deleting nodes would possibly introduce more drastic and uncontrollable perturbations in densely connected networks, because deleting a high-degree node means deleting many edges -- a more extreme change in the structure than deleting a low-degree node.
+One could mitigate this by sampling nodes to delete according some clever non-uniform distribution, but then the distribution itself would be another hyper-parameter that can itself condition robustness measures.
+
+Another argument against using node deletion is that the 3 robustness measures proposed by The Paper are based on identifying and comparing sets of the most important nodes with respect to a given metric.
+Thus, random node deletion could have a significant bias in these robustness measures, whereas edge deletion does not pose direct bias the measures (only indirectly, by affecting metric values).
+
+For the reasons above, I decided to stick with random edge deletion.
+
+\parspace
+
+Define an \textbf{edge removing} graph generator, given a proportion of edges to delete $\alpha$ (deletion rate), as follows:
+\begin{align}
+    &\mathlarger{^{ER} \mathlarger{\xi}}_\alpha(G) \ \overset{n}{\hookrightarrow}\ (V, E')~\text{for}~i\in \integersto{n}, \\[10pt]
+    \text{where}~&E' = \Set{ e \in E }{ \chi_e > \alpha }, \nonumber \\
+    &\forall e \in E.\ \chi_e\sim\mathcal{U}(0,1) \nonumber
+\end{align}
+
+\todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
+
+Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
 
 \subsection{Evaluating metrics}
 
+To study how values of a metric change as we do small perturbations to the input graph, we first evaluate the metric on a number of perturbed graphs and then study the values across all graphs.
+
+Given a metric $M$, a source graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$, let \textbf{metric evaluation} refer to the application of a metric to a sequence of generated graphs:
+\begin{align}
+    M \overset{\mathlarger{\xi}}{\vdash} G_0 &\generates{n} M(G_1), M(G_2), \dots, M(G_n), \\[10pt]
+    \text{with}\qquad \mathlarger{\xi}(G_0) &\generates{n} G_1, G_2, \dots, G_n \nonumber
+\end{align}
+
+Finally, define \textsl{overall ranking} on a sequence of perturbed graphs that is calculated by first averaging node ranks over all induced rankings, and then ranking the averaged values.
+
+\begin{definition}[Overall ranking]
+    \label{def:overall_ranking}
+    An \textbf{overall ranking} $A^*$ of a metric $M$ on $n$ perturbed graphs generated using $\xi$ from a base graph $G_0$, is defined as:
+
+    \begin{align*}
+        &\mathlarger{A^*}\!\left( M \,|\, G_0, \xi, n \right) = A^{\operatorname{Avg}(G_0)} ,\\[5pt]
+        \text{where}~&\operatorname{Avg}(G) :\ \forall v \in V.\ v \,\mapsto\, \frac{1}{n} \sum_{i=1}^n A^{M(G_i)}(v)\, , \\
+        &\begin{aligned}
+             \text{where}~\,&\xi(G) \generates{n} G_1, \dots, G_n\,, \\
+             & G = (V, E)
+        \end{aligned}
+    \end{align*}
+\end{definition}
+
+In the definition, $A^{M(G_i)}$ is the ranking induced on one generated graph.
+For each node $v$, we calculate the average of $v$'s rank across all rankings, and call it a metric $\operatorname{Avg}$ (because it maps each node to a value).
+Then the overall ranking is just the ranking of the locally defined $\operatorname{Avg}$ metric.
+
 \subsection{Robustness measures}
+
+In this section I define the 3 robustness measures proposed by The Paper: rank continuity, rank identifiability, and rank instability.
+Then I explain how I extended two of the measures from scored networks to unscored networks.
+
+The Paper argues that in the context of bioinformatics, metrics are often used to identify key nodes of graphs, therefore it is natural to focus on the highest ranking nodes only.
+This is also true for networks that are just too large for each node to be inspected individually\citeneeded.
+Hence, in principle, the three robustness measures test how reliably a metric can identify a certain number of highest-ranked nodes across multiple perturbed graphs.
+
+
+For that, I will first define the notion of $k$-similarity and $\alpha$-relaxed $k$-similarity, as proposed in The Paper.
+Both similarities quantify a relationship between two rankings with meaning similar to rank correlation coefficient, but take into account the highest-ranked nodes only.
+
+\begin{definition}[$\boldsymbol{k}$-similarity]
+    The \textbf{$\boldsymbol{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
+    \[ M_k(A_\theta, A_\mu | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
+    where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.
+\end{definition}
+
+Note that this measure of rank similarity is symmetric.
+Also, as none of the used graph generator methods alter the set of nodes, we have $V_\theta = V_\mu = V^{\cap}$ (the sets of nodes of the two graphs will always be equal).
+
+The following $\alpha$-relaxed $k$-similarity accounts for situations where the two rankings don't carry the same meaning and are interpreted differently.
+
+\begin{definition}[$\boldsymbol{\alpha}$-relaxed $\boldsymbol{k}$-similarity]
+    The \textbf{$\boldsymbol{\alpha}$-relaxed $\boldsymbol{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\boldsymbol{a}\%$ highest ranking nodes in $A_\theta$:
+    \[ M_k^\alpha(A_\theta, A | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\boldsymbol{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
+    where $\alpha > 0$, $k, k\alpha \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A$.
+\end{definition}
+
+For example, if $A_\theta$ is obtained by ranking a perturbed graph and $A$ is an overall ranking (of multiple perturbed graphs), relaxed $k$-similarity may be used to identify whether the top 10 nodes overall, i.e. in $G$, are among the top 20 for the particular observed threshold, i.e. in $G_\theta$.
+
+\todo{other robustness measures:~\cite{BorgattiRobustnessCentralityMeasures2006}}
+
+\todo{The Paper also refers to:} Rank similarity typically measured by a rank correlation coefficient such as Spearman or Kendall.
+
+\parspace
+
+The following three rank robustness measures are defined given a metric $M$, a source graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$
 
 \subsubsection{Rank continuity}\label{sub:rank_continuity}
 
-\subsubsection{rank identifiability}
+Speaking of scored networks, rank continuity of a metric is the similarity between rankings induced at consecutive thresholds.
 
-\subsubsection{rank instability}
+\ldots
 
+\subsubsection{Rank identifiability}
 
-\section{Terms and definitions}
+\subsubsection{Rank instability}
 
-I will loosely clarify, concretise or define the following terms:
+\begin{definition}[Rank instability]
+    \newcommand*{\args}{\left(M \,|\, G, \xi, n \right)}\newcommand*{\astar}{A^*\!\args}
+    The \textbf{rank instability} measure is defined as:
 
-\begin{description}
-    \item[Imprecise source]
-    ...
-\end{description}
+    \begin{flalign}
+        &\operatorname{rank\ instability} \args \eqdef \frac{1}{\left\| U \right\|}\, \mathlarger{\sum}_{v \in U} \frac{range(v)}{n} & \\[10pt]
+        \text{where }\ & A = \astar \quad \text{(an overall ranking, by Definition~\ref{def:overall_ranking})}, \nonumber \\
+        & U = \Set{v \in V}{A(v) > 99\%n}, \nonumber \\[2pt]
+        & range : \begin{array}[t]{l}
+                      V \to \mathbb{R}\\ v \,\mapsto\,  \max\limits_{i \in \integersto{n}} \left( A^{M(G_i)}(v) \right)  -  \min\limits_{i \in \integersto{n}} \left( A^{M(G_i)}(v) \right)\ ,
+        \end{array} \nonumber \\
+        & G = (V, E) \nonumber
+    \end{flalign}
+\end{definition}
 
+In the definition, $U$ is the set of the $1\%$ highest ranked nodes according to the overall ranking $A^*\!\left(M \,|\, G, \xi, n \right)$.
+Then, for each node $v$, we calculate a range of \textsl{ranks} that the node holds across the generated graphs $G_1$ to $G_n$.
+Finally, the rank instability measure is calculated as the average scaled range for the $1\%$ highest ranked nodes in $U$.
 
-\section{Methods}
+\parspace
 
-In particular, this chapter will discuss mainly the following, in the theoretical framework:
-\begin{itemize}
-    \item collecting source datasets
-    \item generating distorted graphs
-    \item common graph metrics that can evaluated on graphs
-    \item ways to quantify robustness of metrics
-\end{itemize}
+\todo{include some cool figures to demonstrate the three robustness measures}
+
 

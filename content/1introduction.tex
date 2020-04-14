@@ -1,3 +1,5 @@
+I designed a way and built a tool to analyse robustness of graph metrics.
+
 \section{Motivation}
 
 This project was inspired by, and is based on the following paper~\cite{Bozhilova2019} (further referred to as ``The Paper'') which served as a kickoff point for this project.
@@ -45,17 +47,17 @@ These errors may then propagate and cause errors in graph metrics, which the use
 
 For example, the STRING database\cite{Szklarczyk2019} is an open collection that contains known and predicted protein-protein interactions.
 It provides confidence scores for edges, indicating how likely the dataset authors consider an interaction to be true, given the available evidence.
-A research paper by Bozhilova et al.~\cite{Bozhilova2019} demonstrates instability of some graph metrics on thresholded protein networks and proposes ways to assess robustness of graph metrics in such networks.
+The Paper~\cite{Bozhilova2019} demonstrates instability of some graph metrics on thresholded protein networks and proposes ways to assess robustness of graph metrics in such networks.
 
 
 \section{Metric robustness}
 
 Although the field of investigating graph metric robustness is novel and recent, a number of attempts tried to assess robustness or stability properties of graph metrics.
 Examples are analysing impact of errors on centrality measures in random networks~\cite{BorgattiRobustnessCentralityMeasures2006} or, more specifically, evaluating reproducibility of metrics on multi-temporal scans of human brain using coefficient of variation (CV), the repeatability coefficient (RC) and the intra class correlation (ICC)~\cite{VaessenEffectReproducibilityDifferent2010,DennisTestRetestReliabilityGraph2012}.
-A significant amount of research analysing reproducibility of metrics in uncertain brain networks appeared around 2011, summarised in`\cite{TelesfordExplorationGraphMetric2013}.
-The latest research led to development of methods for analysis of such uncertain data, estimating a ground-truth network structure from imperfect data ~\cite{Martin2016,Newman2018}, and a method to mitigate sensitivity of metrics on the selection of a threshold in scored networks~\cite{Drakesmith2015}.
+A significant amount of research analysing reproducibility of metrics in uncertain brain networks appeared around 2011, summarised in~\cite{TelesfordExplorationGraphMetric2013}.
+The latest research led to development of methods for analysis of such uncertain data, estimating a ground-truth network structure from imperfect data~\cite{Martin2016,Newman2018}, and even a method to mitigate sensitivity of metrics on the selection of a threshold in scored networks~\cite{Drakesmith2015}.
 
-One of the most recent researches on metric robustness is already mentioned work on protein interaction networks by Bozhilova et al.~\cite{Bozhilova2019}.
+One of the most recent researches on metric robustness is already mentioned work on protein interaction networks in The Paper.
 In the study they use 3 ways to quantify metric robustness, focusing on comparing node rankings induced by each metric at different score thresholds instead of the calculated values, arguing that comparing ranks better assesses robustness of metrics.
 Those robustness measures are: Rank continuity (comparing sets of highly ranked nodes between graphs derived from similar confidence threshold), Rank identifiability (considering overall ranks of all nodes and quantifying how much these ranks differ from ranks observed in graphs derived from various confidence thresholds), Rank instability (quantifying variation of ranks of top 1\% of nodes over a certain confidence range).
 
