@@ -220,8 +220,23 @@ All metrics below are defined for \textsl{undirected} graphs.
 One of the simplest metrics calculates the degree of each node.
 
 \begin{definition}[Degree (centrality)]
-    For a graph $G = (V, E)$, define \textbf{degree centrality} $DC : V \rightarrow \mathbb{N}$ to be
-    \[ DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right| \]
+    For a graph $G = (V, E)$, define degree centrality $DC : V \rightarrow \mathbb{N}$:
+    \begin{equation*}
+        DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right|
+    \end{equation*}
+\end{definition}
+
+\subsubsection{Betweenness centrality}
+
+One of the most common centrality measures, betweenness centrality, is calculated for each node $v$ as the number of all shortest paths passing through that node, for all pairs of nodes.
+If there are multiple shortest paths between a pair of nodes, the fraction of those passing through $v$ are considered.
+
+\begin{definition}[Betweenness centrality]
+    For a graph $G = (V, E)$, define betweenness centrality $B : V \rightarrow \mathbb{R}$:
+    \begin{equation*}
+        B(v) \eqdef \sum_{\substack{s,t \in V \\ s \ne v \ne t}} \frac{ \sigma_{st}(v) }{ \sigma_{st} }
+    \end{equation*}
+    where $\sigma_{st}$ is the number of shortest paths between $s$ and $t$, and $\sigma_{st}(v)$ is the number of those that pass through $v$.
 \end{definition}
 
 \subsubsection{Closeness centrality}
@@ -229,7 +244,7 @@ One of the simplest metrics calculates the degree of each node.
 Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
 
 \begin{definition}[Closeness centrality]
-    \[CC(v) = \frac{1}{\sum_{i \neq v} d(v, i)}\]
+    \[CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}\]
 \end{definition}
 
 This is well-defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
