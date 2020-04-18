@@ -108,7 +108,7 @@ Still, I may interchange the words \textsl{graph}, \textsl{network} and \textsl{
     \begin{itemize}[leftmargin=*]
         \item $G$ is \textbf{reflexive} iff $\forall v \in V.\ (v, v) \in E$
         \item $G$ is \textbf{anti-reflexive} iff $\forall v \in V.\ (v, v) \notin E$
-        \item $G$ is \textbf{undirected} (or equally \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Leftrightarrow (v_2, v_1) \in E$
+        \item $G$ is \textbf{undirected} (or equally \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Rightarrow (v_2, v_1) \in E$
         \item $G$ is \textbf{directed} iff it is not undirected
         \item $G$ is a \textbf{simple graph} iff it is undirected and anti-reflexive
     \end{itemize}
@@ -181,11 +181,6 @@ For example, in \autoref{fig:disconnecting_graph}, the red nodes form a giant co
 %There may be either an exact or inexact matching between nodes/edges in the graph and objects/relations in the real world where the data came from (depending on whether the dataset is an approximation of the world).
 %I will often use networks when describing knowledge of the world.
 %
-%\begin{definition}[Graph matching]
-%    Given two graphs $G = (V, E)$ and $G' = (V', E')$ derived from the same network, define \textbf{graph matching}, $M$, to be a bijection $V \leftrightarrow V'$ such that $(v, v') \in M$ iff $v, v'$ correspond to, or come from the same node in the network.
-%\end{definition}
-%
-%For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
 
 \subsection{Graph metrics}
 
@@ -521,6 +516,18 @@ Note: the~\nameref{sub:rank_continuity} robustness measure compares pairs of con
 
 The exact value of $n$ is conceptually unimportant and is discussed in the~\nameref{ch:evaluation} chapter.
 
+\parspace
+
+For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
+So, define:
+
+\begin{definition}[Graph matching]
+    Given two generated graphs graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ derived from the same network, define \textbf{graph matching}, $\leftrightsquigarrow$, to be a bijection between $V_1, V_2$ such that
+    \begin{equation}
+        \forall v_1 \in V_1, \forall v_2 \in V_2.\quad v_1 \leftrightsquigarrow v_2\quad\text{iff}\quad \begin{array}{l}v_1, v_2\ \text{correspond to the same }\\\text{node in the source network}\end{array}
+    \end{equation}
+\end{definition}
+
 \subsubsection{Thresholding scored networks}
 
 Various methods were proposed to choose a good baseline threshold, from fixing the value upfront\cite{MeunierAgerelatedChangesModular2009} or after examining a range of values\cite{vanWijkComparingBrainNetworks2010,HorstmannStateDependentProperties2010}, through maximising the threshold given some constraints\cite{BassettAdaptiveReconfigurationFractal2006}, to choosing a value optimising some criterion such as classification rate\cite{ZaninOptimizingFunctionalNetwork2012}.
@@ -534,17 +541,17 @@ Define a \textbf{linear thresholding} graph generator, given a minimum threshold
     &\mathlarger{^T \mathlarger{\xi}}_{t_0}^{t_1}(G) \generates{n} (V, E')~\text{for}~i\in \integersto{n}, \\[10pt]
     \text{where}~&E' = \Set{(v_1, v_2)\in E}{ c(v_1, v_2) > t_0 + \frac{i}{n - 1}(t_1 - t_0) }, \nonumber \\
     &G = (V, E)~\text{is the base graph}, \nonumber \\
-    &c(v_1, v_2)~\text{is the confidence score of the edge $v_1 \leftrightarrow v_2$} \nonumber
+    &c(v_1, v_2)~\text{is the confidence score of the edge $v_1\,\text{---}\,v_2$} \nonumber
 \end{align}
 
 \todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
 
-\subsubsection{Randomly removing edges}\label{sub:randomly_removing_edges}
+\subsubsection{Randomly removing edges}\label{sec:randomly_removing_edges}
 
 For unscored networks, we need to devise another way to simulate the effect of obtaining multiple similar graphs of the same real-world structure.
 
 One study in a similar context~\cite{BorgattiRobustnessCentralityMeasures2006} proposes four kinds of random error:
-\begin{itemize}[topsep=5pt,bottomsep=5pt]
+\begin{itemize}[topsep=5pt]
     \item deleting edges,
     \item deleting nodes,
     \item adding edges,
