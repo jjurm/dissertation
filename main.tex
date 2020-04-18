@@ -76,7 +76,7 @@
 %printf "%'d" "$(texcount -1 -utf8 -sum Part\ II\ Dissertation\ Draft.tex | tr -d '\n')"
 %\END
 
-\pdfsuppresswarningpagegroup=1
+%\pdfsuppresswarningpagegroup=1
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -123,10 +123,14 @@
 	language=Kotlin,
 	numbers=left,
 	numbersep=6pt,
-	numberstyle=\tiny\color{gray},
+	numberstyle=\fontsize{7pt}{7pt}\selectfont\color{gray},
 	showspaces=false,
 	showstringspaces=false,
-	tabsize=1
+	tabsize=1,
+	belowcaptionskip=8pt,
+	inputpath=listings/,
+	rangeprefix=//-----,rangesuffix=-----,
+	includerangemarker=false,
 }
 
 
@@ -202,6 +206,8 @@
 	\listoffigures
 
 	\listoftables
+
+	\lstlistoflistings
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% now for the chapters
