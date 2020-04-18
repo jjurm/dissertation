@@ -10,7 +10,8 @@ The purpose of this project is to develop a methodology and tool, i.e. a framewo
 
 \input{figures/overview_prop_diagram.tex}
 
-\graffs is a command-line tool written in Kotlin\citeneeded that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:overview_prop_diagram} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} where we start with graph datasets and end up with deductions about each metric's robustness.
+\graffs is a command-line tool written in Kotlin\citeneeded that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:overview_prop_diagram} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} where we start with graph datasets and end up with deductions about each metric's
+
 
 
 \section{Design goals}\label{sec:design-goals}
@@ -99,10 +100,15 @@ Performance-wise, Kotlin is comparable to Java.
     \item Safer, preventing a significant number of errors
     \item IDE-friendly, allowing the IDE to help with software engineering
     \item Allows more functional constructs than Java
-    \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, platform-independent, extensible.
+    \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, multi-threaded, platform-independent, secure and easily extensible.
 \end{itemize}
 
-Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiles the \texttt{.kt} files to Java-bytecode \texttt{.class} files.
+Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiler compiles \texttt{.kt} files to Java-bytecode \texttt{.class} files.
+Kotlin has most of its concepts and features adopted from Java, such as classes, polymorphism, inheritance, so these concepts I will freely use in this work.
+
+There is one notable feature of Kotlin: properties.
+Properties are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
+In UML diagrams in this work , instead of presenting fields and methods of each class, listed are methods and properties (in this order).
 
 \todo{diagram of Kotlin, Gradle, Git, server}
 
@@ -156,35 +162,115 @@ The project is structured in the following modules, using multi-project builds i
 \todo{diagram of code structure + modules + packages}
 
 
-\section{Main pipeline}
+\section{Data model}
+
+The \graffs tool uses a number of libraries to represent graphs in memory, define a persistence model, and store data in a relational database.
+This section explains how the data of the program is persisted.
+
+\subsection{Using GraphStream}
+
+Graphs in memory are stored and manipulated by the GraphStream library\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}
+
+\input{figures_gen/graphstream_diagram.tex}
+
+The library is based around the \texttt{Graph} interface, which provides access to \texttt{Node}s and \texttt{Edge}s of each graph.
+The most relevant interfaces are illustrated in \autoref{fig:graphstream_diagram} (heavily simplified).
+The interfaces also provide methods for changing graphs (adding/removing nodes, edges, attributes, etc.).
+In practice the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
+
+For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset.
+Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used to construct 
+Thus, I used \texttt{Node}'s ID coming from the original dataset is must be preserved in the generated graphs too, not just metric values for each node.
+
+The library provides a solid base for numerous features built in this project such as loading graph files, storing them in various formats, and visualisations.
+The GraphStream library allows working with dynamic graphs (changing over time), my project only uses static graphs.
+The library also contains an implementation of some graph metrics.
+
+Another benefit of GraphStream is that each node and edge implicitly has a unique identifier within the graph.
+This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same source graph.
+
+\parspace
+
+The \texttt{Graph} object from the GraphStream library stores (references) all nodes and edges, along with attributes.
+In my project, if a metric has been evaluated on a graph, the metric's value for each node is stored as the \texttt{Node}'s attribute, all contained within the \texttt{Graph} object.
+The attribute key is given my the metric name.
 
 
-\subsection{Data model}
+\subsection{Relational model}
+
+Data of the \graffs tool such as generated graphs, evaluated metrics, robustness measure results as well as any user-defined hyper-parameters are stored in a relational database system.
+The Java Persistence API (JPA)~\cite{BiswasJavaPersistenceAPI2016} provides an abstraction for accessing relational data from Java, Hibernate~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015} is a framework that implements the inteface.
+I used specifically the H2 database engine\cite{MuellerH2DatabaseEngine2006} as the underlying storage for Hibernate.
+This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
+
+\input{figures_gen/data_model_diagram.tex}
+
+\autoref{fig:data_model_diagram} shows the entities that the program persists in the database, as explained below.
+Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the user creates and later refers to with their name.
+\begin{description}
+    \item[\texttt{PerturbedGraph}]
+    stores a serialised version of the \texttt{Graph} object, inclucing all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
+    It also stores metadata, such as a hash which distinguishes the graph from other graphs beloging to the same \texttt{GraphCollection} coming from the same graph generator.
+    For example in the case graphs are generated by \hyperref[sec:randomly_removing_edges]{randomly removing edges}, the starting seed value of the generator of the particular graph is used as its hash.
+
+    \item[\texttt{GraphCollection}]
+    represents an (ordered) collection of \texttt{PerturbedGraph}s.
+    It also keeps track of which datasets the graphs were generated from.
+
+    \item[\texttt{GraphGenerator}]
+    is an entity that stores user-defined rules for generating graphs from a dataset.
+    Once a graph generator is defined and created, it can universally be used on multiple input datasets.
+    The parameters of a generator include the name of the method to use (such as \texttt{linear-thresholding}), number of perturbed graphs to generate from each input dataset, seed, and any additional numeric parameters specific to each generator.
+
+    \item[\texttt{Experiment}]
+    an entity that encapsulates a concept of evaluating multiple \textsl{robustness measures} of multiple \textsl{metrics} on multiple \textsl{datasets}, using a specific graph generator.
+    With an existing generator, the user defines an experiment, which can then be evaluated (see \autoref{sec:main_pipeline}).
+
+    \item[\texttt{Robustness}]
+    an entity that stores a single result of evaluating a \textsl{robustness measure} of a \textsl{metric}, on a set of perturbed graphs originating from a certain \textsl{dataset}.
+    These robustness values each belong to its parent \texttt{Experiment}.
+    Note (\autoref{fig:data_model_diagram}) that the four fields \texttt{experiment}, \texttt{dataset}, \texttt{metric}, \texttt{robustnessMeasure} together form the primary key.
+\end{description}
+
+
+\subsection{Java Persistence API}
+
+The Java Persistence API\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for management of relational data in Java.
+It describes ways in Java to specify schemas of relational databases and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
+\textsl{Persistence} is an abstract term referring to accessing, managing, and storing entities.
+
+The Hibernate framework~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015}, an object-relational mapping tool, provides a concrete implementation of JPA.
+I use Hibernate as the intermediate layer between the \texttt{core} module of \graffs and the underlying H2 database that is completely abstracted away from the \graffs code (\autoref{fig:orm_kotlin_h2_diagram}).
+
+\input{figures/orm_kotlin_h2_diagram.tex}
+
+\input{figures_gen/data_model_classes_diagram.tex}
+
+Further, \autoref{fig:data_model_classes_diagram} shows the underlying classes written in Kotlin that have the following function:
+\begin{itemize}[topsep=5pt]
+    \item define persistence model, seen in \autoref{fig:data_model_diagram}
+    \item provide Java/Kotlin object structure functioning as a mapping between persisted entities and
+\end{itemize}
+
+
+\subsection{H2 Database}
+
+I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based on SQL language) for storing entities, for the following reasons:
+\begin{itemize}[topsep=5pt]
+    \item Very fast, small footprint
+    \item Easily embeddable, as it implements the JDBC API (Java Database Connectivity API, used by Hibernate too)
+    \item Supports in-memory databases (good for testing)
+    \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
+\end{itemize}
+
+\subsubsection*{Storing graphs in database}
+
+Considering exporting graphs to various formats, I chose to store them purely as serialised \texttt{Graph} objects, including: \texttt{Node}s, \texttt{Edges}, their attributes.
 
 
 
 
-\subsubsection{Java Persistence API}
-
-\subsubsection{Entities}
-\begin{enumerate}
-    \item GeneratedGraph
-    \item MetricExperiment
-\end{enumerate}
-
-\subsubsection{Database}
-
-\subsubsubsection{Storing graphs in database}
-
-For evaluation of robustness, we need to be able to compare either values or ranks of values of a specific node between two generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset.
-Thus, a node ID originating from the original dataset must be stored, not just values of a metric for each node.
-
-I considered the following formats of storing graph:
-\begin{enumerate}
-    \item DGS
-    \item DOT - doesn't preserve node IDs
-\end{enumerate}
-
+\section{Main pipeline}\label{sec:main_pipeline}
 
 \subsection{Loading graphs}
 
