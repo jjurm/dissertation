@@ -38,6 +38,7 @@
 \usepackage{xspace}
 \usepackage{relsize}
 \usepackage{bm}
+\usepackage{bookmark}
 
 \addbibresource{refs.bib}
 
@@ -50,6 +51,7 @@
 %printf "%'d" "$(texcount -1 -utf8 -sum Part\ II\ Dissertation\ Draft.tex | tr -d '\n')"
 %\END
 
+\pdfsuppresswarningpagegroup=1
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -58,6 +60,8 @@
 
 \renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make more readable
 \setlist[itemize]{itemsep=0pt}
+\setlength{\parskip}{3pt}
+\renewcommand{\floatpagefraction}{.8}%
 
 % Better footnote handling
 \newcounter{footnoteInText}
@@ -67,9 +71,7 @@
 
 \setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{4}
-
 \graphicspath{{figures/}{figures_gen/}{images/}}
-
 \allowdisplaybreaks
 
 \include{commands}
@@ -120,7 +122,8 @@
 		
 	
 	\section*{Work completed}
-	
+
+		\todo{include courses this project was based on}
 		
 		\newpage
 		
