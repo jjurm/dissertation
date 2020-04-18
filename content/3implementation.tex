@@ -99,13 +99,14 @@ Performance-wise, Kotlin is comparable to Java.
     \item Concise, reducing the amount of boilerplate code
     \item Safer, preventing a significant number of errors
     \item IDE-friendly, allowing the IDE to help with software engineering
-    \item Allows more functional constructs than Java
+    \item Employs functional programming paradigms\cite{Bonev}
     \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, multi-threaded, platform-independent, secure and easily extensible.
 \end{itemize}
 
 Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiler compiles \texttt{.kt} files to Java-bytecode \texttt{.class} files.
 Kotlin has most of its concepts and features adopted from Java, such as classes, polymorphism, inheritance, so these concepts I will freely use in this work.
 
+Kotlin has a number of advanced features such as improved type safety and reduced boilerplate code\cite{JemerovKotlinAction2017}.
 There is one notable feature of Kotlin: properties.
 Properties are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
 In UML diagrams in this work , instead of presenting fields and methods of each class, listed are methods and properties (in this order).
@@ -178,16 +179,13 @@ The most relevant interfaces are illustrated in \autoref{fig:graphstream_diagram
 The interfaces also provide methods for changing graphs (adding/removing nodes, edges, attributes, etc.).
 In practice the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
 
-For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset.
-Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used to construct 
-Thus, I used \texttt{Node}'s ID coming from the original dataset is must be preserved in the generated graphs too, not just metric values for each node.
+For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see \autoref{def:graph_matching}).
+Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used for matching nodes between base and perturbed graphs.
+This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same base graph.
 
-The library provides a solid base for numerous features built in this project such as loading graph files, storing them in various formats, and visualisations.
+The GraphStream library also provides a solid base for numerous features in this project such as loading graph files, storing them in various formats, and visualisations.
 The GraphStream library allows working with dynamic graphs (changing over time), my project only uses static graphs.
 The library also contains an implementation of some graph metrics.
-
-Another benefit of GraphStream is that each node and edge implicitly has a unique identifier within the graph.
-This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same source graph.
 
 \parspace
 
@@ -246,11 +244,29 @@ I use Hibernate as the intermediate layer between the \texttt{core} module of \g
 
 \input{figures_gen/data_model_classes_diagram.tex}
 
-Further, \autoref{fig:data_model_classes_diagram} shows the underlying classes written in Kotlin that have the following function:
-\begin{itemize}[topsep=5pt]
-    \item define persistence model, seen in \autoref{fig:data_model_diagram}
-    \item provide Java/Kotlin object structure functioning as a mapping between persisted entities and
+Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{entity classes} written in Kotlin that have the following function:
+\begin{itemize}[topsep=5pt,label=$\boldsymbol{\rightarrow}$]
+    \item \textbf{Persistence model definition}, seen in \autoref{fig:data_model_diagram}
+
+    JPA provides a number of Java annotations to define entities (\texttt{@Entity}), their fields (\texttt{@Column}), constraints such as foreign key constraint (\texttt{@OneToMany}, \texttt{@ManyToOne} and others), and metadata such as rules for fetching data from database (e.g. \texttt{@Basic(fetch = FetchType.LAZY)} for lazy fetching of a field).
+
+    Processing the JPA annotations, Hibernate then abstracts away also operations such as creating and updating the database schema, which are configured in the \texttt{hibernate.cfg.xml} file.
+
+    \item \textbf{Metamodel generation}
+
+    Taking the annotated entity classes, Hibernate generates \textsl{metamodel} classes to allow writing type-safe queries.
+
+    For example, a code excerpt:
+    \texttt{criteria.select(criteria.from<Experiment>(Experiment::class.java).get<String>(Experiment_.name))}... %TODO
+
+    \item \textbf{Object-relational mapping}
+
+    The classes (\autoref{fig:data_model_classes_diagram}) themselves carry the data managed by Hibernate.
+    This means that other modules such as \texttt{generators} and \texttt{robustness} can use object of these classes as they are, while they are also managed by Hibernate.
 \end{itemize}
+
+
+%TODO entity class example
 
 
 \subsection{H2 Database}
@@ -265,7 +281,7 @@ I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based 
 
 \subsubsection*{Storing graphs in database}
 
-Considering exporting graphs to various formats, I chose to store them purely as serialised \texttt{Graph} objects, including: \texttt{Node}s, \texttt{Edges}, their attributes.
+Considering exporting graphs to various formats, I chose to store them purely as serialised \texttt{Graph} objects, including: \texttt{Node}s, \texttt{Edges}, and their attributes.
 
 
 

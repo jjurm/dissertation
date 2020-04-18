@@ -521,10 +521,10 @@ The exact value of $n$ is conceptually unimportant and is discussed in the~\name
 For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
 So, define:
 
-\begin{definition}[Graph matching]
+\begin{definition}[Graph matching]\label{def:graph_matching}
     Given two generated graphs graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ derived from the same network, define \textbf{graph matching}, $\leftrightsquigarrow$, to be a bijection between $V_1, V_2$ such that
     \begin{equation}
-        \forall v_1 \in V_1, \forall v_2 \in V_2.\quad v_1 \leftrightsquigarrow v_2\quad\text{iff}\quad \begin{array}{l}v_1, v_2\ \text{correspond to the same }\\\text{node in the source network}\end{array}
+        \forall v_1 \in V_1, \forall v_2 \in V_2.\quad v_1 \leftrightsquigarrow v_2\quad\text{iff}\quad \begin{array}{l}v_1, v_2\ \text{correspond to the same }\\\text{node in the base graph}\end{array}
     \end{equation}
 \end{definition}
 
@@ -588,7 +588,7 @@ Unlike linear thresholding, edge removing is applicable to unscored networks (an
 
 To study how values of a metric change as we do small perturbations to the input graph, we first evaluate the metric on a number of perturbed graphs and then study the values across all graphs.
 
-Given a metric $M$, a source graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$, let \textbf{metric evaluation} refer to the application of a metric to a sequence of generated graphs:
+Given a metric $M$, a base graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$, let \textbf{metric evaluation} refer to the application of a metric to a sequence of generated graphs:
 \begin{align}
     M \overset{\mathlarger{\xi}}{\vdash} G_0 &\generates{n} M(G_1), M(G_2), \dots, M(G_n), \\[10pt]
     \text{with}\qquad \mathlarger{\xi}(G_0) &\generates{n} G_1, G_2, \dots, G_n \nonumber
@@ -652,7 +652,7 @@ For example, if $A_\theta$ is obtained by ranking a perturbed graph and $A$ is a
 
 \parspace
 
-The following three rank robustness measures are defined given a metric $M$, a source graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$
+The following three rank robustness measures are defined given a metric $M$, a base graph $G_0$, a graph generator $\xi$, and the number of perturbed graphs $n$
 
 \subsubsection{Rank continuity}\label{sub:rank_continuity}
 
