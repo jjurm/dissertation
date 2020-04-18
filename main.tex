@@ -1,7 +1,6 @@
 % Computer Science Tripos Part II project dissertation
 \documentclass[12pt,a4paper,twoside,openany]{report}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
 \usepackage[
 	backend=biber,
 	natbib=true,
@@ -39,8 +38,34 @@
 \usepackage{relsize}
 \usepackage{bm}
 \usepackage{bookmark}
+\usepackage{listings}
 
 \addbibresource{refs.bib}
+
+%\setmonofont{JetBrainsMono}[
+%	Path = fonts/JetBrainsMono-1.0.3/ttf/,
+%	Extension = .ttf,
+%	UprightFont = *-Regular,
+%	BoldFont = *-Bold,
+%	ItalicFont = *-Italic,
+%	BoldItalicFont = *-Bold-Italic,
+%]
+\newfontfamily\jbmono{JetBrainsMono}[
+	Path = fonts/JetBrainsMono-1.0.3/ttf/,
+	Extension = .ttf,
+	NFSSFamily = jbmono,
+	UprightFont = *-Regular,
+	BoldFont = *-Bold,
+	ItalicFont = *-Italic,
+	BoldItalicFont = *-Bold-Italic,
+	FontFace = {sb}{n}{*-Medium},
+	FontFace = {sb}{it}{*-Medium-Italic},
+	FontFace = {eb}{n}{*-ExtraBold},
+	FontFace = {eb}{it}{*-ExtraBold-Italic},
+	Scale = 0.87,
+]
+\renewcommand{\ttdefault}{jbmono}
+
 
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
@@ -74,19 +99,50 @@
 \graphicspath{{figures/}{figures_gen/}{images/}}
 \allowdisplaybreaks
 
+
+\lstdefinelanguage{Kotlin}{
+	comment=[l]{//},
+	commentstyle={\color{gray}\ttfamily},
+	emph={delegate, filter, first, firstOrNull, forEach, lazy, map, mapNotNull, println, return@},
+	emphstyle={\color{OrangeRed}},
+	identifierstyle=\color{black},
+	keywords={abstract, actual, as, as?, break, by, class, companion, continue, data, do, dynamic, else, enum, expect, false, final, for, fun, get, if, import, in, interface, internal, is, null, object, override, package, private, public, return, set, super, suspend, this, throw, true, try, typealias, val, var, vararg, when, where, while},
+	keywordstyle={\color{NavyBlue}\bfseries},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+	morestring=[s]{"""*}{*"""},
+	ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String},
+	ndkeywordstyle={\color{BurntOrange}\bfseries},
+	sensitive=true,
+	stringstyle={\color{ForestGreen}\ttfamily},
+}
+\lstset{
+	basicstyle=\jbmono\fontsize{10pt}{11pt}\selectfont\color{black},
+	breaklines=true,
+	frame=single,
+	language=Kotlin,
+	numbers=left,
+	numbersep=6pt,
+	numberstyle=\tiny\color{gray},
+	showspaces=false,
+	showstringspaces=false,
+	tabsize=1
+}
+
+
 \include{commands}
 
 \begin{document}
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Title
-	
+
 	\pagestyle{empty}
-	
+
 	\begin{center}
 	    \LARGE \textbf{Juraj Mi\v{c}ko}
 	\end{center}
-	
+
 	\vspace*{60mm}
 	\begin{center}
 		\Huge
@@ -95,14 +151,14 @@
 		Jesus College \\[5mm]
 		\today  % today's date
 	\end{center}
-	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Proforma, table of contents and list of figures
-	
+
 	\pagestyle{plain}
-	
+
 	\chapter*{Proforma}
-	
+
 	{\large
 		\begin{tabular}{ll}
 			Name:               & \textbf{Juraj Mi\v{c}ko}							\\
@@ -116,73 +172,73 @@
 		\end{tabular}
 	}
 	\fntext{This word count was computed using \texttt{script}}
-	
+
 	\section*{Original aims of the project}
-	
-		
-	
+
+
+
 	\section*{Work completed}
 
 		\todo{include courses this project was based on}
-		
+
 		\newpage
-		
+
 	\section*{Special difficulties}
-	
-		
-		
+
+
+
 	\section*{Declaration of originality}
-	
+
 		I, Juraj Mi\v{c}ko of Jesus College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
-	
+
 		\bigskip
 		\leftline{Signed: \textit{Juraj Mi\v{c}ko}}
-		
+
 		\medskip
 		\leftline{Date: \today}
-	
+
 	\tableofcontents
-	
+
 	\listoffigures
-	
+
 	\listoftables
-	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% now for the chapters
-	
+
 	\pagestyle{headings}
-	
+
 	\chapter{Introduction}\label{ch:introduction}
 	\input{content/1introduction.tex}
-	
+
 	\chapter{Preparation}\label{ch:preparation}
 	\input{content/2preparation.tex}
-	
+
 	\chapter{Implementation}\label{ch:implementation}
 	\input{content/3implementation.tex}
-	
+
 	\chapter{Evaluation}\label{ch:evaluation}
 	\input{content/4evaluation.tex}
-	
+
     \chapter{Conclusion}\label{ch:conclusion}
     \input{content/5conclusion.tex}
 
 	\input{content/0scratch.tex}
 
-	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the bibliography
 	%\addcontentsline{toc}{chapter}{Bibliography}
 	%\bibliographystyle{ieeetr}
 	%\bibliography{refs}
 	\printbibliography[heading=bibintoc]
-	
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% the appendices
 	\appendix
-			
+
 	\chapter{Project Proposal}\label{ch:proposal}
-	
+
 	\input{proposal.tex}
 
 \end{document}
