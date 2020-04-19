@@ -13,7 +13,6 @@ The purpose of this project is to develop a methodology and tool, i.e. a framewo
 \graffs is a command-line tool written in Kotlin\citeneeded that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:overview_prop_diagram} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} where we start with graph datasets and end up with deductions about each metric's
 
 
-
 \section{Design goals}\label{sec:design-goals}
 
 The following are technical requirements I set for the project.
@@ -89,7 +88,6 @@ In this section I explain major decisions about the platform.
 
 \todo{Work In Progress from here below...}
 
-
 \subsection{Kotlin language}
 
 I used the programming language \textbf{Kotlin}, mainly for the following reasons.
@@ -136,8 +134,6 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 
 \todo{maybe put all subsections below somewhere at the end of Implementation}
 
-
-
 \subsection{Remote computing cluster}
 
 I used a remote computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
@@ -145,8 +141,6 @@ I used a remote computing facility provided by the Systems Research Group (\url{
 In particular, I worked with the server \texttt{rio.cl.cam.ac.uk} with \todo{include computing characteristics}.
 
 \subsubsection{Setting up the cluster}
-
-
 
 \subsection{Project modules}
 
@@ -182,7 +176,6 @@ The following entities highligh the main concept, and there are some more entiti
 
 A user can create and manage \textsl{graph generators} and \textsl{experiments} using the command line interface (see \autoref{sec:cli}).
 
-
 \subsection{Using GraphStream}
 
 Graphs in memory are stored and manipulated by the GraphStream library\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}
@@ -207,7 +200,6 @@ The library also contains an implementation of some graph metrics.
 The \texttt{Graph} object from the GraphStream library stores (references) all nodes and edges, along with attributes.
 In my project, if a metric has been evaluated on a graph, the metric's value for each node is stored as the \texttt{Node}'s attribute, all contained within the \texttt{Graph} object.
 The attribute key is given my the metric name.
-
 
 \subsection{Relational model}
 
@@ -244,7 +236,6 @@ Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the
     These robustness values each belong to its parent \texttt{Experiment}.
     Note (\autoref{fig:data_model_diagram}) that the four fields \texttt{experiment}, \texttt{dataset}, \texttt{metric}, \texttt{robustnessMeasure} together form the primary key.
 \end{description}
-
 
 \subsection{Java Persistence API}
 
@@ -293,9 +284,7 @@ Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{e
 
 \autoref{lst:kotlin_experiment_entity} presents a full code listing of the \texttt{Experiment} entity.
 
-\lstinputlisting[label={lst:kotlin_experiment_entity}, caption={The \texttt{Experiment} class written in Kotlin. Note especially the annotations which are enough to define the JPA data model.}, float, firstline=9]{Experiment.kt}
-
-
+\lstinputlisting[label={lst:kotlin_experiment_entity}, caption={The \texttt{Experiment} class written in Kotlin. Note especially the annotations which are enough to define the JPA data model.}, float, firstline=11]{Experiment.kt}
 
 \subsection{H2 Database}
 
@@ -312,16 +301,15 @@ I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based 
 Considering exporting graphs to various formats, I chose to store them purely as serialised \texttt{Graph} objects, including: \texttt{Node}s, \texttt{Edges}, and their attributes.
 
 
-
-
 \section{Main pipeline}\label{sec:main_pipeline}
+
+\input{figures/main_data_flow.tex}
 
 \subsection{Loading graphs}
 
 \subsubsection{Edge files}
 
 \subsubsection{RData files}
-
 
 \subsection{Generating graphs}
 
@@ -338,27 +326,23 @@ Now, $G_0, G_1$ are different but describe the same structure of people in the w
 These nodes will have important meaning for definition of the robustness function, because the pairs of corresponding nodes describe the same entities of the real world.
 Thus, we can observe how a graph metric behaves for a particular node in different graphs.
 
-
 \subsubsection{Random edge deletion}
 
 \subsubsection{Thresholding edges of protein graphs}
 
-
 \subsection{Evaluating metrics}
 
-
 \subsection{Metric robustness}
-
 
 \subsection{Visualising graphs}
 
 
 \section{Parallelism using Kotlin coroutines}
 
+
 \section{Command line interface}\label{sec:cli}
 
 \todo{hierarchical diagram of nested command groups and their options}
-
 
 
 \section{Testing}
