@@ -494,7 +494,7 @@ Its covers diverse areas such as `social networks, hyperlink networks, authorshi
 
 \todo{list used datasets}
 
-\subsection{Perturbing graphs}
+\subsection{Perturbing graphs}\label{sec:perturbing_graphs}
 
 The goal of the dissertation is to empirically study how resilient a graph metric is to small perturbations in an input graph.
 This only relates to graphs that ``approximate'' the observed real-world structures, and are not their exact representation.
@@ -584,7 +584,7 @@ Define an \textbf{edge removing} graph generator, given a proportion of edges to
 
 Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
 
-\subsection{Evaluating metrics}
+\subsection{Evaluating metrics}\label{sec:evaluating_metrics}
 
 To study how values of a metric change as we do small perturbations to the input graph, we first evaluate the metric on a number of perturbed graphs and then study the values across all graphs.
 
@@ -614,7 +614,7 @@ In the definition, $A^{M(G_i)}$ is the ranking induced on one generated graph.
 For each node $v$, we calculate the average of $v$'s rank across all rankings, and call it a metric $\operatorname{Avg}$ (because it maps each node to a value).
 Then the overall ranking is just the ranking of the locally defined $\operatorname{Avg}$ metric.
 
-\subsection{Robustness measures}
+\subsection{Robustness measures}\label{sec:robustness_measures}
 
 In this section I define the 3 robustness measures proposed by The Paper: rank continuity, rank identifiability, and rank instability.
 Then I explain how I extended two of the measures from scored networks to unscored networks.
@@ -627,8 +627,8 @@ Hence, in principle, the three robustness measures test how reliably a metric ca
 For that, I will first define the notion of $k$-similarity and $\alpha$-relaxed $k$-similarity, as proposed in The Paper.
 Both similarities quantify a relationship between two rankings with meaning similar to rank correlation coefficient, but take into account the highest-ranked nodes only.
 
-\begin{definition}[$\boldsymbol{k}$-similarity]
-    The \textbf{$\boldsymbol{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
+\begin{definition}[$\bm{k}$-similarity]
+    The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
     \[ M_k(A_\theta, A_\mu | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
     where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.
 \end{definition}
@@ -638,9 +638,9 @@ Also, as none of the used graph generator methods alter the set of nodes, we hav
 
 The following $\alpha$-relaxed $k$-similarity accounts for situations where the two rankings don't carry the same meaning and are interpreted differently.
 
-\begin{definition}[$\boldsymbol{\alpha}$-relaxed $\boldsymbol{k}$-similarity]
-    The \textbf{$\boldsymbol{\alpha}$-relaxed $\boldsymbol{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\boldsymbol{a}\%$ highest ranking nodes in $A_\theta$:
-    \[ M_k^\alpha(A_\theta, A | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\boldsymbol{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
+\begin{definition}[$\bm{\alpha}$-relaxed $\bm{k}$-similarity]
+    The \textbf{$\bm{\alpha}$-relaxed $\bm{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\bm{a}\%$ highest ranking nodes in $A_\theta$:
+    \[ M_k^\alpha(A_\theta, A | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
     where $\alpha > 0$, $k, k\alpha \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A$.
 \end{definition}
 

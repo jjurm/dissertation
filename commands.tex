@@ -31,6 +31,22 @@
 \g@addto@macro\@floatboxreset\centering
 \makeatother
 
+% Directory trees
+\def\FTdir(#1,#2,#3){%
+    \FTfile(#1,{{\color{black!40!white}\faFolderOpen}\hspace{0.2em}#3})
+    (tmp.west)++(0.8em,-0.4em)node(#2){}
+    (tmp.west)++(1.5em,0)
+    ++(0,-1.3em)
+}
+\def\FTfile(#1,#2){%
+    node(tmp){}
+    (#1|-tmp)++(1.0em,0)
+    node(tmp)[anchor=west,black]{\tt\fontsize{10pt}{10pt}\selectfont #2}
+    (#1)|-(tmp.west)
+    ++(0,-1.2em)
+}
+\def\FTroot{tmp.west}
+
 % Code listing
 \makeatletter
 \newcommand*\idstyle{%

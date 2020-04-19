@@ -134,9 +134,9 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 
 \todo{maybe put all subsections below somewhere at the end of Implementation}
 
-\subsection{Remote computing cluster}
+\subsection{Computing cluster}\label{sec:computing_cluster}
 
-I used a remote computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
+I used a remote high-performance computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
 
 In particular, I worked with the server \texttt{rio.cl.cam.ac.uk} with \todo{include computing characteristics}.
 
@@ -187,7 +187,7 @@ The most relevant interfaces are illustrated in \autoref{fig:graphstream_diagram
 The interfaces also provide methods for changing graphs (adding/removing nodes, edges, attributes, etc.).
 In practice the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
 
-For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see \autoref{def:graph_matching}).
+For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see definition~\ref{def:graph_matching}).
 Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used for matching nodes between base and perturbed graphs.
 This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same base graph.
 
@@ -251,7 +251,7 @@ I use Hibernate as the intermediate layer between the \texttt{core} module of \g
 \input{figures_gen/data_model_classes_diagram.tex}
 
 Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{entity classes} written in Kotlin that have the following functions:
-\begin{itemize}[topsep=5pt,label=$\boldsymbol{\rightarrow}$]
+\begin{itemize}[topsep=5pt,label=$\bm{\rightarrow}$]
     \item \textbf{Data model definition}, seen in \autoref{fig:data_model_diagram}
 
     JPA provides a number of Java annotations to define entities (\texttt{@Entity}), their fields (\texttt{@Column}), constraints such as foreign key constraint (\texttt{@OneToMany}, \texttt{@ManyToOne} and others), and metadata such as rules for fetching data from database (e.g. \texttt{@Basic(fetch = FetchType.LAZY)} for lazy fetching of a field).
@@ -303,9 +303,54 @@ Considering exporting graphs to various formats, I chose to store them purely as
 
 \section{Main pipeline}\label{sec:main_pipeline}
 
+In this section I explain the steps of \graffs involved in calculating robustness measures of metrics.
+In summary, the normal steps are:
+\begin{enumerate}
+    \item \textbf{Obtain datasets}, for example use demo datasets downloadable by the \graffs tool or provide any custom datasets
+    \item \textbf{Define graph generator}, i.e. a way to generate new graphs from these datasets
+    \item \textbf{Define an experiment} specifying a set of datasets to start with, a graph generator to use, a set of metrics to asses, and a set of robustness measures to evaluate stability of those metrics.
+    \item \textbf{Run the experiment} computation (a computationally intensive task, which may, depending on the inputs and the environment, run in the order of magnitude of hours)
+
+    This encompasses the following:
+    \begin{enumerate}[label=\alph*.]
+        \item \textbf{Generate perturbed graphs} (according to \autoref{sec:perturbing_graphs})
+        \item \textbf{Calculate metric values} on the generated graphs, i.e. calculating a real number ($\mathbb{R}$) for each metric for each node in each generated graph (according to \autoref{sec:evaluating_metrics}).
+        \item \textbf{Calculate robustness measures} for each metric, on collated perturbed graphs of each dataset
+    \end{enumerate}
+\end{enumerate}
+
+All results, namely generated graphs with nodes including calculated values of each metric, and robustness measure results, are then stored in the database.
+
 \input{figures/main_data_flow.tex}
 
-\subsection{Loading graphs}
+Running the experiment is a computationally intensive task, mainly due to metric evaluation (which certainly depends on the chosen metrics).
+To mitigate this, I employed the following:
+\begin{itemize}[topsep=5pt]
+    \item Optimised the program for computation speed by applying performance engineering principles \todo{elaborate}
+    \item Allow parallel computation
+    \item I ran extensive experiments on a high-performance computing facility (from \autoref{sec:computing_cluster})
+\end{itemize}
+
+\autoref{fig:main_data_flow} illustrates the flow of data across the above-mentioned steps.
+
+\subsection{Loading datasets}
+
+Datasets are located, and are expected to be located, in the `data' directory in the \graffs's working directory (i.e. where the program is run).
+Each sub-directory represents a dataset identified by the sub-directory's name.
+\graffs supports loading files of two different types of files:
+
+\begin{description}
+    \item Edge files -- text format with each line containing a pair of adjacent nodes
+    \item RData files -- binary files that store objects created in the R language~\cite{RCoreTeamLanguageEnvironmentStatistical2009}
+\end{description}
+
+\input{figures_gen/data_dir_structure.tex}
+
+In each dataset's directory, the program looks for a file that ends with either \texttt{.RData} or \texttt{.txt}, in this order.
+Datasets may additionally contain an \texttt{info.txt} file holding a human-readable description of the dataset (that is printed in the command-line interface when the dataset is loaded).
+\autoref{fig:data_dir_structure} shows an example directory structure.
+
+
 
 \subsubsection{Edge files}
 
