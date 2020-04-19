@@ -30,3 +30,50 @@
 \makeatletter
 \g@addto@macro\@floatboxreset\centering
 \makeatother
+
+% Code listing
+\makeatletter
+\newcommand*\idstyle{%
+    \expandafter\id@style\the\lst@token\relax
+}
+\def\id@style#1#2\relax{%
+    \ifcat#1\relax\else
+    \ifnum`#1=\uccode`#1%
+    \bfseries\color{black}
+    \fi
+    \fi
+}
+\makeatother
+
+\lstdefinelanguage{Kotlin}{
+    comment=[l]{//},
+    commentstyle={\color{gray}\ttfamily},
+    emph={delegate, filter, first, firstOrNull, forEach, lazy, map, mapNotNull, println, return@},
+    emphstyle={\color{OrangeRed}},
+    identifierstyle=\idstyle,
+    keywords={abstract, actual, as, as?, break, by, class, companion, continue, data, do, dynamic, else, enum, expect, false, final, for, fun, get, if, import, in, interface, internal, is, null, object, override, package, private, public, return, set, super, suspend, this, throw, true, try, typealias, val, var, vararg, when, where, while},
+    keywordstyle={\color{NavyBlue}\bfseries},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[s]{"""*}{*"""},
+    ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, @Entity, @ManyToOne, @ElementCollection, @OneToMany, @LazyCollection},
+    ndkeywordstyle={\color{BurntOrange}\bfseries},
+    sensitive=true,
+    stringstyle={\color{ForestGreen}\ttfamily},
+}
+\lstset{
+    basicstyle=\jbmono\fontsize{10pt}{11pt}\selectfont\color{black},
+    breaklines=true,
+    frame=single,
+    language=Kotlin,
+    numbers=left,
+    numbersep=6pt,
+    numberstyle=\fontsize{7pt}{7pt}\selectfont\color{gray},
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=1,
+    belowcaptionskip=8pt,
+    inputpath=listings/,
+    rangeprefix=//-----,rangesuffix=-----,
+    includerangemarker=false,
+}
