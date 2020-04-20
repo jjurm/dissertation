@@ -417,12 +417,12 @@ In particular, this section will discuss mainly the following, in the theoretica
     \item ways to quantify \textsl{robustness} of metrics
 \end{itemize}
 
-\subsection{Datasets}
+\subsection{Datasets}\label{sec:datasets}
 
 Later in this section I present different kinds of publicly available graph datasets used in this project.
 In my work I distinguish two types of networks: scored and unscored.
 
-\subsubsection{Scored networks}
+\subsubsection{Scored networks}\label{sec:scored_networks}
 
 In scored networks, the edges are weighted, with each weight, also called the \textbf{score}, representing the likelihood that the edge is true in the real world.
 
@@ -431,7 +431,7 @@ The score is usually a real value between $0$ and $1$.
 \input{figures_gen/graph_example_scored_edges.tex}
 
 Scored protein networks are a good example of scored networks.
-\autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{ecoli} dataset where edges in the figures are drawn with the width proportional to their weight.
+\autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{Escherichia coli} dataset from the~\nameref{sec:string_database} where edges in the figures are drawn with the width proportional to their weight.
 
 Scored networks are useful for metric robustness analysis because they naturally provide a way to introduce perturbations to the networks -- by adjusting the confidence threshold.
 
@@ -451,7 +451,7 @@ Although the \graffs tool built is universal and is not bound to any kind of dat
 
 There are multiple online sources providing interesting network datasets.
 
-\subsubsection{STRING database}
+\subsubsection{STRING database}\label{sec:string_database}
 
 \textit{STRING}\cite{Szklarczyk2019} is an open database of scored interactions between proteins.
 At the time of writing, the database contains over 24M different proteins from over 5K organisms, accounting for over $2 * 10^9$ interactions.

@@ -1,3 +1,4 @@
+%! Suppress = PrimitiveStyle
 %! Suppress = DiscouragedUseOfDef
 %! Suppress = Makeatletter
 
@@ -77,11 +78,27 @@
     sensitive=true,
     stringstyle={\color{ForestGreen}\ttfamily},
 }
+
+\let\origthelstnumber\thelstnumber
+\makeatletter
+\newcommand*\Suppresslinenumbers{%
+    \lst@AddToHook{OnNewLine}{%
+    %! Suppress = DuplicateDefinition
+        \let\thelstnumber\relax%
+        \advance\c@lstnumber-\@ne\relax%
+    }%
+}
+\newcommand*\Reactivatelinenumbers{%
+    \lst@AddToHook{OnNewLine}{%
+    %! Suppress = DuplicateDefinition
+        \let\thelstnumber\origthelstnumber%
+        \advance\c@lstnumber\@ne\relax}%
+}
+\makeatother
 \lstset{
     basicstyle=\jbmono\fontsize{10pt}{11pt}\selectfont\color{black},
     breaklines=true,
     frame=single,
-    language=Kotlin,
     numbers=left,
     numbersep=6pt,
     numberstyle=\fontsize{7pt}{7pt}\selectfont\color{gray},
@@ -92,4 +109,5 @@
     inputpath=listings/,
     rangeprefix=//-----,rangesuffix=-----,
     includerangemarker=false,
+    escapechar=¦,
 }
