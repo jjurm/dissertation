@@ -133,7 +133,7 @@ I used graphs like this for testing purposes when developing \graffs.
         \item In an undirected graph, $v_1$ is \textbf{adjacent} to $v_2$ iff $(v_1, v_2) \in E$
         \item A \textbf{loop} is an edge of the form $(v, v)$.
         Note that simple graphs have no loops.
-        \item Define $\deg^-(v) = \left| \Set{v' \in V}{(v', v) \in E} \right|$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left| \Set{v' \in V}{(v, v') \in E} \right|$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
+        \item Define $\deg^-(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left\lvert \Set{v' \in V}{(v, v') \in E} \right\rvert$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
         If the graph is undirected, then $\deg^-(v) = \deg^+(v) = \deg(v)$ is called \textbf{degree}.
         \item For $G = (V, E)$ with $V = \integersto{n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
         \[ a_{ij} = \begin{cases}
@@ -217,7 +217,7 @@ One of the simplest metrics calculates the degree of each node.
 \begin{definition}[Degree (centrality)]
     For a graph $G = (V, E)$, define degree centrality $DC : V \rightarrow \mathbb{N}$:
     \begin{equation*}
-        DC(v) \eqdef \deg(v) = \left| \Set{v' \in V}{(v', v) \in E} \right|
+        DC(v) \eqdef \deg(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert
     \end{equation*}
 \end{definition}
 
@@ -243,7 +243,7 @@ Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i
 \end{definition}
 
 This is well-defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
-For disconnected graphs, I set $d(v, i) = \left\| V \right\|$ to follow the approach in The Paper.
+For disconnected graphs, I set $d(v, i) = \left\lvert V \right\rvert$ to follow the approach in The Paper.
 
 Closeness centrality measures the reciprocal of the \textsl{farness} of each node to other nodes.
 Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
@@ -330,17 +330,17 @@ A less-than-or-equal relation ($\leq$) on real numbers $\mathbb{R}$ is an exampl
     \[ \forall v_1, v_2 \in V.\ M(v_1) < M(v_2) \implies v_1 \preceq v_2 \]
 \end{definition}
 
-By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\integersto{\left\| V \right\|}$, with the associated integers being called \textbf{ranks}.
+By convention, we can consider a ranking to be a bijection between nodes $V$ and the set $\integersto{\left\lvert V \right\rvert}$, with the associated integers being called \textbf{ranks}.
 This definition basically means that ranking with respect to a metric is \textsl{a} ordering of nodes such that nodes with high metric values correspond to high ranks.
 
 \begin{definition}[Ranking (vector)]
-    A \textbf{ranking vector} $A^{\preceq}$, or a \textbf{ranking}, induced by a metric $M$ on a graph $G$ is a bijection $V \leftrightarrow \integersto{\left\| V \right\|}$ such that
+    A \textbf{ranking vector} $A^{\preceq}$, or a \textbf{ranking}, induced by a metric $M$ on a graph $G$ is a bijection $V \leftrightarrow \integersto{\left\lvert V \right\rvert}$ such that
     \[ \forall v_1, v_2 \in V.\ v_1 \preceq v_2 \implies A^{\preceq}(v_1) \leq A^{\preceq}(v_2), \]
     where $\preceq$ is a ranking relation of graph $G = (V, E)$ with respect to metric $M$.
 
     Also, allow $A^{M(G)}$ as a shortened notation of a ranking induced by the metric $M$ on the graph $G$.
     Therefore,
-    \[ A^{M(G)} : V \leftrightarrow \integersto{\left\| V \right\|} \]
+    \[ A^{M(G)} : V \leftrightarrow \integersto{\left\lvert V \right\rvert} \]
 \end{definition}
 
 Note, there may be multiple valid rankings if multiple nodes have the same metric value, in which case any mutual order of such nodes is permitted in the ranking.
@@ -521,10 +521,13 @@ The exact value of $n$ is conceptually unimportant and is discussed in the~\name
 For measuring metric robustness it will be beneficial to know matching between multiple graphs coming from the same dataset, or in other words to preserve identity of nodes across such graphs.
 So, define:
 
-\begin{definition}[Graph matching]\label{def:graph_matching}
+\begin{definition}[Graph matching]
+    \label{def:graph_matching}
     Given two generated graphs graphs $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ derived from the same network, define \textbf{graph matching}, $\leftrightsquigarrow$, to be a bijection between $V_1, V_2$ such that
     \begin{equation}
-        \forall v_1 \in V_1, \forall v_2 \in V_2.\quad v_1 \leftrightsquigarrow v_2\quad\text{iff}\quad \begin{array}{l}v_1, v_2\ \text{correspond to the same }\\\text{node in the base graph}\end{array}
+        \forall v_1 \in V_1, \forall v_2 \in V_2.\quad v_1 \leftrightsquigarrow v_2\quad\text{iff}\quad \begin{array}{l}
+                                                                                                            v_1, v_2\ \text{correspond to the same }\\\text{node in the base graph}
+        \end{array}
     \end{equation}
 \end{definition}
 
@@ -601,7 +604,7 @@ Finally, define \textsl{overall ranking} on a sequence of perturbed graphs that 
     An \textbf{overall ranking} $A^*$ of a metric $M$ on $n$ perturbed graphs generated using $\xi$ from a base graph $G_0$, is defined as:
 
     \begin{align*}
-        &\mathlarger{A^*}\!\left( M \,|\, G_0, \xi, n \right) = A^{\operatorname{Avg}(G_0)} ,\\[5pt]
+        &\mathlarger{A^*}\!\left( M \mid G_0, \xi, n \right) = A^{\operatorname{Avg}(G_0)} ,\\[5pt]
         \text{where}~&\operatorname{Avg}(G) :\ \forall v \in V.\ v \,\mapsto\, \frac{1}{n} \sum_{i=1}^n A^{M(G_i)}(v)\, , \\
         &\begin{aligned}
              \text{where}~\,&\xi(G) \generates{n} G_1, \dots, G_n\,, \\
@@ -629,7 +632,7 @@ Both similarities quantify a relationship between two rankings with meaning simi
 
 \begin{definition}[$\bm{k}$-similarity]
     The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
-    \[ M_k(A_\theta, A_\mu | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
+    \[ M_k(A_\theta, A_\mu \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.
 \end{definition}
 
@@ -640,7 +643,7 @@ The following $\alpha$-relaxed $k$-similarity accounts for situations where the 
 
 \begin{definition}[$\bm{\alpha}$-relaxed $\bm{k}$-similarity]
     The \textbf{$\bm{\alpha}$-relaxed $\bm{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\bm{a}\%$ highest ranking nodes in $A_\theta$:
-    \[ M_k^\alpha(A_\theta, A | k) = \frac{\left\| \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\|}{Nk} \]
+    \[ M_k^\alpha(A_\theta, A \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $\alpha > 0$, $k, k\alpha \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A$.
 \end{definition}
 
@@ -665,11 +668,11 @@ Speaking of scored networks, rank continuity of a metric is the similarity betwe
 \subsubsection{Rank instability}
 
 \begin{definition}[Rank instability]
-    \newcommand*{\args}{\left(M \,|\, G, \xi, n \right)}\newcommand*{\astar}{A^*\!\args}
+    \newcommand*{\args}{\left(M \mid G, \xi, n \right)}\newcommand*{\astar}{A^*\!\args}
     The \textbf{rank instability} measure is defined as:
 
     \begin{flalign}
-        &\operatorname{rank\ instability} \args \eqdef \frac{1}{\left\| U \right\|}\, \mathlarger{\sum}_{v \in U} \frac{range(v)}{n} & \\[10pt]
+        &\operatorname{rank\ instability} \args \eqdef \frac{1}{\left\lvert U \right\rvert}\, \mathlarger{\sum}_{v \in U} \frac{range(v)}{n} & \\[10pt]
         \text{where }\ & A = \astar \quad \text{(an overall ranking, by Definition~\ref{def:overall_ranking})}, \nonumber \\
         & U = \Set{v \in V}{A(v) > 99\%n}, \nonumber \\[2pt]
         & range : \begin{array}[t]{l}
@@ -679,7 +682,7 @@ Speaking of scored networks, rank continuity of a metric is the similarity betwe
     \end{flalign}
 \end{definition}
 
-In the definition, $U$ is the set of the $1\%$ highest ranked nodes according to the overall ranking $A^*\!\left(M \,|\, G, \xi, n \right)$.
+In the definition, $U$ is the set of the $1\%$ highest ranked nodes according to the overall ranking $A^*\!\left(M \mid G, \xi, n \right)$.
 Then, for each node $v$, we calculate a range of \textsl{ranks} that the node holds across the generated graphs $G_1$ to $G_n$.
 Finally, the rank instability measure is calculated as the average scaled range for the $1\%$ highest ranked nodes in $U$.
 

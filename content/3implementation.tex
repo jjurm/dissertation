@@ -359,7 +359,7 @@ A common pure format of storing network structure (without any metadata) is to l
 The set of nodes is then implicitly defined by the set of all distinct node identifiers present in the file.
 
 However, different dataset sources (\autoref{sec:datasets}) provide \texttt{.txt} edge files with the content in different formats.
-Some edge files contain a header, \texttt{#comments}, or a third number in each line representing the edge's weight (for \hyperref[sec:scored_networks]{scored networks}).
+Some edge files contain a header, \texttt{\#comments}, or a third number in each line representing the edge's weight (for \hyperref[sec:scored_networks]{scored networks}).
 \autoref{fig:edge_file_examples} shows a number of example edge files that should be accepted by \graffs.
 
 \input{figures/edge_file_examples.tex}
@@ -370,7 +370,7 @@ However, one of the goals for \graffs is to make it as versatile as possible, th
 Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending GraphStream's \texttt{FileSourceEdge} simple LR parser, to allow the following:
 \begin{itemize}[topsep=5pt]
     \item Modify the grammar to correctly parse node IDs containing dots (\texttt{.}), such as \texttt{362663.ECP\_0001} (to allow datasets from the STRING database)
-    \item Ignore comment lines starting with the \texttt{#} character
+    \item Ignore comment lines starting with the \texttt{\#} character
     \item Ignore headers starting with the string \texttt{protein1} (included in graph files downloaded from the STRING database)
     \item Recognise if a line has 3 tokens instead of 2, in which case parse and store it as the weight of the edge
 \end{itemize}
@@ -384,7 +384,7 @@ To make \graffs as versatile as possible and not require the R software environm
 Renjin can execute R code (as well as load RData files) within Java, without the need to install any additional platform.
 
 When an RData file is to be loaded in \graffs, a Renjin engine starts under the hood and loads desired file.
-If an object ending with \texttt{.df}\footnotemark is found, it is converted into a GraphStream's \texttt{Graph} object.
+If an object whose name ends with \texttt{.df}\footnotemark{} is found, it is converted into a GraphStream's \texttt{Graph} object.
 \footnotetext{This is to follow convention from \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/c39bfed/data_prep.R}}
 
 \subsection{Generating graphs}
