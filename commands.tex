@@ -94,9 +94,8 @@
         \let\thelstnumber\origthelstnumber%
         \advance\c@lstnumber\@ne\relax}%
 }
-\makeatother
-\lstset{
-    basicstyle=\jbmono\fontsize{10pt}{11pt}\selectfont\color{black},
+\lstset{%! Suppress = NonMatchingIf
+    basicstyle=\ttfamily\color{black}\lst@ifdisplaystyle\fontsize{10pt}{11pt}\selectfont\fi,
     breaklines=true,
     frame=single,
     numbers=left,
@@ -111,3 +110,6 @@
     includerangemarker=false,
     escapechar=¦,
 }
+\makeatother
+
+\lstMakeShortInline[columns=fixed]|

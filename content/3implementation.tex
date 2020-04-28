@@ -389,28 +389,44 @@ If an object ending with \texttt{.df}\footnotemark is found, it is converted int
 
 \subsection{Generating graphs}
 
-\todo{work in progress}
+First, there is the \texttt{GraphProducer} interface, which has a single method\footnotemark{}:\\ \texttt{fun produce(sourceGraph: Graph, n: Int): List<Deferred<PerturbedGraph>>}
+\footnotetext{It returns a list of \texttt{Deferred} objects from the \texttt{kotlinx.coroutines} package, so that the generation can be parallelised at a higher level in the program using \textsl{Kotlin coroutines}, as described in \autoref{sec:kotlin_coroutines}.}
+Each |GraphProducer| implementation also provides a corresponding |GraphProducerFactory| object, defined as:
+% @formatter:off
+\begin{lstlisting}[language=Kotlin]
+typealias GraphProducerFactory =
+    (seed: Long, params: List<Number>, coroutineScope: CoroutineScope) -> GraphProducer
+\end{lstlisting}
+% @formatter:on
 
-For evaluating robustness of graph metrics according to the model described in the~\nameref{ch:proposal}, we need to evaluate graph metrics on a number of similar graphs - graphs that all describe the same facts from the real world.
-We need to be able compare value of a metric between different graphs that \textit{share the same source} or are \textit{of the same foundation}.
+Further, \texttt{GraphGenerator}s (from \autoref{fig:data_model_classes_diagram}), which are stored in the database, have the \texttt{method} field referencing a \texttt{GraphProducer} to use.
 
-One specific example may be a graph constructed from social network, such as Facebook.
-Let $G_0$ be a dataset constructed from people and their mutual friendships at Facebook, and let $G_1$ be a graph constructed from people, with the set of edges including only stronger friendships. $G_0$ and $G_1$ have the same nodes, but edges of $G_1$ is a subset of edges of $G_0$.
-Now, $G_0, G_1$ are different but describe the same structure of people in the world, i.e.\ convey the same meaning.
-
-\textbf{Preserving node identities} For two such graphs, we can define subsets $V_{c0}$ and $V_{c1}$ of nodes of the respective graphs, such that there exists a bijection $V_{c0} \leftrightarrow V_{c1}$.
-These nodes will have important meaning for definition of the robustness function, because the pairs of corresponding nodes describe the same entities of the real world.
-Thus, we can observe how a graph metric behaves for a particular node in different graphs.
-
-\subsubsection{Random edge deletion}
-
-\subsubsection{Thresholding edges of protein graphs}
+Implementations of the methods for producing graphs as described in~\autoref{sec:perturbing_graphs} are straightforward.
+Each generated graph is in some way a copy of the input graph, with some edges deleted.
 
 \subsection{Evaluating metrics}
 
+Metrics are classes (or rather, Kotlin |object|s) implementing the |Metric| interface, with a single method \texttt{fun evaluate(graph: Graph): MetricResult?}.
+
+In the database, each |PerturbedGraph| entry stores a single serialised |Graph| object, whose nodes holds values for all metrics.
+A metric's value at each node is stored in the node's attribute map.
+
+An |Experiment| entry (those are created by the user) has a |Set<String>| field specifying which metrics to evaluate on each |PerturbedGraph|, and those metrics are again referenced by a |String| identifier.
+
 \subsection{Metric robustness}
 
-\subsection{Visualising graphs}
+Similar to other concepts, robustness measures are classes implementing the |RobustnessMeasure| interface, with a single method |suspend fun evaluate(metric: MetricInfo, graphCollection: GraphCollection, metadata: GraphCollectionMetadata): Double|.
+
+|MetricInfo| uniquely identifies the |Metric| whose robustness to calculate.
+|GraphCollection| is an entity (from \autoref{fig:data_model_classes_diagram}) with a list of |PerturbedGraph|s of one dataset.
+|GraphCollectionMetadata| provides cached\footnotemark{} access to intermediate results regarding the particular |GraphCollection| in the context of the current |Metric|, such as the overall ranking of the given metric over all the perturbed graphs (see Definition~\ref{def:overall_ranking}).
+\footnotetext{cached, as the overall ranking is calculated only once for each \texttt{GraphCollection} and each \texttt{Metric}, and used for more robustness measures}
+Each |RobustnessMeasure| returns a single |Double| value, which is the numerical result, calculated as described in \autoref{sec:robustness_measures}.
+The |evaluate| function has the |suspend| modifier so that it can suspend and finish asynchronously within the context of Kotlin coroutines (see \autoref{sec:kotlin_coroutines}).
+
+\subsection{Visualising graphs & producing figures}
+
+\todo{todo}
 
 
 \section{Parallelism using Kotlin coroutines}
