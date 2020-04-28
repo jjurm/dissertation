@@ -2,12 +2,12 @@
 \documentclass[12pt,a4paper,twoside,openany]{report}
 \usepackage{fontspec}
 \usepackage[
-	backend=biber,
-	natbib=true,
-	style=ieee,
-	url=false,
-	doi=true
-	%eprint=false
+    backend=biber,
+    natbib=true,
+    style=ieee,
+    url=false,
+    doi=true
+%eprint=false
 ]{biblatex}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
 \usepackage[margin=25mm]{geometry}  % adjusts page layout
@@ -24,9 +24,9 @@
 \usepackage{amssymb}
 \usepackage{csquotes}
 \usepackage[
-	%nottoc,
-	notlot,
-	notlof
+%nottoc,
+    notlot,
+    notlof
 ]{tocbibind}
 \usepackage{amsfonts}
 \usepackage{mathtools}
@@ -41,30 +41,23 @@
 \usepackage{listings}
 \usepackage{fontawesome}
 \usepackage{footnotehyper}
+\usepackage{bashful}
 
 \addbibresource{refs.bib}
 
-%\setmonofont{JetBrainsMono}[
-%	Path = fonts/JetBrainsMono-1.0.3/ttf/,
-%	Extension = .ttf,
-%	UprightFont = *-Regular,
-%	BoldFont = *-Bold,
-%	ItalicFont = *-Italic,
-%	BoldItalicFont = *-Bold-Italic,
-%]
 \newfontfamily\jbmono{JetBrainsMono}[
-	Path = fonts/JetBrainsMono-1.0.3/ttf/,
-	Extension = .ttf,
-	NFSSFamily = jbmono,
-	UprightFont = *-Regular,
-	BoldFont = *-Bold,
-	ItalicFont = *-Italic,
-	BoldItalicFont = *-Bold-Italic,
-	FontFace = {sb}{n}{*-Medium},
-	FontFace = {sb}{it}{*-Medium-Italic},
-	FontFace = {eb}{n}{*-ExtraBold},
-	FontFace = {eb}{it}{*-ExtraBold-Italic},
-	Scale = 0.87,
+    Path = fonts/JetBrainsMono-1.0.3/ttf/,
+    Extension = .ttf,
+    NFSSFamily = jbmono,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-Bold-Italic,
+    FontFace = {sb}{n}{*-Medium},
+    FontFace = {sb}{it}{*-Medium-Italic},
+    FontFace = {eb}{n}{*-ExtraBold},
+    FontFace = {eb}{it}{*-ExtraBold-Italic},
+    Scale = 0.87,
 ]
 \renewcommand{\ttdefault}{jbmono}
 
@@ -72,11 +65,11 @@
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
 %\makeatother
-%\usepackage{bashful}
-%\bash[stdoutFile=wordcount.tex]
+
 %LC_NUMERIC="en_GB.UTF-8"
-%printf "%'d" "$(texcount -1 -utf8 -sum Part\ II\ Dissertation\ Draft.tex | tr -d '\n')"
-%\END
+%printf "%'d" "$(texcount -1 -merge -utf8 -sum main.tex | tr -d '\n')"
+\newcommand{\wordcountScript}{texcount -1 -merge -q -utf8 -sum main.tex}
+
 
 %\pdfsuppresswarningpagegroup=1
 
@@ -93,7 +86,7 @@
 % Better footnote handling
 \newcounter{footnoteInText}
 \newcounter{footnoteInNote}
-\newcommand{\fnmark}{\stepcounter{footnoteInText}\setcounter{footnote}{\value{footnoteInText}}\addtocounter{footnote}{-1}\footnotemark}
+\newcommand{\fnmark}{\stepcounter{footnoteInText}\setcounter{footnote}{\value{footnoteInText}}\addtocounter{footnote}{-1}\footnotemark{}}
 \newcommand{\fntext}[1]{\stepcounter{footnoteInNote}\setcounter{footnote}{\value{footnoteInNote}}\footnotetext{#1}}
 
 \setcounter{tocdepth}{4}
@@ -106,113 +99,118 @@
 
 \begin{document}
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% Title
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Title
 
-	\pagestyle{empty}
+    \pagestyle{empty}
 
-	\begin{center}
-	    \LARGE \textbf{Juraj Mi\v{c}ko}
-	\end{center}
+    \begin{center}
+        \LARGE \textbf{Juraj Mi\v{c}ko}
+    \end{center}
 
-	\vspace*{60mm}
-	\begin{center}
-		\Huge
-		\textbf{Framework for empirical analysis of graph metric robustness} \\[5mm]
-		Computer Science Tripos -- Part II \\[5mm]
-		Jesus College \\[5mm]
-		\today  % today's date
-	\end{center}
+    \vspace*{60mm}
+    \begin{center}
+        \Huge
+        \textbf{Framework for empirical analysis of graph metric robustness} \\[5mm]
+        Computer Science Tripos -- Part II \\[5mm]
+        Jesus College \\[5mm]
+        \today  % today's date
+    \end{center}
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% Proforma, table of contents and list of figures
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Proforma, table of contents and list of figures
 
-	\pagestyle{plain}
+    \pagestyle{plain}
 
-	\chapter*{Proforma}
+    \chapter*{Proforma}
 
-	{\large
-		\begin{tabular}{ll}
-			Name:               & \textbf{Juraj Mi\v{c}ko}							\\
-			College:            & \textbf{Jesus College}										\\
-			Project Title:		& \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}					\\
-			Examination:        & \textbf{Computer Science Tripos -- Part II Project},
-			\\ & \textbf{June 2020}		\\
-			Word Count:			& \textbf{X\fnmark} 									\\
-			Project Originator: & Dr Timothy Griffin	  							\\
-			Supervisor:			& Dr Timothy Griffin										\\
-		\end{tabular}
-	}
-	\fntext{This word count was computed using \texttt{script}}
+    {\large
+        \begin{tabular}{ll}
+            Name: & \textbf{Juraj Mi\v{c}ko}                            \\
+            College: & \textbf{Jesus College}                                        \\
+            Project Title: & \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}                    \\
+            Examination: & \textbf{Computer Science Tripos -- Part II Project},
+            \\ & \textbf{June 2020}        \\
+            Word Count: & \textbf{\splice{\wordcountScript}\footnotemark{}}                                    \\
+            Project Originator: & Dr Timothy Griffin                                \\
+            Supervisor: & Dr Timothy Griffin                                        \\
+        \end{tabular}
+    }
+    \footnotetext{This word count was computed using \texttt{\wordcountScript}}
 
-	\section*{Original aims of the project}
-
-
-
-	\section*{Work completed}
-
-		\todo{include courses this project was based on}
-
-		\newpage
-
-	\section*{Special difficulties}
+    \section*{Original aims of the project}
 
 
 
-	\section*{Declaration of originality}
+    \section*{Work completed}
 
-		I, Juraj Mi\v{c}ko of Jesus College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
+    \todo{include courses this project was based on}
 
-		\bigskip
-		\leftline{Signed: \textit{Juraj Mi\v{c}ko}}
+    \newpage
 
-		\medskip
-		\leftline{Date: \today}
+    \section*{Special difficulties}
 
-	\tableofcontents
 
-	\listoffigures
 
-	\listoftables
+    \section*{Declaration of originality}
 
-	\lstlistoflistings
+    I, Juraj Mi\v{c}ko of Jesus College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% now for the chapters
+    \bigskip
+    \leftline{Signed: \textit{Juraj Mi\v{c}ko}}
 
-	\pagestyle{headings}
+    \medskip
+    \leftline{Date: \today}
 
-	\chapter{Introduction}\label{ch:introduction}
-	\input{content/1introduction.tex}
+    \tableofcontents
 
-	\chapter{Preparation}\label{ch:preparation}
-	\input{content/2preparation.tex}
+    \listoffigures
 
-	\chapter{Implementation}\label{ch:implementation}
-	\input{content/3implementation.tex}
+    \listoftables
 
-	\chapter{Evaluation}\label{ch:evaluation}
-	\input{content/4evaluation.tex}
+    \lstlistoflistings
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % now for the chapters
+
+    \pagestyle{headings}
+
+
+    \chapter{Introduction}\label{ch:introduction}
+    \input{content/1introduction.tex}
+
+
+    \chapter{Preparation}\label{ch:preparation}
+    \input{content/2preparation.tex}
+
+
+    \chapter{Implementation}\label{ch:implementation}
+    \input{content/3implementation.tex}
+
+
+    \chapter{Evaluation}\label{ch:evaluation}
+    \input{content/4evaluation.tex}
+
 
     \chapter{Conclusion}\label{ch:conclusion}
     \input{content/5conclusion.tex}
 
-	\input{content/0scratch.tex}
+    \input{content/0scratch.tex}
 
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% the bibliography
-	%\addcontentsline{toc}{chapter}{Bibliography}
-	%\bibliographystyle{ieeetr}
-	%\bibliography{refs}
-	\printbibliography[heading=bibintoc]
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % the bibliography
+    %\addcontentsline{toc}{chapter}{Bibliography}
+    %\bibliographystyle{ieeetr}
+    %\bibliography{refs}
+    \printbibliography[heading=bibintoc]
 
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	% the appendices
-	\appendix
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % the appendices
+    \appendix
 
-	\chapter{Project Proposal}\label{ch:proposal}
 
-	\input{proposal.tex}
+    \chapter{Project Proposal}\label{ch:proposal}
+    \input{proposal.tex}
 
 \end{document}

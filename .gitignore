@@ -352,5 +352,10 @@ TSWLatexianTemp*
 
 # End of https://www.gitignore.io/api/latex,intellij+iml
 
+# Bashful
+main.sh
+*.stderr
+*.stdout
+
 .idea/deployment.xml
 main.pdf
