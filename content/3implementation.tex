@@ -430,6 +430,42 @@ The |evaluate| function has the |suspend| modifier so that it can suspend and fi
 
 
 \section{Parallelism using Kotlin coroutines}
+\label{sec:kotlin_coroutines}
+
+Kotlin supports a concept of \textsl{suspending functions}, i.e. functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
+The context in which a suspending function suspends, is called coroutine.
+Coroutines are a well-known control abstraction in programming languages\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
+
+Asynchronous computations, delays, or IO operations can be programmed as suspending calls, i.e. functions that are allowed to \textsl{suspend} (or \textsl{pause}) coroutine voluntarily, and return the control back to the caller, then continue whenever their \textsl{continuation} is resumed (or invoked).
+
+Coroutines can be used even within a single thread, and so allow a concurrent execution.
+In the case of \graffs, however, we are interested in running computation in parallel, to utilise the power of multiple CPU cores.
+A simple solution in Java would be to use |Thread|s, or a library working with threads directly.
+This would work but it's heavyweight, not very expressive and not safe (e.g. a failure of an operation in one thread will not automatically cancel following or related tasks in other threads, unless this safety is implemented manually).
+Another option is to use job queueing and an abstract multi-threaded executor, but then specifying inter-task execution order constraints would still be verbose, and running jobs would not be abstracted away from the code defining the jobs.
+
+Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap\cite{AriasFunctionalKotlinExtend2018}.
+They have a similar life cycle and are executed within regular threads, although they are not bound to them\cite{TorresLearningConcurrencyKotlin2018}.
+Coroutines allow executing suspending functions.
+
+Suspending functions in Kotlin, when compiled to Java bytecode, are regular functions accepting |Continuation<Int>| as one of the arguments.
+The |async| function (or its alternatives) takes a suspending function, creates an asynchronous coroutine executing the function and immediately returns its future result (as |Deferred<T>|).
+Then the |await| suspending function called on a |Deferred| object waits for the resulting value without blocking, and resumes when the deferred computation is complete.
+
+Kotlin also provides other means to synchronise coroutines, such as using mutual exclusion or actors, when needed in a parallel execution.
+Mutexes are used to ensure synchronised access when persisting entities in the database.
+
+\todo{diagram similar to \url{https://s3.amazonaws.com/kukuruku-co/uploads/images/00/17/75/2016/10/09/126426.png}}
+
+The following parts of \graffs use parallel programming with coroutines:
+\begin{itemize}[topsep=5pt]
+    \item Generating graphs
+    \item Evaluating metrics on graphs
+
+    Each |Graph| is treated individually without the need to synchronise across them, however, evaluation of metrics within one |Graph| is sequential as the GraphStream library does not support parallel access.
+    \item Evaluating robustness, including calculating overall ranks, which must be calculated for each |GraphCollection| before any robustness measure is evaluated on it
+    \item Generating various figures, for which an intermediate
+\end{itemize}
 
 
 \section{Command line interface}\label{sec:cli}
