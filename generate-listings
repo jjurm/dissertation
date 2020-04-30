@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+FILE1=listings/graffs-help.txt
+echo "¦\textcolor{blue}{\\$ ./graffs --help}¦" >$FILE1
+./graffs --help >>$FILE1
+echo "" >>$FILE1
+echo "¦\textcolor{blue}{\\$ ./graffs experiment --help}¦" >>$FILE1
+./graffs experiment --help >>$FILE1
+echo "" >>$FILE1
+echo "¦\textcolor{blue}{\\$ ./graffs dataset --help}¦" >>$FILE1
+./graffs dataset --help >>$FILE1

@@ -1,0 +1,65 @@
+¦\textcolor{blue}{\$ ./graffs --help}¦
+Usage: graffs [OPTIONS] COMMAND [ARGS]...
+
+  Tool for evaluating Graph Metric Robustness
+
+Options:
+  -v, --version  Show the version and exit
+  -h, --help     Show this message and exit
+
+Commands:
+  dataset     Access available datasets
+  metric      Access available metrics
+  generator   Create or list graph generators
+  experiment  Manage experiments (evaluating metrics on generated graphs)
+  plot        Plot results
+  db          Manage the underlying database
+
+Examples:
+> graffs db drop
+> graffs dataset list
+> graffs dataset load social-network
+> graffs generator create --help
+> graffs generator create --name g1 -n 10 --method removing-edges --params 0.05
+> graffs experiment create --help
+> graffs experiment create --name e1 --datasets test,social-network --generator g1 --metrics Degree,PageRank,Betweenness --robustnessMeasures RankInstability
+> graffs experiment run --name e1
+
+¦\textcolor{blue}{\$ ./graffs experiment --help}¦
+Usage: graffs experiment [OPTIONS] COMMAND [ARGS]...
+
+  Manage experiments (evaluating metrics on generated graphs)
+
+Options:
+  -h, --help  Show this message and exit
+
+Commands:
+  list    List created experiments and their properties
+  create  Create an experiment
+  change  Change an existing experiment
+  clone   Create a new experiment using parameters of existing experiment
+  remove  Remove an experiment, all its generated graph and any computed
+          results
+  run     Run an experiment
+  prune   Remove all generated graphs and calculated robustness values of an
+          experiment
+
+¦\textcolor{blue}{\$ ./graffs dataset --help}¦
+Usage: graffs dataset [OPTIONS] COMMAND [ARGS]...
+
+  Access available datasets
+
+  Datasets are stored in the `data` folder, each dataset in a subfolder.
+  Supported files are:
+
+  - *.txt with lines describing edges with optional weight in the format: NODE1 NODE2 [WEIGHT]
+  - *.RData with an R dataframe object named *.df
+
+Options:
+  -h, --help  Show this message and exit
+
+Commands:
+  list            List all datasets available in the `data` directory
+  load            Check if datasets can be loaded from the `data` directory
+  download-demos  Download datasets for demonstration
+  viz             Visualise graph

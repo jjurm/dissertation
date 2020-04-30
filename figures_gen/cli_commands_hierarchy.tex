@@ -1,0 +1,35 @@
+\begin{figure}
+\caption{Hierarchy of supported command-line interface commands, and their brief description}
+\label{fig:cli_commands_hierarchy}
+\begin{flushleft}
+\setlength{\DTbaselineskip}{11pt}
+\small
+\dirtree{%
+.1 graffs \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Tool for evaluating Graph Metric Robustness\end{minipage}.
+.2 dataset \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Access available datasets\end{minipage}.
+.3 list \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}List all datasets available in the `data` directory\end{minipage}.
+.3 load \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Check if datasets can be loaded from the `data` directory\end{minipage}.
+.3 download-demos \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Download datasets for demonstration\end{minipage}.
+.3 viz \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Visualise graph\end{minipage}.
+.2 metric \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Access available metrics\end{minipage}.
+.3 list \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}List available graph metrics\end{minipage}.
+.2 generator \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Create or list graph generators\end{minipage}.
+.3 list \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}List available graph generators\end{minipage}.
+.3 create \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Create a new graph generator description\end{minipage}.
+.3 remove \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Remove a graph generator\end{minipage}.
+.2 experiment \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Manage experiments (evaluating metrics on generated graphs)\end{minipage}.
+.3 list \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}List created experiments and their properties\end{minipage}.
+.3 create \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Create an experiment\end{minipage}.
+.3 change \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Change an existing experiment\end{minipage}.
+.3 clone \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Create a new experiment using parameters of existing experiment\end{minipage}.
+.3 remove \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Remove an experiment, all its generated graph and any computed results\end{minipage}.
+.3 run \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Run an experiment\end{minipage}.
+.3 prune \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Remove generated graphs and calculated robustness values of an experiment\end{minipage}.
+.2 plot \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Plot results\end{minipage}.
+.3 rank-similarity.
+.2 db \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Manage the underlying database\end{minipage}.
+.3 test \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Test the database connection\end{minipage}.
+.3 drop \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Reset the database schema and contents\end{minipage}.
+}
+\end{flushleft}
+\end{figure}

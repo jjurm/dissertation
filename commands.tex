@@ -94,21 +94,28 @@
         \let\thelstnumber\origthelstnumber%
         \advance\c@lstnumber\@ne\relax}%
 }
-\lstset{%! Suppress = NonMatchingIf
-    basicstyle=\ttfamily\color{black}\lst@ifdisplaystyle\fontsize{10pt}{11pt}\selectfont\fi,
+\lstdefinestyle{light}{%
+    basicstyle=\ttfamily\color{black},
     breaklines=true,
+    frame=none,
+    numbers=none,
+    xleftmargin=2\parindent,
+}
+\lstset{%! Suppress = NonMatchingIf
+    basicstyle=\ttfamily\color{black}\lst@ifdisplaystyle\fontsize{10pt}{10pt}\selectfont\fi,
+    belowcaptionskip=8pt,
+    breaklines=true,
+    escapechar=¦,
     frame=single,
+    includerangemarker=false,
+    inputpath=listings/,
     numbers=left,
     numbersep=6pt,
     numberstyle=\fontsize{7pt}{7pt}\selectfont\color{gray},
+    rangeprefix=//-----,rangesuffix=-----,
     showspaces=false,
     showstringspaces=false,
     tabsize=1,
-    belowcaptionskip=8pt,
-    inputpath=listings/,
-    rangeprefix=//-----,rangesuffix=-----,
-    includerangemarker=false,
-    escapechar=¦,
 }
 \makeatother
 

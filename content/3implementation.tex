@@ -470,7 +470,27 @@ The following parts of \graffs use parallel programming with coroutines:
 
 \section{Command line interface}\label{sec:cli}
 
-\todo{hierarchical diagram of nested command groups and their options}
+The \graffs tool is built as a program with rich and intuitive command-line interface.
+The program is pre-packaged in a \texttt{.jar} file, built for Java 8 or higher, so running it involves running the shell command:
+% @formatter:off
+\begin{lstlisting}[language=bash,style=light]
+java -jar graffs.jar [ARGS]
+\end{lstlisting}
+% @formatter:on
+
+Clikt\citeneeded is a \enquote{multiplatform command line interface parsing for Kotlin} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
+The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
+
+The \graffs tool provides many commands (loading datasets, creating and accessing graph generators, creating and running experiments, and so on).
+Commands are grouped based on their context and the objects that they operate on, and can further have sub-commands.
+Those are together structured in a tree-like hierarchy.
+The hierarchy is shown in \autoref{fig:cli_commands_hierarchy}.
+
+\input{figures_gen/cli_commands_hierarchy.tex}
+
+Further, \autoref{lst:graffs_cli_examples} shows an example output of some of the commands.
+
+\lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the help text printed by the command-line tool}, float, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}
 
 
 \section{Testing}
