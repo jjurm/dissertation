@@ -3,53 +3,94 @@ First, I explain in detail why measuring robustness of graph metrics is an impor
 Further I introduce specific definitions of graph metrics and robustness measures that I use in the implementation.
 
 
+\section{Graphs and metrics}
+
+%The total data (created, captured or replicated) in the world by 2018 was estimated to be 18 zettabytes in 2018 and is expected to reach 175 zettabytes by 2025~\cite{ReinselDigitizationWorldEdge2018}.
+Ever-increasing data sources and applications of data science force researchers and data scientists to use tools such as graph theory to model real-world problems.
+Graph theory has been used to help solve problems in the field of information technology, engineering, biology, chemistry, social systems, geography, linguistics and many more ~\cite{FouldsGraphTheoryApplications2012}.
+Graphs, or networks (nodes and edges), can capture many types of entities and their relations in the real world.
+A simple example is a social network in which nodes may represent people and edges represent existence of relationships between pairs of people.
+
+Graph theory proved especially useful when analysing large structures of data that cannot simply be visualised or otherwise analysed by investigating individual entities.
+The word \textsl{network} is often used in this context to refer to large instances of graphs stemming from real systems, as opposed to graphs referring more to the mathematical concept itself.
+Graph \textsl{statistics} (e.g. size, average degree, diameter, radius) have been invented to help mathematically describe properties of arbitrarily large graphs, such as betweenness centrality.
+Further, graph \textsl{metrics} (such as betweenness centrality, closeness centrality, eccentricity) quantify properties of individual nodes.
+For example a person represented by a node with high closeness centrality score is considered to be \textsl{closer} to others in terms of number of hops needed, in other words can spread information in the network faster.
+
+
 \section{Introduction to confidence}
 
-Statistical significance, confidence scores, confidence intervals, error ranges, all are used to signal or approximate the extent to which the observed result is reliable.
-Some of the confidence values are a direct probability that an error is made, given the available evidence, such as a statistical significance when rejecting a null hypothesis, or confidence intervals.
-Other error values such as error ranges or standard deviations estimate how much off a numerical value may be.
-These error measures are all important to state and assess how precise or confident an experiment or an observation is.
+Statistical significance, confidence scores, confidence intervals, error ranges, all signal or approximate the extent to which the observed result is reliable.
+Some confidence values are a direct probability that an error is present, given the available evidence (such as a statistical significance when rejecting a null hypothesis).
+Other measures such as error ranges or standard deviations estimate how much off a numerical value may be.
 
-A research result without assessing its precision or confidence can be considered incomplete.
-We need the assessment of possible error to derive any further guidance from the research.\citeneeded
+Networks obtained from the real-world by experiments, observations, or deductions,may contain errors too, such as missing nodes or edges, false positives, uncertain nodes or edges, falsely aggregated nodes.
+Network errors may stem from measurement errors, approximations, lack of knowledge, lack of experimental evidence or thresholding of scored networks~\cite{Wang2012,MarsdenNetworkDataMeasurement1990,JonesChallengesLimitationsQuantifying2010}.
+These errors may then propagate and cause errors in graph metrics.
 
-However, can we measure the precision, or the confidence or graph metrics?
-If research is based on evaluating metrics on graphs which are themselves imprecise or having possible errors in the structure, how can we assess the confidence or precision of such result?
+Error measures are important to assess how precise or confident an experiment or an observation is.
+A research result without examining its precision or confidence can be considered incomplete.\citeneeded{}
+
+\parskip
+
+However, can we measure precision or confidence of graph metrics?
+If an outcome is based on evaluating metrics on graphs which are themselves imprecise or possibly have errors in the structure, how can we assess the confidence or precision of such result?
+\unimportant{Helping to answer these questions is the motivation behing building \graffs.}
+
+A number of attempts already tried to assess robustness or stability properties of graph metrics.
+Examples are analysing impact of errors on centrality measures in random networks~\cite{BorgattiRobustnessCentralityMeasures2006} or, more specifically, evaluating reproducibility of metrics on multi-temporal scans of human brain using coefficient of variation (CV), the repeatability coefficient (RC) and the intra class correlation (ICC)~\cite{VaessenEffectReproducibilityDifferent2010,DennisTestRetestReliabilityGraph2012}.
+A significant amount of research analysing reproducibility of metrics in uncertain brain networks appeared around 2011, summarised in~\cite{TelesfordExplorationGraphMetric2013}.
+\unimportant{The latest research led to development of methods for analysis of such uncertain data, estimating a ground-truth network structure from imperfect data~\cite{Martin2016,Newman2018}, and even a method to mitigate sensitivity of metrics on the selection of a threshold in scored networks~\cite{Drakesmith2015}.}
 
 
 \section{The Paper}
 
-This dissertation project is based on, and extending the ideas from the paper by Bozhilova et al.: \textsl{Measuring rank robustness in scored protein interaction networks}\cite{Bozhilova2019}.
-From now on, I will refer to it as \textsl{The Paper}.
+This dissertation project is based on, and extending the ideas from the paper by Bozhilova et al.: \textsl{Measuring rank robustness in scored protein interaction networks}~\cite{Bozhilova2019}.
+In my work I refer to~\cite{Bozhilova2019} as \textsl{The Paper}.
+
+The Paper is one of the most recent researches on metric robustness.
+The study demonstrates instability of some graph metrics on thresholded protein networks and proposes ways to quantify robustness of graph metrics in such networks.
 
 \subsection{Protein networks}
 
-Protein networks is a large research field with a plethora of uses, and investigating them is important for the future of bioinformatics~\todo{examples + citations}.
+Protein interaction networks (PINs), also called protein-protein interaction (PPI) networks, are an example of a prominent research field relying on graph theory.
+Nodes in protein networks represent proteins present in cells of organisms and edges represent interactions between them, often labelled to convey additional information.
 
-Protein interaction networks (PINs), also called protein-protein interaction (PPI) networks, as well as most graph datasets obtained from the real-world, are a result of experiments or observations which possibly introduce measurement errors, either systematic or random errors.
+Studying them helps in understanding physiology of biological cells and developing drugs as they generally affect protein interactions.
+For example, highly connected proteins and hubs of proteins in a cell are shown to be most essential for its survival~\cite{JeongLethalityCentralityProtein2001,HeWhyHubsTend2006}.
 
-Also, protein networks have a specific structure: nodes represent proteins and weighted (or scored) edges represent the presence of interactions between proteins.
+Protein networks have a specific structure: nodes represent proteins and weighted (or scored) edges represent the presence of interactions between proteins.
 It is assumed that such interactions are mutual, therefore the formed graph is undirected.
 
 \input{figures/protein_network_schematic1.tex}
 
 \subsection{Confidence scores}
 
-The weight of each edge represents a confidence score which may be a value, or a set of values, describing some sort of \textsl{likelihood} that the given interaction is true, given the available evidence.
-They do \textsl{not} indicate the strength or intensity of the interaction (which would be a different property, usually not observed in such protein networks).
+The weight of each edge in protein networks represents a confidence score which may be a value, or a set of values, describing some sort of \textsl{likelihood} that the given interaction is true, given the available evidence.
+They do \textsl{not} indicate the strength or intensity of the interaction (which would be a different property).
 
-For example, in the STRING database of protein networks used in The Paper, the main interaction score is an approximated \textsl{confidence} based on evidence such as scientific experiments, genetic observations (gene fusions, gene co-occurrence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases)~\cite{Szklarczyk2019}.
-The database then contains score values for each type of evidence, as well as a combined overall confidence score.
-The Paper, as well as my dissertation, use only the combined confidence score and do not focus on the biological details of each evidence type.
+As an example, the STRING database~\cite{Szklarczyk2019} used in The Paper is an open collection that contains known and predicted protein-protein interactions.
+It provides confidence scores for edges, indicating how likely the dataset authors consider an interaction to be true, given the available evidence.
+Databases HitPredict~\cite{LopezHitPredictVersionComprehensive2015} and IntAct~\cite{OrchardMIntActProjectIntAct2014} and others use a similar approach.
+
+Edges in the STRING database have confidence scores for various types of evidence, such as scientific experiments, genetic observations (gene fusions, gene co-occurrence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases).
+An approximation of an overall confidence score is calculated for each edge (illustrated in \autoref{fig:string_network_image}).
+The Paper, as well as my dissertation, use only the overall confidence score and do not focus on the biological details of each evidence type.
+
+\input{figures/string_network_image.tex}
+
+\subsection{Network thresholding}
 
 \input{figures_gen/ecoli_giant_at_900.tex}
 
 When researching protein interactions, in practice, researchers choose a \textbf{threshold} and then form a protein interaction network from the database considering only interactions (edges) whose confidence score is greater than the selected threshold, to only take into account interactions of sufficiently high quality.
-Researchers then use tools such as graph metrics to identify important nodes or components of graphs, calculate statistics, or derive other results.
+Thresholding edges of sufficient confidence is a common step before further graph analysis.
 
-\autoref{fig:ecoli_giant_at_900} shows an example of a protein network taken from the STRING database\cite{Szklarczyk2019}, of proteins of the \textit{Escherichia coli} organism.
+\autoref{fig:ecoli_giant_at_900} shows an example of a protein network taken from the STRING database, containing proteins of the \textit{Escherichia coli} organism.
 Only edges with score of $0.9$ corresponding to the ``highest confidence'' level (on the scale from $0$ to $1$) were retained, and only the giant connected component of it is shown.
 That yields a graph with 2382 nodes and 12071 edges.
+
+\todo{Histogram of edge confidence of a graph such as \textsl{ecoli}}
 
 \subsection{Metric robustness}
 
@@ -57,16 +98,16 @@ However, as The Paper remarks, the analysis based on metric evaluation can be se
 If a node metric is to be useful for extracting biological signal, it should lead to similar results across networks obtained at different reasonable confidence score thresholds.
 Hence, the point of studying metric robustness or \textsl{stability} is a way to assess how reliable the results are on a graph derived from a given threshold.
 
-It is clear that numerical values of node metrics will depend on such threshold, for example the degree and the clustering coefficient of each node will indeed monotonically decline with declining density of the network, which monotonically declines as we increase the confidence threshold.
+When measuring robustness of node metrics, numerical values of metrics will undoubtedly depend on the chosen threshold, for example the degree and the clustering coefficient of each node will indeed monotonically decline with declining density of the network, which monotonically declines as we increase the confidence threshold.
 For this reason, the point of The Paper is to assess a robustness of graph metrics based on the \textbf{rankings} of nodes induced by each metric (where ranking is just a total preorder of the nodes based on the metric values).
 
-\subsubsection{Rank robustness}
+\subsubsection*{Rank robustness}
 
-The Paper introduces three different measures assessing robustness of node metrics (all will be explained later):
+The Paper introduces three different measures assessing robustness of node metrics (all are further explained later):
 \begin{itemize}
-    \item rank continuity,
-    \item rank identifiability,
-    \item rank instability.
+    \item rank continuity (comparing highly ranked nodes at similar thresholds),
+    \item rank identifiability (comparing ranks at various thresholds and the overall ranking),
+    \item rank instability (quantifying variation of ranks of top 1\% of nodes).
 \end{itemize}
 All three measures are based on rankings of nodes induced by node metrics, and not on the exact values, to mitigate the density bias described above.
 
@@ -620,7 +661,7 @@ Then the overall ranking is just the ranking of the locally defined $\operatorna
 \subsection{Robustness measures}\label{sec:robustness_measures}
 
 In this section I define the 3 robustness measures proposed by The Paper: rank continuity, rank identifiability, and rank instability.
-Then I explain how I extended two of the measures from scored networks to unscored networks.
+Then I explain how I extended two of the measures from scored networks to unscored networks.\todo{extend these to unscored networks}
 
 The Paper argues that in the context of bioinformatics, metrics are often used to identify key nodes of graphs, therefore it is natural to focus on the highest ranking nodes only.
 This is also true for networks that are just too large for each node to be inspected individually\citeneeded.
