@@ -231,7 +231,7 @@ Metrics are crucial in analysing graphs of ever-growing real-world data.
 
 Mathematically speaking, if $\mathbb{G}$ is the set of all graphs $G = (V, E)$ with $V \subset \mathbb{V}$, then we can define the domain of metrics to be generally functions of graphs:
 \begin{equation}
-    \label{eqn:metric_type_def}
+    \label{eq:metric_type_def}
     \mathbb{M} \eqdef \mathbb{G} \Rightarrow (\mathbb{V} \Rightarrow \mathbb{R})
 \end{equation}
 
@@ -251,9 +251,9 @@ The set of these metrics and their specific definition is based on The Paper\cit
 
 All metrics below are defined for \textsl{undirected} graphs.
 
-\subsubsection{Degree}
+\subsubsection{Centralities}
 
-One of the simplest metrics calculates the degree of each node.
+One of the simplest metrics calculates the \textsl{degree} of each node, which is often considered a centrality measure (indicating that nodes with higher degree are more important in the network).
 
 \begin{definition}[Degree (centrality)]
     For a graph $G = (V, E)$, define degree centrality $DC : V \rightarrow \mathbb{N}$:
@@ -262,9 +262,7 @@ One of the simplest metrics calculates the degree of each node.
     \end{equation*}
 \end{definition}
 
-\subsubsection{Betweenness centrality}
-
-One of the most common centrality measures, betweenness centrality, is calculated for each node $v$ as the number of all shortest paths passing through that node, for all pairs of nodes.
+Another one of the most common centrality measures, \textsl{betweenness centrality}, is calculated for each node $v$ as the number of all shortest paths passing through that node, for all pairs of nodes.
 If there are multiple shortest paths between a pair of nodes, the fraction of those passing through $v$ are considered.
 
 \begin{definition}[Betweenness centrality]
@@ -275,9 +273,7 @@ If there are multiple shortest paths between a pair of nodes, the fraction of th
     where $\sigma_{st}$ is the number of shortest paths between $s$ and $t$, and $\sigma_{st}(v)$ is the number of those that pass through $v$.
 \end{definition}
 
-\subsubsection{Closeness centrality}
-
-Closeness centrality of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
+\textsl{Closeness centrality} of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
 
 \begin{definition}[Closeness centrality]
     \[CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}\]
@@ -289,18 +285,76 @@ For disconnected graphs, I set $d(v, i) = \left\lvert V \right\rvert$ to follow 
 Closeness centrality measures the reciprocal of the \textsl{farness} of each node to other nodes.
 Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
 
-A common alternative for disconnected graphs is to compute Harmonic centrality.
-
 \input{figures_gen/simplegraph_by_some_metrics.tex}
 
-\subsubsection{Harmonic centrality}
-
-Has similar meaning to closeness centrality, and a similar definition.
+A common alternative for disconnected graphs is to compute \textsl{Harmonic centrality}.
+It has similar meaning to closeness centrality, and a similar definition.
 
 \begin{definition}[Harmonic centrality]
-    \[HC(v) = \sum_{i \neq v} \frac{1}{d(v, i)}\]
-    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$.
+    \[HC(v) \eqdef \sum_{i \neq v} \frac{1}{d(v, i)}\]
+    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (according to~\cite{MarchioriHarmonySmallworld2000}).
 \end{definition}
+
+Both \textsl{closeness} and \textsl{harmonic centrality} require the computation of distances between all pairs of nodes.
+I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962}.
+
+\subsubsection{Ego network measures}
+
+Ego networks are local subgraphs centered around a particular node in the network.
+Step-$n$ ego network (also called ego-$n$ network) of a node $v$ is a subgraph including $v$ (the \textsl{ego} node), all nodes reachable from $v$ in at most $n$ hops (the \textsl{alter} nodes), and all edges among these (see \autoref{fig:ego_network}).
+For simplicity, $\ego_n$ below are defined just as a subset of nodes $V$.
+
+\begin{definition}[ego-$\mathbf{n}$ network]
+    For a graph $G = (V, E)$, define inductively $\ego_n : V \rightarrow \mathcal{P}(V)$:
+    \begin{align*}
+        \ego_0(v) &\eqdef \left\{\, v \, \right\} \\
+        \forall n \in \mathbb{N}.\ \ego_{n+1} (v) &\eqdef \ego_n \cup \Set{v' \in V}{ \exists v'' \in \ego_n(v).\ (v', v'') \in E }
+    \end{align*}
+\end{definition}
+
+\input{figures/ego_network.tex}
+
+Ego metrics are node metrics whose value depend only on properties of local ego network(s).
+I chose and implemented 3 interesting ego metrics used also in The Paper.
+
+\begin{definition}[ego-$\mathbf{1}$ edges]
+    \[ E\mathit{1}E (v) = \left\lvert \Set{(v', v'') \in E}{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert \]
+\end{definition}
+
+\begin{definition}[ego-$\mathbf{2}$ nodes]
+    \[ E\mathit{2}N (v) = \left\lvert \ego_2(v) \right\rvert \]
+\end{definition}
+
+\begin{definition}[ego-$\mathbf{1/2}$ nodes ratio]
+    \[ ER(v) = \frac{ \left\lvert \ego_1(v) \right\rvert }{ \left\lvert \ego_2(v) \right\rvert } \]
+\end{definition}
+
+\textsl{Local clustering} is also a common node metric, measuring the proportion of existing and all possible edges among neighbours of $v$, defined as in~\cite{WattsCollectiveDynamicsSmallworld1998}.
+Following that, \textsl{redundancy} node metric is defined as the extent that $v$'s neighbours are adjacent to each other as well, according to~\cite{borgatti1997structural}.
+\begin{definition}[Local clustering]
+    Let $k = \deg(v)$, the degree of $v$, then
+    \[
+        LC(v) \eqdef
+        \begin{dcases}
+            0, &\text{if } k = 0,1 \\
+            \frac{ \left\lvert \Set{ (v', v'') \in E }{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert }{ k (k-1) / 2 } \quad &otherwise
+        \end{dcases}
+    \]
+
+\end{definition}
+
+\begin{definition}[Redundancy]
+    \[ R(v) \eqdef LC (v) \times (\deg(v) - 1) \]
+
+    Note that for $k \leq 1$, $LC(v) = R(v) = 0$.
+\end{definition}
+
+\subsubsection{Page rank}
+
+A different, interesting node metric is \textsl{PageRank}~\cite{BrinAnatomyLargescaleHypertextual1998}, first developed for Google Search to rate the importance of websites.
+For brevity, the full definition is not included here.
+I used an implementation of PageRank that is described in~\cite{ilprints422}.
+
 
 %\subsubsection{Eigenvector centrality}
 %
@@ -412,7 +466,7 @@ The difference between graphs obtained from the same imprecise source are always
 
 \subsection{Robustness}
 
-At the highest level where metrics are functions (\autoref{eqn:metric_type_def}), robustness measures can be regarded as functions from $\mathbb{M}$ (the domain of all metrics) to real numbers.
+At the highest level where metrics are functions (\autoref{eq:metric_type_def}), robustness measures can be regarded as functions from $\mathbb{M}$ (the domain of all metrics) to real numbers.
 \begin{equation}
     \mathcal{R} \eqdef \mathbb{M} \Rightarrow \mathbb{R}
 \end{equation}
