@@ -1,3 +1,43 @@
+\section{Success criteria}
+
+Referring to the~\nameref{ch:proposal}, I met all success criteria of the project
+
+
+\begin{todolist}
+    \item[\done] Implemented the experimental framework (\graffs) to automate experiments of robustness of graph metrics
+    \item[\done] Completed statistical analysis and compared results to The Paper
+    \item[\done] Extended the idea from The Paper to unscored networks, and deduced empirical observations about graph metrics on interesting unscored datasets
+\end{todolist}
+
+For the evaluation of \graffs, I designed the following experiments:
+\begin{description}
+    \item[\texttt{reproduce}] focuses on reproducing some results from The Paper, following the setup from The Paper as closely as possible
+    \item[\texttt{random-edges}] validates whether random edge deletion is a suitable graph generation method, by applying the same pipeline as in \texttt{repr} just with random edge deletion
+    \item[\texttt{unscored}] applies the random edge deletion method to new, unscored, datasets
+\end{description}
+
+
+\section{Validation against The Paper}
+
+The first evaluation part is the \texttt{repr} experiment set up in the following way:
+
+% @formatter:off
+\begin{lstlisting}[language=bash,style=light]
+graffs dataset download-demos
+graffs generator create --name thresholding --method threshold-linear --params 150,990 -n 85 --seed 5692472407974226435
+graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thresholding --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,EgoRatio,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
+graffs experiment run --name reproduce
+\end{lstlisting}
+% @formatter:on
+
+The datasets used (\texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}) are the exact datasets that were used in The Paper\footnote{The datasets are available at \url{https://github.com/lbozhilova/measuring_rank_robustness}}.
+They originate from the STRING database, but the database changes over time, so to validate \graffs by reproducing the results I prefered using the same datasets over their new version.
+The linear thresholding generator produces 85 graphs at linearly spaced thresholds between 0.15 and 0.99 confidence values.
+
+As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality, which depend on the all pair shortest paths algorithm that would take unreasonable amount of time to compute (\todo{evaluating Closeness on one graph takes XY minutes...})
+
+
+
 \section{Reliability of \graffs}
 
 - why is~\nameref{sec:randomly_removing_edges} as good as thresholding?
@@ -14,4 +54,5 @@ maybe apply Randomly removing edges to scored networks and see the difference of
 
 
 \section{Releasing \graffs}
+
 \subsection{Licensing}

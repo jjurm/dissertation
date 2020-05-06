@@ -28,6 +28,14 @@
 \newcommand{\graffs}{\texttt{graffs}\xspace}
 \newcommand{\parspace}{\bigskip}
 
+% Lists
+\setlist[itemize]{itemsep=0pt}
+
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\ding{51}}}\hspace{-2.5pt}}
+%\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\ding{55}}}
+
 % Figures
 \makeatletter
 \g@addto@macro\@floatboxreset\centering

@@ -370,7 +370,7 @@ However, one of the goals for \graffs is to make it as versatile as possible, th
 Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending GraphStream's \texttt{FileSourceEdge} simple LR parser, to allow the following:
 \begin{itemize}[topsep=5pt]
     \item Modify the grammar to correctly parse node IDs containing dots (\texttt{.}), such as \texttt{362663.ECP\_0001} (to allow datasets from the STRING database)
-    \item Ignore comment lines starting with the \texttt{\#} character
+    \item Ignore comment lines starting with \texttt{\#} or \texttt{\%} characters
     \item Ignore headers starting with the string \texttt{protein1} (included in graph files downloaded from the STRING database)
     \item Recognise if a line has 3 tokens instead of 2, in which case parse and store it as the weight of the edge
 \end{itemize}
@@ -492,6 +492,7 @@ Further, \autoref{lst:graffs_cli_examples} shows an example output of some of th
 
 \lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the help text printed by the command-line tool}, float, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}
 
+\todo{Describe Clikt features such as command completion}
 
 \section{Testing}
 
