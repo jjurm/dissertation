@@ -27,7 +27,7 @@ However, in order to validate whether the results produced by \graffs are legit,
 
 The \texttt{reproduce} experiment with the \texttt{thMedHigh} generator (producing 31 graphs at linearly spaced thresholds between 0.60 and 0.90 confidence values) were set up in the following way:
 % @formatter:off
-\begin{lstlisting}[language=bash,style=light]
+\begin{lstlisting}[language=bash]
 graffs dataset download-demos
 graffs generator create --name thMedHigh --method threshold-linear --params 600,900 -n 31 --seed 7
 graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thMedHigh --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
@@ -35,7 +35,30 @@ graffs experiment run --name reproduce
 \end{lstlisting}
 % @formatter:on
 
-As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality, which depend on the all pair shortest paths algorithm that would take unreasonable amount of time to compute (\todo{evaluating Closeness on one graph takes XY minutes...})
+As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality (Definitions~\ref{def:closeness_centrality} and~\ref{def:harmonic_centrality}).
+These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take unreasonable amount of time to compute on large graphs. (\todo{evaluating Closeness on one graph takes XY minutes\ldots})
+
+\input{figures/plot_reproduction.tex}
+
+\autoref{fig:plot_reproduction} demonstrates that \graffs is able to identify similar robustness properties of metrics as in The Paper.
+The Paper identifies metrics \texttt{Ego1Edges}, \texttt{Redundancy}, \texttt{Ego2Nodes}, \texttt{Degree} as very stable (i.e. robust).
+Those have reported RankContinuity and RankIdentifiability values above $0.75$ on almost all evaluations on the 3 datasets, and RankInstability below $\sim 0.1$.
+\graffs also reports these metrics as relatively stable, although the RankIdentifiability value is lower in general.
+
+On the other hand, \texttt{Betweenness} and \texttt{LocalClustering} are considered unstable by The Paper (RankContinuity and RankIdentifiability significantly dropped while RankInstability increased), and the results from \graffs copy the behaviour.
+Although the RankContinuity values of \texttt{LocalClustering} are not as low as reported by The Paper, one can definitely conclude that these two metrics are equally identified as less robust by \graffs.
+
+The robustness values from The Paper and \graffs should not be compared directly as there are many implementation details that make the numerical values vary between implementations.
+For example, when ranking nodes according to a metric, The Paper resolved ties randomly for each perturbed graph (which already leads to fluctuations in rankings), and my implementation resolves ties arbitrarily but predictably and constantly across all perturbed graphs of a dataset, with the purpose to improve reliability of robustness measures.
+The Paper also randomly resolved ties when calculating the overall ranking (Definition~\ref{def:overall_ranking}).
+Furthermore, there are other nuances that may cause these variations, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity (definitions~\ref{def:k_similarity},~\ref{def:alpha_relaxed_k_similarity}), definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
+
+For further thought, we can also consider variance of robustness measures to conclude that \texttt{Redundancy} (a stable metric) was assessed with variance close to zero, whereas the RankContinuity and RankIdentifiability measures of the \texttt{Ego2Nodes} metric led to diverse values across the 3 datasets.
+
+\todo{add timings}
+%Generate graphs            : 51s
+%Evaluate metrics - run     : 38m 46s
+%Robustness - compute       : 10s
 
 
 \section{Validation of random edge deletion}

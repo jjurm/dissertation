@@ -444,6 +444,8 @@ Note, there may be multiple valid rankings if multiple nodes have the same metri
 A ranking just assigns each node a rank (or a position) such that it doesn't violate the ordering by metric values.
 Also, note that each node must be assigned a \textsl{unique} rank, due to the antisymmetry property.
 
+\todo{explain how ties are resolved (in The Paper: randomly)}
+
 \todo{add graph figure with ranked nodes (either labels or node size by rank)}
 
 
@@ -677,7 +679,7 @@ For the reasons above, I decided to stick with random edge deletion.
 
 Define an \textbf{edge removing} graph generator, given a proportion of edges to delete $\alpha$ (deletion rate), as follows:
 \begin{align}
-    &\mathlarger{^{ER} \mathlarger{\xi}}_\alpha(G) \ \overset{n}{\hookrightarrow}\ (V, E')~\text{for}~i\in \integersto{n}, \\[10pt]
+    &\mathlarger{^{ER} \mathlarger{\xi}}_\alpha(G) \ \overset{n}{\hookrightarrow}\ (V, E')~\text{for}~i\in \integersto{n}, \label{eq:edge_removing_generator}\\[10pt]
     \text{where}~&E' = \Set{ e \in E }{ \chi_e > \alpha }, \nonumber \\
     &\forall e \in E.\ \chi_e\sim\mathcal{U}(0,1) \nonumber
 \end{align}
@@ -730,6 +732,7 @@ For that, I will first define the notion of $k$-similarity and $\alpha$-relaxed 
 Both similarities quantify a relationship between two rankings with meaning similar to rank correlation coefficient, but take into account the highest-ranked nodes only.
 
 \begin{definition}[$\bm{k}$-similarity]
+    \label{def:k_similarity}
     The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
     \[ M_k(A_\theta, A_\mu \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.
@@ -741,6 +744,7 @@ Also, as none of the used graph generator methods alter the set of nodes, we hav
 The following $\alpha$-relaxed $k$-similarity accounts for situations where the two rankings don't carry the same meaning and are interpreted differently.
 
 \begin{definition}[$\bm{\alpha}$-relaxed $\bm{k}$-similarity]
+    \label{def:alpha_relaxed_k_similarity}
     The \textbf{$\bm{\alpha}$-relaxed $\bm{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\bm{a}\%$ highest ranking nodes in $A_\theta$:
     \[ M_k^\alpha(A_\theta, A \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $\alpha > 0$, $k, k\alpha \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A$.
