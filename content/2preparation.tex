@@ -687,6 +687,8 @@ Define an \textbf{edge removing} graph generator, given a proportion of edges to
 \todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
 
 Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
+However, in practice it is useful to specify an \textsl{initial threshold} so that this generator can work on scored networks too, by turning them into unscored.
+Note that keeping all edges and purely discarding the confidence scores would be detrimental, as low-scored edges would make scored networks falsely dense.
 
 \subsection{Evaluating metrics}\label{sec:evaluating_metrics}
 
@@ -763,6 +765,10 @@ The following three rank robustness measures are defined given a metric $M$, a b
 \subsubsection{Rank continuity}\label{sub:rank_continuity}
 
 Speaking of scored networks, rank continuity of a metric is the similarity between rankings induced at consecutive thresholds.
+
+\begin{definition}[Rank continuity]\label{def:rank_continuity}
+    \ldots
+\end{definition}
 
 \ldots
 

@@ -66,19 +66,31 @@ For further thought, we can also consider variance of robustness measures to con
 Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
 The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach.
 
-I set the $\alpha$ parameter (proportion of edges to delete; see \autoref{eq:edge_removing_generator}) equal to $4\%$.
-This is following
+\input{figures/plot_edge_deletion_per_step.tex}
 
-The experiment was set up in the following way:
+I set the $\alpha$ parameter (proportion of edges to delete; see \autoref{eq:edge_removing_generator}) equal to $4\%$, following the analysis in \autoref{fig:plot_edge_deletion_per_step}.
+To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
+
+Also note that the rank continuity metric (definition~\ref{def:rank_continuity}) is only applicable to scored datasets, so will not be computed in this experiment.
+
+The experiment was set up using the following commands:
 % @formatter:off
 \begin{lstlisting}[language=bash]
 graffs dataset download-demos
-graffs generator create --name thMedHigh --method threshold-linear --params 600,900 -n 31 --seed 7
-graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thMedHigh --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
-graffs experiment run --name reproduce
+graffs generator create --name random04 --method removing-edges --params 0.04,600 -n 31 --seed 7
+graffs experiment create --name random-edges --datasets pvivax,ecoli,yeast --generator random04 --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability
+graffs experiment run --name random-edges
 \end{lstlisting}
 % @formatter:on
 
+\input{figures/plot_random_edges.tex}
+
+Results are shown in \autoref{fig:plot_random_edges}.
+We can see that RankInstability is able to flag both \texttt{Ego2Nodes} and \texttt{LocalClustering} metrics as relatively unstable, whereas Rank Identifiability only identified \texttt{LocalClustering} as unstable, and moreover with high variance among the datasets.
+
+
+
+\section{Extending to unscored datasets}
 
 \section{Reliability of \graffs}
 
@@ -86,7 +98,6 @@ graffs experiment run --name reproduce
 maybe apply Randomly removing edges to scored networks and see the difference of robustness
 
 
-\section{Reproducing results}
 
 
 \section{Extending to further datasets}

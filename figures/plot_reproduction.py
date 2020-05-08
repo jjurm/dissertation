@@ -7,6 +7,8 @@ import seaborn as sns
 
 import matplotlib
 
+from utils import palette_source_robustness, dashes_source_robustness
+
 matplotlib.rc('text', usetex=True)
 matplotlib.rcParams['mathtext.fontset'] = 'custom'
 matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
@@ -111,18 +113,6 @@ data = df.copy()
 data['source_robustness'] = data['source'].astype('string') + ", " + data['robustness'].astype('string')
 data = data.sort_values(['source', 'robustness'])
 
-palette_robustness = dict(zip(robustness_measures,
-                              sns.color_palette(palette="bright", n_colors=len(robustness_measures))))
-palette_robustness_light = dict(zip(robustness_measures,
-                                    sns.color_palette(palette="pastel", n_colors=len(robustness_measures))))
-palette_source_robustness = {
-    (s + ", " + r): palette_robustness[r] if s == 'graffs' else palette_robustness_light[r]
-    for r in robustness_measures for s in sources
-}
-dashes_source_robustness = {
-    (s + ", " + r): (1, 0) if s == 'graffs' else (5, 4)
-    for r in robustness_measures for s in sources
-}
 
 for dataset in datasets:
     data_local = data[data['dataset'] == dataset]
@@ -157,7 +147,7 @@ plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0,1,5)))
 plt.grid(color='0.8', linestyle=':', which='major', axis='both')
 plt.title("Comparison of results from The Paper and \\texttt{graffs} (experiment: \\texttt{reproduce}),\n"
           "including 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
-plt.xlabel("Metric")
+plt.xlabel("\\textsl{Metric}")
 plt.ylabel("Robustness value")
 
 plt.tight_layout()
