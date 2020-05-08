@@ -16,26 +16,45 @@ For the evaluation of \graffs, I designed the following experiments:
     \item[\texttt{unscored}] applies the random edge deletion method to new, unscored, datasets
 \end{description}
 
+In analyses in the following sections, the protein network datasets \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast} are the exact datasets that were used in The Paper\footnote{The datasets are available at \url{https://github.com/lbozhilova/measuring_rank_robustness}}.
+They originate from the STRING database, but the database changes over time, so to validate \graffs by reproducing the results I preferred using the same datasets over their new version.
+
 
 \section{Validation against The Paper}
 
-The first evaluation part is the \texttt{repr} experiment set up in the following way:
+One of the added values of \graffs is the ability to experiment with \textsl{unscored} graphs.
+However, in order to validate whether the results produced by \graffs are legit, I first constructed and ran a \texttt{reproduce} experiment trying to reproduce results from The Paper, by linearly thresholding 3 scored protein interaction networks in the same way as The Paper.
 
+The \texttt{reproduce} experiment with the \texttt{thMedHigh} generator (producing 31 graphs at linearly spaced thresholds between 0.60 and 0.90 confidence values) were set up in the following way:
 % @formatter:off
 \begin{lstlisting}[language=bash,style=light]
 graffs dataset download-demos
-graffs generator create --name thresholding --method threshold-linear --params 150,990 -n 85 --seed 5692472407974226435
-graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thresholding --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,EgoRatio,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
+graffs generator create --name thMedHigh --method threshold-linear --params 600,900 -n 31 --seed 7
+graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thMedHigh --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
 graffs experiment run --name reproduce
 \end{lstlisting}
 % @formatter:on
 
-The datasets used (\texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}) are the exact datasets that were used in The Paper\footnote{The datasets are available at \url{https://github.com/lbozhilova/measuring_rank_robustness}}.
-They originate from the STRING database, but the database changes over time, so to validate \graffs by reproducing the results I prefered using the same datasets over their new version.
-The linear thresholding generator produces 85 graphs at linearly spaced thresholds between 0.15 and 0.99 confidence values.
-
 As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality, which depend on the all pair shortest paths algorithm that would take unreasonable amount of time to compute (\todo{evaluating Closeness on one graph takes XY minutes...})
 
+
+\section{Validation of random edge deletion}
+
+Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
+The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach.
+
+I set the $\alpha$ parameter (proportion of edges to delete; see \autoref{eq:edge_removing_generator}) equal to $4\%$.
+This is following
+
+The experiment was set up in the following way:
+% @formatter:off
+\begin{lstlisting}[language=bash]
+graffs dataset download-demos
+graffs generator create --name thMedHigh --method threshold-linear --params 600,900 -n 31 --seed 7
+graffs experiment create --name reproduce --datasets pvivax,ecoli,yeast --generator thMedHigh --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
+graffs experiment run --name reproduce
+\end{lstlisting}
+% @formatter:on
 
 
 \section{Reliability of \graffs}

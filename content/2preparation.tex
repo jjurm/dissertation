@@ -274,29 +274,31 @@ If there are multiple shortest paths between a pair of nodes, the fraction of th
 \end{definition}
 
 \textsl{Closeness centrality} of a node $v$ is the reciprocal value of the sum of $d(v, i)$, the distances from that node to all other nodes $i$ in the graph.
+It measures the reciprocal of the \textsl{farness} of each node to other nodes.
+Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
 
-\begin{definition}[Closeness centrality]
+\begin{definition}[Closeness centrality]\label{def:closeness_centrality}
     \[CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}\]
 \end{definition}
 
 This is well-defined for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
 For disconnected graphs, I set $d(v, i) = \left\lvert V \right\rvert$ to follow the approach in The Paper.
 
-Closeness centrality measures the reciprocal of the \textsl{farness} of each node to other nodes.
-Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
-
 \input{figures_gen/simplegraph_by_some_metrics.tex}
 
 A common alternative for disconnected graphs is to compute \textsl{Harmonic centrality}.
 It has similar meaning to closeness centrality, and a similar definition.
 
-\begin{definition}[Harmonic centrality]
+\begin{definition}[Harmonic centrality]\label{def:harmonic_centrality}
     \[HC(v) \eqdef \sum_{i \neq v} \frac{1}{d(v, i)}\]
-    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (according to~\cite{MarchioriHarmonySmallworld2000}).
+    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (as in~\cite{MarchioriHarmonySmallworld2000}).
 \end{definition}
 
 Both \textsl{closeness} and \textsl{harmonic centrality} require the computation of distances between all pairs of nodes.
-I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962}.
+I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962} of time complexity $O({\left\lvert V \right\rvert}^3)$.
+An alternative would be running Dijkstra's algorithm~\cite{dijkstra1959note} with time complexity $O({\left\lvert V \right\rvert}^2)$ starting in each node.
+
+\todo{consider Seidel's APD algorithm, od Dijkstra}
 
 \subsubsection{Ego network measures}
 
