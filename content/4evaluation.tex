@@ -53,20 +53,25 @@ For example, when ranking nodes according to a metric, The Paper resolved ties r
 The Paper also randomly resolved ties when calculating the overall ranking (Definition~\ref{def:overall_ranking}).
 Furthermore, there are other nuances that may cause these variations, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity (definitions~\ref{def:k_similarity},~\ref{def:alpha_relaxed_k_similarity}), definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
 
-For further thought, we can also consider variance of robustness measures to conclude that \texttt{Redundancy} (a stable metric) was assessed with variance close to zero, whereas the RankContinuity and RankIdentifiability measures of the \texttt{Ego2Nodes} metric led to diverse values across the 3 datasets.
+For further thought, we can also consider variance of robustness measures, concluding, for example, that \texttt{Redundancy} (a stable metric) has small variance in RankIdentifiability across the 3 datasets, whereas the RankContinuity and RankIdentifiability of the \texttt{Ego2Nodes} metric led to more diverse values.
 
-\todo{add timings}
-%Generate graphs            : 51s
-%Evaluate metrics - run     : 38m 46s
-%Robustness - compute       : 10s
+\subsection{Rank similarity}
+
+Another way to validate intermediate results is to consider $k$-similarity of perturbed graphs between two consecutive thresholds, and $\alpha$-relaxed $k$-similarity between graphs at individual thresholds and overall ranks.
+I compare the results for metrics \texttt{Degree}, \texttt{Betweenness} and \texttt{LocalClustering} on the protein network datasets with the results of The Paper (these metrics were highlighted in The Paper).
+
+\input{plot_rank_similarity.tex}
+
+First, for each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated $k$-similarity of each pair of graphs at consecutive thresholds, which are shown in \autoref{fig:plot_rank_similarity}.
+The $k$ coefficient was set to $0.01$ for computing these plots\footnote{Chosen according to \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/master/figure_generation.R#L28}}.
 
 
 \section{Validation of random edge deletion}
 
-Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
-The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach.
-
 \input{figures/plot_edge_deletion_per_step.tex}
+
+Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
+The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach, comparing robustness results of the same metrics, on the same datasets, just with a different graph-generating method.
 
 I set the $\alpha$ parameter (proportion of edges to delete; see \autoref{eq:edge_removing_generator}) equal to $4\%$, following the analysis in \autoref{fig:plot_edge_deletion_per_step}.
 To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
@@ -89,21 +94,54 @@ Results are shown in \autoref{fig:plot_random_edges}.
 We can see that RankInstability is able to flag both \texttt{Ego2Nodes} and \texttt{LocalClustering} metrics as relatively unstable, whereas Rank Identifiability only identified \texttt{LocalClustering} as unstable, and moreover with high variance among the datasets.
 
 
-
 \section{Extending to unscored datasets}
 
-\section{Reliability of \graffs}
+Having validated that randomly removing edges is a reasonable method for generating small perturbations in unscored graphs, we can now proceed to evaluating robustness of multiple metrics on multiple interesting datasets.
+I have chosen the following datasets, considering mainly their size (number of nodes and density; due to associated computational cost), and supposed structure.
 
-- why is~\nameref{sec:randomly_removing_edges} as good as thresholding?
-maybe apply Randomly removing edges to scored networks and see the difference of robustness
+\begin{description}
+    \item[airports]\ Airport–airport flights in the US in 2010~\cite{konect:2016:opsahl-usairport,konect:opsahl11}, from KONECT~\cite{Kunegis2013}
+    \item[citation]\ High-energy physics theory citation network~\cite{LeskovecGraphsTimeDensification2005,GehrkeOverview2003KDD2003}, from SNAP Datasets~\cite{Large2016}
+    \item[collab]\ Collaboration network of Arxiv General Relativity category~\cite{LeskovecGraphEvolutionDensification2007}, SNAP Datasets
+    \item[facebook]\ Social circles (friends) from Facebook~\cite{NIPS2012_4532}, from SNAP Datasets
+    \item[internet]\ Internet topology network of autonomous systems~\cite{konect:zhang05,konect:2016:topology}, from KONECT
+\end{description}
+
+\todo{mention licenses of datasets, and include them on download}
 
 
+The experiment using these datasets is set up as follows:
+% @formatter:off
+\begin{lstlisting}[language=bash]
+graffs dataset download-demos
+graffs experiment create --name unscored --generator random04 \
+    --datasets airports,citation,collab,facebook,internet \
+    --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy \
+    --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
+graffs experiment run --name unscored
+\end{lstlisting}
+% @formatter:on
+
+\input{figures/plot_unscored.tex}
+
+\autoref{fig:plot_unscored} shows 2 robustness measures evaluated on the 7 metrics using 5 unscored datasets.
+Overall, the tendency of robustness measures identify the key results from previous experiments: metrics \texttt{Degree}, \texttt{Ego1Edges}, and \texttt{Redundancy} are stable on all datasets.
+The \texttt{facebook} dataset has lower RankIdentifiability of \texttt{Betweenness} and \texttt{Ego2Nodes} metric, and most of the datasets apart from \texttt{internet} have lower values of both robustness measures of the \texttt{LocalClustering} metric.
 
 
-\section{Extending to further datasets}
+\section{Performance}
 
+The following plots compare the time it took to evaluate the experiments: \texttt{reproduce}, \texttt{random-edges}, \texttt{unscored}; and the time spent on evaluating each metric.
 
-\section{(Predicting metric stability)}
+I ran the experiments on a computing server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
+
+\todo{include plots}
+
+% reproduce
+%Generate graphs            : 51s
+%Evaluate metrics - run     : 38m 46s
+%Robustness - compute       : 10s
+
 
 
 \section{Releasing \graffs}

@@ -19,29 +19,12 @@ matplotlib.rcParams['mathtext.tt'] = prop.get_name()
 
 columns = ['experiment', 'robustness', 'dataset', 'metric', 'value']
 metrics = ['Betweenness', 'Degree', 'Ego1Edges', 'Ego2Nodes', 'LocalClustering', 'PageRank', 'Redundancy']
-datasets = ['pvivax', 'ecoli', 'yeast']
+datasets = ['airports', 'facebook', 'collab', 'internet', 'citation']
 robustness_measures = ['RankIdentifiability', 'RankInstability']
-random_edges_experiment = 'random-edges'
-experiments = ['paper', 'reproduce', random_edges_experiment]
+experiment_name = 'unscored'
+experiments = [experiment_name]
 
 # %%
-# DF paper
-
-df_paper = pd.read_excel("robustness_paper.xlsx", sheet_name=None)
-sheets = ['P-RankContinuity', 'P-RankIdentifiability', 'P-RankInstability']
-df_paper = pd.concat({sheet: df_paper[sheet].set_index("Metric") for sheet in sheets}, axis=1)
-df_paper = df_paper.unstack().reset_index()
-df_paper = df_paper.rename({"level_0": "robustness", "level_1": "dataset", "Metric": "metric", 0: "value"}, axis=1)
-df_paper['robustness'] = df_paper['robustness'].str[2:]
-df_paper['metric'] = df_paper['metric'].replace(
-    {'Harmonic centrality': 'Harmonic', 'Ego1: edges': 'Ego1Edges', 'Local clustering': 'LocalClustering',
-     'Ego1/Ego2: nodes': 'EgoRatio', 'Ego2: nodes': 'Ego2Nodes'})
-df_paper['dataset'] = df_paper['dataset'].str.lower().str.strip().replace({'pvx': 'pvivax'})
-
-df_paper = df_paper[df_paper['metric'].isin(metrics) & df_paper['dataset'].isin(datasets)]
-df_paper['metric'] = pd.Categorical(df_paper['metric'], categories=metrics, ordered=True)
-df_paper = df_paper.assign(experiment='paper')
-df_paper = df_paper[columns]
 
 # DF graffs
 
@@ -55,13 +38,13 @@ df_graffs = df_graffs[columns]
 
 # DF combined
 
-df_combined = pd.concat([df_graffs, df_paper], axis=0)
+df_combined = df_graffs
 df_combined = df_combined[df_combined['robustness'].isin(robustness_measures)]
 
 # %% Sort columns
 
 # Decide metric order
-avgs = df_combined[df_combined['experiment'] == 'reproduce'].groupby(['metric', 'robustness'], as_index=False).mean()
+avgs = df_combined[df_combined['experiment'] == experiment_name].groupby(['metric', 'robustness'], as_index=False).mean()
 by_metrics = avgs.pivot_table(values='value', index='metric', columns='robustness', aggfunc='mean')
 by_metrics['robustness_overall'] = by_metrics['RankIdentifiability'] - by_metrics['RankInstability']
 by_metrics = by_metrics.drop(robustness_measures, axis=1)
@@ -75,13 +58,33 @@ df['dataset'] = pd.Categorical(df_combined['dataset'], categories=datasets, orde
 df['metric'] = pd.Categorical(df_combined['metric'], categories=metrics_sorted, ordered=True)
 df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 
+# %% Bar plot for one robustness measure
+
+# data = df
+# r = 'RankIdentifiability'
+# data = data[data['robustness'] == r]
+# # data = data.groupby(['metric','source'], as_index=False).mean()
+# plt.subplots(figsize=(8, 7))
+#
+# plt.subplot(111)
+# sns.barplot(
+#     x=data['metric'],
+#     y=data['value'],
+#     hue=data['dataset'],
+#     # style=data['source'],
+# )
+# plt.ylim(0, 1)
+# plt.title(r + " paper")
+#
+# plt.show()
+
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(8, 5), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(8, 4.5), sharex=True, squeeze=True)
 
 gs1 = GridSpec(2, 1)
-gs1.update(hspace=0.02)
+gs1.update(hspace=0.0)
 
 
 # noinspection PyUnresolvedReferences
@@ -91,49 +94,33 @@ def plot_for_robustness(robustness_measure, pos):
     palette_experiment = {
         "paper": palette_robustness_light[robustness_measure],
         "reproduce": palette_robustness[robustness_measure],
-        random_edges_experiment: palette_robustness_dark[robustness_measure],
+        experiment_name: palette_robustness_dark[robustness_measure],
     }
     dashes_experiment = {
         "paper": (5, 4),
         "reproduce": (1, 0),
-        random_edges_experiment: (1.5, 1.5),
+        experiment_name: (1.5, 1.5),
     }
     print(palette_experiment)
 
-    for dataset in datasets:
-        data_local = data[data['dataset'] == dataset]
-        sns.lineplot(
-            x=data_local['metric'],
-            y=data_local['value'],
-            hue=data_local['experiment'],  # .rename("\\textbf{Robustness measure}"),
-            style=data_local['experiment'],  # .rename("\\textbf{Data source}"),
-            estimator='mean',
-            size=True,
-            sizes=[0.5],
-            legend=False,
-            palette=palette_experiment,
-            dashes=dashes_experiment,
-        )
-    experiment_col = data['experiment'].rename("\\textbf{experiment:}")
     sns.lineplot(
         x=data['metric'],
         y=data['value'],
-        hue=experiment_col,
-        style=experiment_col,
+        hue=data['dataset'],  # .rename("\\textbf{Robustness measure}"),
+        # style=data_local['experiment'],  # .rename("\\textbf{Data source}"),
         estimator='mean',
-        ci=100,
-        palette=palette_experiment,
-        dashes=dashes_experiment,
+        # palette=palette_experiment,
+        # dashes=dashes_experiment,
     )
 
     plt.margins(x=0.05)
     if pos == 0:
-        plt.ylim(0.15, 1.05)
+        plt.ylim(0.5, 1.04)
         ax1.set_xticklabels([])
         ax1.set_xlabel(None)
     elif pos == 1:
         plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
-        plt.ylim(0, 0.15)
+        plt.ylim(-0.04, 0.5)
     plt.gca().yaxis.set_minor_locator(plticker.MultipleLocator(0.05))
     plt.grid(color='0.8', linestyle=':', which='both', axis='both')
 
@@ -141,12 +128,12 @@ def plot_for_robustness(robustness_measure, pos):
 
 
 plot_for_robustness('RankIdentifiability', 0)
-plt.title("Validating \\texttt{random-edges} experiment agains \\texttt{reproduce} and results of The Paper\n"
-          "using 2 robustness measures on 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
+plt.title("The \\texttt{unscored} experiment: RankIdentifiability and RankInstability computed\n"
+          "on 7 metrics and 5 new unscored datasets")
 
 plot_for_robustness('RankInstability', 1)
 plt.xlabel("\\textsl{Metric}")
 
 plt.tight_layout()
-plt.savefig("plot_random_edges.pdf")
+plt.savefig("plot_unscored.pdf")
 plt.show()
