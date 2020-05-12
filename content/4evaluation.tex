@@ -51,7 +51,7 @@ Although the RankContinuity values of \texttt{LocalClustering} are not as low as
 The robustness values from The Paper and \graffs should not be compared directly as there are many implementation details that make the numerical values vary between implementations.
 For example, when ranking nodes according to a metric, The Paper resolved ties randomly for each perturbed graph (which already leads to fluctuations in rankings), and my implementation resolves ties arbitrarily but predictably and constantly across all perturbed graphs of a dataset, with the purpose to improve reliability of robustness measures.
 The Paper also randomly resolved ties when calculating the overall ranking (Definition~\ref{def:overall_ranking}).
-Furthermore, there are other nuances that may cause these variations, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity (definitions~\ref{def:k_similarity},~\ref{def:alpha_relaxed_k_similarity}), definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
+Furthermore, there are other nuances that may cause these variations, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity (different values were used in \graffs to generalize the process; see definitions~\ref{def:k_similarity},~\ref{def:alpha_relaxed_k_similarity}), definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
 
 For further thought, we can also consider variance of robustness measures, concluding, for example, that \texttt{Redundancy} (a stable metric) has small variance in RankIdentifiability across the 3 datasets, whereas the RankContinuity and RankIdentifiability of the \texttt{Ego2Nodes} metric led to more diverse values.
 
@@ -62,8 +62,11 @@ I compare the results for metrics \texttt{Degree}, \texttt{Betweenness} and \tex
 
 \input{plot_rank_similarity.tex}
 
-First, for each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated $k$-similarity of each pair of graphs at consecutive thresholds, which are shown in \autoref{fig:plot_rank_similarity}.
+For each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated $k$-similarity of each pair of graphs at consecutive thresholds. Those are shown in \autoref{fig:plot_rank_similarity} (b), along with plots of the same data from The Paper.
 The $k$ coefficient was set to $0.01$ for computing these plots\footnote{Chosen according to \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/master/figure_generation.R#L28}}.
+
+The $k$-similarity values are used for computing the \texttt{RankContinuity} robustness measure, which is equal to the proportion of such pair of consecutive graphs whose $k$-similarity is above the $0.9$ threshold.
+The visual plots demonstrate that \graffs can reproduce these results closely.
 
 
 \section{Validation of random edge deletion}
