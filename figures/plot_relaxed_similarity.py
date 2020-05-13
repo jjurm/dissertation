@@ -24,20 +24,27 @@ datasets_bozhilova_colors = {
 
 # %%
 
-df = pd.read_csv('plot_rank_similarity_graffs.csv')
+df = pd.read_csv('plot_relaxed_similarity_graffs.csv')
 
 # %%
 
-metrics = ["Degree", "Betweenness", "Redundancy"]
+# ?Degree LocalC ?Redundancy
+# ?Ego1Edges
+# Betweenness
+metrics = ["Degree", "Betweenness", "LocalClustering"]
 
 plt.subplots(figsize=(12, 3.5), sharey="all", nrows=1, ncols=3)
 
+
 def plot_metric(metric, pos):
-    ax=plt.subplot(1, len(metrics), pos)
+    ax = plt.subplot(1, len(metrics), pos)
     data = df[df['metric'] == metric]
 
+    # noinspection PyUnresolvedReferences
+    ax.axvspan(0.6, 0.9, color='0.85')
     for loc in [0, 0.25, 0.5, .75, 1]:
         plt.axhline(y=loc, color="0.75", linestyle='-', linewidth=0.5)
+
     sns.lineplot(
         x=data['threshold'],
         y=data['similarity'],
@@ -48,27 +55,30 @@ def plot_metric(metric, pos):
     plt.xlim(0.1, 1)
     plt.ylim(0, 1.02)
     plt.gca().yaxis.set_major_locator(MultipleLocator(0.25))
-    plt.xticks([0.15, 0.4, 0.7, 0.9, 1])
+    plt.xticks([0.15, 0.4, 0.6, 0.7, 0.9, 1])
     plt.yticks([0, 0.25, 0.5, 0.75, 0.9, 1])
 
     plt.title(metric)
     plt.xlabel("Threshold")
 
     if pos == 1:
-        plt.ylabel("$k\,$-similarity")
+        plt.ylabel("$\\alpha$\,-relaxed $k\,$-similarity")
     else:
         plt.ylabel("")
         # noinspection PyUnresolvedReferences
         plt.setp(ax.get_yticklabels(), visible=False)
+    if pos == 3:
+        plt.legend(loc="upper left")
 
     plt.plot([0, 1], [0.9, 0.9], c="0.4", linestyle="--")
 
     for x in [0.15, 0.4, 0.7, 0.9]:
-        plt.plot([x,x],[-1,2], linestyle=":", c="0.6")
+        plt.plot([x, x], [-1, 2], linestyle=":", c="0.6")
 
-for i,m in enumerate(metrics):
-    plot_metric(m, i+1)
+
+for i, m in enumerate(metrics):
+    plot_metric(m, i + 1)
 
 plt.tight_layout()
-plt.savefig("plot_rank_similarity_graffs.pdf")
+plt.savefig("plot_relaxed_similarity_graffs.pdf")
 plt.show()

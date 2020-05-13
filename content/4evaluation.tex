@@ -58,15 +58,21 @@ For further thought, we can also consider variance of robustness measures, concl
 \subsection{Rank similarity}
 
 Another way to validate intermediate results is to consider $k$-similarity of perturbed graphs between two consecutive thresholds, and $\alpha$-relaxed $k$-similarity between graphs at individual thresholds and overall ranks.
-I compare the results for metrics \texttt{Degree}, \texttt{Betweenness} and \texttt{LocalClustering} on the protein network datasets with the results of The Paper (these metrics were highlighted in The Paper).
+For each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated the needed metric values for each graph.
+Then I compare the results for 3 chosen metrics on the protein network datasets with the results of The Paper.
 
-\input{plot_rank_similarity.tex}
+\input{figures/plot_rank_similarity.tex}
+\input{figures/plot_relaxed_similarity.tex}
 
-For each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated $k$-similarity of each pair of graphs at consecutive thresholds. Those are shown in \autoref{fig:plot_rank_similarity} (b), along with plots of the same data from The Paper.
+\autoref{fig:plot_rank_similarity} shows $k$-similarity of each pair of graphs at consecutive thresholds, along with plots of the same data from The Paper.
 The $k$ coefficient was set to $0.01$ for computing these plots\footnote{Chosen according to \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/master/figure_generation.R#L28}}.
+The $k$-similarity values are used for computing the \texttt{RankContinuity} robustness measure (which is equal to the proportion of such pair of consecutive graphs whose $k$-similarity is above the $0.9$ threshold).
 
-The $k$-similarity values are used for computing the \texttt{RankContinuity} robustness measure, which is equal to the proportion of such pair of consecutive graphs whose $k$-similarity is above the $0.9$ threshold.
-The visual plots demonstrate that \graffs can reproduce these results closely.
+\autoref{fig:plot_relaxed_similarity} shows $\alpha$-relaxed $k$-similarity between overall ranking and rankings of graphs at individual thresholds.
+The overall ranking was calculated for the ``wide
+medium-high confidence region'' $\left[ 0.6, 0.9 \right]$, and $\alpha$ was set to $1.5$.
+
+The visual plots demonstrate that \graffs can reproduce the original results closely, in both $k$-similarity and $\alpha$-relaxed $k$-similarity.
 
 
 \section{Validation of random edge deletion}
@@ -144,7 +150,6 @@ I ran the experiments on a computing server running \textsl{Ubuntu 18}, using \t
 %Generate graphs            : 51s
 %Evaluate metrics - run     : 38m 46s
 %Robustness - compute       : 10s
-
 
 
 \section{Releasing \graffs}
