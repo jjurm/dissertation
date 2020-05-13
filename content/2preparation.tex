@@ -31,7 +31,7 @@ These errors may then propagate and cause errors in graph metrics.
 Error measures are important to assess how precise or confident an experiment or an observation is.
 A research result without examining its precision or confidence can be considered incomplete.\citeneeded{}
 
-\parskip
+\parspace
 
 However, can we measure precision or confidence of graph metrics?
 If an outcome is based on evaluating metrics on graphs which are themselves imprecise or possibly have errors in the structure, how can we assess the confidence or precision of such result?
@@ -648,7 +648,7 @@ Define a \textbf{linear thresholding} graph generator, given a minimum threshold
     &c(v_1, v_2)~\text{is the confidence score of the edge $v_1\,\text{---}\,v_2$} \nonumber
 \end{align}
 
-\todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
+\todo{generate array of ~8 linearly thresholded graphs to demonstrate this}
 
 \subsubsection{Randomly deleting edges}\label{sec:randomly_removing_edges}
 
@@ -684,7 +684,7 @@ Define an \textbf{edge removing} graph generator, given a proportion of edges to
     &\forall e \in E.\ \chi_e\sim\mathcal{U}(0,1) \nonumber
 \end{align}
 
-\todo{generate an array of ~8 linearly thresholded graphs to demonstrate this effect}
+\todo{generate array of ~8 linearly thresholded graphs to demonstrate this}
 
 Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
 However, in practice it is useful to specify an \textsl{initial threshold} so that this generator can work on scored networks too, by turning them into unscored.
@@ -723,7 +723,9 @@ Then the overall ranking is just the ranking of the locally defined $\operatorna
 \subsection{Robustness measures}\label{sec:robustness_measures}
 
 In this section I define the 3 robustness measures proposed by The Paper: rank continuity, rank identifiability, and rank instability.
-Then I explain how I extended two of the measures from scored networks to unscored networks.\todo{extend these to unscored networks}
+Then I explain how I extended two of the measures from scored networks to unscored networks.
+
+\todo{extend these to unscored networks}
 
 The Paper argues that in the context of bioinformatics, metrics are often used to identify key nodes of graphs, therefore it is natural to focus on the highest ranking nodes only.
 This is also true for networks that are just too large for each node to be inspected individually\citeneeded.

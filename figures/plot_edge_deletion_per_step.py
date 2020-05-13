@@ -29,7 +29,7 @@ df['deleted'] = df['deleted'] * 100
 
 # %%
 
-plt.figure(figsize=(4, 3))
+plt.figure(figsize=(4.5, 3))
 
 palette_map = dict(zip(datasets, sns.color_palette(n_colors=len(datasets))))
 palette_map_light = {k: colors.to_rgba(c, 0.15) for k, c in palette_map.items()}
@@ -43,7 +43,7 @@ for dataset in datasets:
     avg = avgs[dataset]
     plt.plot(
         thresholds, data['deleted'],
-        color=palette_map[dataset], linewidth=0.5,
+        color=palette_map[dataset], linewidth=1,
         label=dataset
     )
     plt.plot(
@@ -71,7 +71,9 @@ plt.grid(which="both", color="0.9")
 plt.ylim(0, 10)
 plt.gca().yaxis.set_major_formatter(plticker.PercentFormatter(decimals=0))
 plt.title("Proportion of edges deleted at each threshold\non linearly thresholded protein networks")
+plt.xlabel("Threshold")
+plt.ylabel("\\%\, edges deleted")
 
-plt.tight_layout()
+plt.tight_layout(pad=0.6)
 plt.savefig("plot_edge_deletion_per_step.pdf")
 plt.show()

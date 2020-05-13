@@ -63,17 +63,15 @@ Then I compare the results for 3 chosen metrics on the protein network datasets 
 
 \input{figures/plot_rank_similarity.tex}
 \input{figures/plot_relaxed_similarity.tex}
+\afterpage{\clearpage}
 
 \autoref{fig:plot_rank_similarity} shows $k$-similarity of each pair of graphs at consecutive thresholds, along with plots of the same data from The Paper.
-The $k$ coefficient was set to $0.01$ for computing these plots\footnote{Chosen according to \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/master/figure_generation.R#L28}}.
-The $k$-similarity values are used for computing the \texttt{RankContinuity} robustness measure (which is equal to the proportion of such pair of consecutive graphs whose $k$-similarity is above the $0.9$ threshold).
+The $k$-similarity values are used for calculating \texttt{RankContinuity}, which is equal to the proportion of such pairs of consecutive graphs whose $k$-similarity is above the $0.9$ threshold).
 
 \autoref{fig:plot_relaxed_similarity} shows $\alpha$-relaxed $k$-similarity between overall ranking and rankings of graphs at individual thresholds.
-The overall ranking was calculated for the ``wide
-medium-high confidence region'' $\left[ 0.6, 0.9 \right]$, and $\alpha$ was set to $1.5$.
+$\alpha$-relaxed $k$-similarity is used for calculating \texttt{RankIdentifiability}, which is equal to the minimum similarity value within the $\left[ 0.6, 0.9 \right]$ confidence interval.
 
-The visual plots demonstrate that \graffs can reproduce the original results closely, in both $k$-similarity and $\alpha$-relaxed $k$-similarity.
-
+The visual plots of the three chosen metrics in each case demonstrate that \graffs's similarity values match those of The Paper closely, in both $k$-similarity and $\alpha$-relaxed $k$-similarity.
 
 \section{Validation of random edge deletion}
 

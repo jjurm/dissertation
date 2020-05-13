@@ -138,7 +138,9 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 
 I used a remote high-performance computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
 
-In particular, I worked with the server \texttt{rio.cl.cam.ac.uk} with \todo{include computing characteristics}.
+In particular, I worked with the server \texttt{rio.cl.cam.ac.uk} with \ldots
+
+\todo{include computing characteristics}.
 
 \subsubsection*{Setting up the cluster}
 
@@ -390,8 +392,8 @@ If an object whose name ends with \texttt{.df}\footnotemark{} is found, it is co
 \subsection{Generating graphs}
 
 First, there is the \texttt{GraphProducer} interface, which has a single method\footnotemark{}:\\ \texttt{fun produce(sourceGraph: Graph, n: Int): List<Deferred<PerturbedGraph>>}
-\footnotetext{It returns a list of \texttt{Deferred} objects from the \texttt{kotlinx.coroutines} package, so that the generation can be parallelised at a higher level in the program using \textsl{Kotlin coroutines}, as described in \autoref{sec:kotlin_coroutines}.}
-Each |GraphProducer| implementation also provides a corresponding |GraphProducerFactory| object, defined as:
+\footnotetext{It returns a list of \texttt{Deferred} objects from the \texttt{kotlinx.coroutines} package, so that the generation can be parallelised at a higher level in the program using \textsl{Kotlin coroutines}, as described in \autoref{sec:kotlin_coroutines}.} \\
+Each |GraphProducer| implementation provides a corresponding |GraphProducerFactory| object, defined as:
 % @formatter:off
 \begin{lstlisting}[language=Kotlin]
 typealias GraphProducerFactory =
@@ -415,7 +417,7 @@ An |Experiment| entry (those are created by the user) has a |Set<String>| field 
 
 \subsection{Metric robustness}
 
-Similar to other concepts, robustness measures are classes implementing the |RobustnessMeasure| interface, with a single method |suspend fun evaluate(metric: MetricInfo, graphCollection: GraphCollection, metadata: GraphCollectionMetadata): Double|.
+Similar to other concepts, robustness measure classes implement the |RobustnessMeasure| interface, with a single method |suspend fun evaluate(metric: MetricInfo, graphCollection: GraphCollection, metadata: GraphCollectionMetadata): Double|.
 
 |MetricInfo| uniquely identifies the |Metric| whose robustness to calculate.
 |GraphCollection| is an entity (from \autoref{fig:data_model_classes_diagram}) with a list of |PerturbedGraph|s of one dataset.
@@ -424,7 +426,7 @@ Similar to other concepts, robustness measures are classes implementing the |Rob
 Each |RobustnessMeasure| returns a single |Double| value, which is the numerical result, calculated as described in \autoref{sec:robustness_measures}.
 The |evaluate| function has the |suspend| modifier so that it can suspend and finish asynchronously within the context of Kotlin coroutines (see \autoref{sec:kotlin_coroutines}).
 
-\subsection{Visualising graphs & producing figures}
+\subsection{Visualising graphs \& producing figures}
 
 \todo{todo}
 
