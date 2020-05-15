@@ -75,16 +75,18 @@ The visual plots of the three chosen metrics in each case demonstrate that \graf
 
 \section{Validation of random edge deletion}
 
+\input{figures/plot_cumulative_confidence_scores.tex}
 \input{figures/plot_edge_deletion_per_step.tex}
 
 Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
 The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach, comparing robustness results of the same metrics, on the same datasets, just with a different graph-generating method.
 
-Taking distribution of confidence scores from \autoref{fig:histogram_edges} and differentiating its right-to-left accumulation function results in \autoref{fig:plot_edge_deletion_per_step}.
-This shows that the relative amount of edges deleted when increasing the threshold in $0.01$ increments, is $4\%$ in average.
-Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm (see \autoref{eq:edge_removing_generator}).
-To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
+To start, I needed to choose the $\delta$ parameter for $\mathlarger{^{ER} \mathlarger{\xi}}_\delta$, the edge-removing graph generator (see \autoref{eq:edge_removing_generator}).
+Taking distribution of confidence scores (\autoref{fig:histogram_edges}), I derived its right-to-left cumulative distribution (\autoref{fig:plot_cumulative_confidence_scores}) and differentiated to get a decrease rate at each threshold, as seen in \autoref{fig:plot_edge_deletion_per_step}.
+As calculated, the relative amount of edges deleted when increasing the threshold in $0.01$ increments (as practiced in The Paper), is $4\%$ in average.
+Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm.
 
+To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
 Also note that the rank continuity metric (definition~\ref{def:rank_continuity}) is only applicable to scored datasets, so will not be computed in this experiment.
 
 The experiment was set up using the following commands:
