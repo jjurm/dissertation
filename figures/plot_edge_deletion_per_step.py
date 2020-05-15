@@ -25,7 +25,7 @@ sources = ['graffs', 'paper']
 
 df = pd.read_csv("../figures_gen/plot_edge_deletion_per_step.csv")
 df['threshold'] = df['threshold'] / 1000
-df['deleted'] = df['deleted'] * 100
+df['deleted'] = df['deleted'] * 100 * (-1)
 
 # %%
 
@@ -68,11 +68,11 @@ for legobj in leg.legendHandles:
 plt.gca().xaxis.set_minor_locator(plticker.MultipleLocator(0.01))
 plt.gca().yaxis.set_major_locator(plticker.MultipleLocator(1))
 plt.grid(which="both", color="0.9")
-plt.ylim(0, 10)
+plt.ylim(-10, 0)
 plt.gca().yaxis.set_major_formatter(plticker.PercentFormatter(decimals=0))
-plt.title("Proportion of edges deleted at each threshold\non linearly thresholded protein networks")
+plt.title("Relative change in number of edges at each threshold\nin 3 protein networks")
 plt.xlabel("Threshold")
-plt.ylabel("\\%\, edges deleted")
+plt.ylabel("Relative $\delta$")
 
 plt.tight_layout(pad=0.6)
 plt.savefig("plot_edge_deletion_per_step.pdf")

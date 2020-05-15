@@ -73,11 +73,13 @@ As an example, the STRING database~\cite{Szklarczyk2019} used in The Paper is an
 It provides confidence scores for edges, indicating how likely the dataset authors consider an interaction to be true, given the available evidence.
 Databases HitPredict~\cite{LopezHitPredictVersionComprehensive2015} and IntAct~\cite{OrchardMIntActProjectIntAct2014} and others use a similar approach.
 
+\input{figures/string_network_image.tex}
+\input{figures/histogram_edges.tex}
+
 Edges in the STRING database have confidence scores for various types of evidence, such as scientific experiments, genetic observations (gene fusions, gene co-occurrence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases).
 An approximation of an overall confidence score is calculated for each edge (illustrated in \autoref{fig:string_network_image}).
 The Paper, as well as my dissertation, use only the overall confidence score and do not focus on the biological details of each evidence type.
-
-\input{figures/string_network_image.tex}
+\autoref{fig:histogram_edges} shows the distribution of confidence scores in 3 protein interaction networks that are investigated in my work (see \autoref{sec:datasets}).
 
 \subsection{Network thresholding}
 
@@ -89,8 +91,6 @@ Thresholding edges of sufficient confidence is a common step before further grap
 \autoref{fig:ecoli_giant_at_900} shows an example of a protein network taken from the STRING database, containing proteins of the \textit{Escherichia coli} organism.
 Only edges with score of $0.9$ corresponding to the ``highest confidence'' level (on the scale from $0$ to $1$) were retained, and only the giant connected component of it is shown.
 That yields a graph with 2382 nodes and 12071 edges.
-
-\todo{Histogram of edge confidence of a graph such as \textsl{ecoli}}
 
 \subsection{Metric robustness}
 
@@ -677,14 +677,16 @@ For the reasons above, I decided to stick with random edge deletion.
 
 \parspace
 
-Define an \textbf{edge removing} graph generator, given a proportion of edges to delete $\alpha$ (deletion rate), as follows:
+Define an \textbf{edge removing} graph generator, given a proportion of edges to delete $\delta$ (deletion rate), as follows:
 \begin{align}
-    &\mathlarger{^{ER} \mathlarger{\xi}}_\alpha(G) \ \overset{n}{\hookrightarrow}\ (V, E')~\text{for}~i\in \integersto{n}, \label{eq:edge_removing_generator}\\[10pt]
-    \text{where}~&E' = \Set{ e \in E }{ \chi_e > \alpha }, \nonumber \\
+    &\mathlarger{^{ER} \mathlarger{\xi}}_\delta(G) \ \overset{n}{\hookrightarrow}\ (V, E')~\text{for}~i\in \integersto{n}, \label{eq:edge_removing_generator}\\[10pt]
+    \text{where}~&E' = \Set{ e \in E }{ \chi_e > \delta }, \nonumber \\
     &\forall e \in E.\ \chi_e\sim\mathcal{U}(0,1) \nonumber
 \end{align}
 
 \todo{generate array of ~8 linearly thresholded graphs to demonstrate this}
+
+\todo{mention \textsl{initial threshold} parameter}
 
 Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
 However, in practice it is useful to specify an \textsl{initial threshold} so that this generator can work on scored networks too, by turning them into unscored.
