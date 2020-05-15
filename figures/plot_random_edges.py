@@ -98,22 +98,21 @@ def plot_for_robustness(robustness_measure, pos):
         "reproduce": (1, 0),
         random_edges_experiment: (1.5, 1.5),
     }
-    print(palette_experiment)
 
-    for dataset in datasets:
-        data_local = data[data['dataset'] == dataset]
-        sns.lineplot(
-            x=data_local['metric'],
-            y=data_local['value'],
-            hue=data_local['experiment'],  # .rename("\\textbf{Robustness measure}"),
-            style=data_local['experiment'],  # .rename("\\textbf{Data source}"),
-            estimator='mean',
-            size=True,
-            sizes=[0.5],
-            legend=False,
-            palette=palette_experiment,
-            dashes=dashes_experiment,
-        )
+    # for dataset in datasets:
+    #     data_local = data[data['dataset'] == dataset]
+    #     sns.lineplot(
+    #         x=data_local['metric'],
+    #         y=data_local['value'],
+    #         hue=data_local['experiment'],  # .rename("\\textbf{Robustness measure}"),
+    #         style=data_local['experiment'],  # .rename("\\textbf{Data source}"),
+    #         estimator='mean',
+    #         size=True,
+    #         sizes=[0.5],
+    #         legend=False,
+    #         palette=palette_experiment,
+    #         dashes=dashes_experiment,
+    #     )
     experiment_col = data['experiment'].rename("\\textbf{experiment:}")
     sns.lineplot(
         x=data['metric'],
@@ -126,7 +125,7 @@ def plot_for_robustness(robustness_measure, pos):
         dashes=dashes_experiment,
     )
 
-    plt.margins(x=0.05)
+    plt.margins(x=0.07)
     if pos == 0:
         plt.ylim(0.15, 1.05)
         ax1.set_xticklabels([])
@@ -141,12 +140,12 @@ def plot_for_robustness(robustness_measure, pos):
 
 
 plot_for_robustness('RankIdentifiability', 0)
-plt.title("Validating \\texttt{random-edges} experiment agains \\texttt{reproduce} and results of The Paper\n"
+plt.title("Validating \\texttt{random-edges} experiment agains \\texttt{reproduce} and results of The Paper,\n"
           "using 2 robustness measures on 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
 
 plot_for_robustness('RankInstability', 1)
 plt.xlabel("\\textsl{Metric}")
 
-plt.tight_layout()
+plt.subplots_adjust(left=0.09, right=0.97, top=0.90)
 plt.savefig("plot_random_edges.pdf")
 plt.show()

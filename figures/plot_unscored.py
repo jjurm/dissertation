@@ -58,26 +58,6 @@ df['dataset'] = pd.Categorical(df_combined['dataset'], categories=datasets, orde
 df['metric'] = pd.Categorical(df_combined['metric'], categories=metrics_sorted, ordered=True)
 df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 
-# %% Bar plot for one robustness measure
-
-# data = df
-# r = 'RankIdentifiability'
-# data = data[data['robustness'] == r]
-# # data = data.groupby(['metric','source'], as_index=False).mean()
-# plt.subplots(figsize=(8, 7))
-#
-# plt.subplot(111)
-# sns.barplot(
-#     x=data['metric'],
-#     y=data['value'],
-#     hue=data['dataset'],
-#     # style=data['source'],
-# )
-# plt.ylim(0, 1)
-# plt.title(r + " paper")
-#
-# plt.show()
-
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
@@ -96,21 +76,12 @@ def plot_for_robustness(robustness_measure, pos):
         "reproduce": palette_robustness[robustness_measure],
         experiment_name: palette_robustness_dark[robustness_measure],
     }
-    dashes_experiment = {
-        "paper": (5, 4),
-        "reproduce": (1, 0),
-        experiment_name: (1.5, 1.5),
-    }
-    print(palette_experiment)
 
     sns.lineplot(
         x=data['metric'],
         y=data['value'],
-        hue=data['dataset'],  # .rename("\\textbf{Robustness measure}"),
-        # style=data_local['experiment'],  # .rename("\\textbf{Data source}"),
+        hue=data['dataset'].rename("\\textbf{dataset}"),
         estimator='mean',
-        # palette=palette_experiment,
-        # dashes=dashes_experiment,
     )
 
     plt.margins(x=0.05)
@@ -128,8 +99,8 @@ def plot_for_robustness(robustness_measure, pos):
 
 
 plot_for_robustness('RankIdentifiability', 0)
-plt.title("The \\texttt{unscored} experiment: RankIdentifiability and RankInstability computed\n"
-          "on 7 metrics and 5 new unscored datasets")
+plt.title("The \\texttt{unscored} experiment: RankIdentifiability and RankInstability\n"
+          "computed on 7 metrics and 5 new unscored datasets")
 
 plot_for_robustness('RankInstability', 1)
 plt.xlabel("\\textsl{Metric}")

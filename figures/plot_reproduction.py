@@ -72,62 +72,30 @@ df['metric'] = pd.Categorical(df_combined['metric'], categories=metrics_sorted, 
 df['robustness'] = pd.Categorical(df_combined['robustness'], categories=robustness_measures, ordered=True)
 df = df.sort_values(['robustness', 'metric'])
 
-# %% Bar plot for one robustness measure
-
-# data = df
-# r = 'RankContinuity'
-# data = data[data['robustness'] == r]
-# # data = data.groupby(['metric','source'], as_index=False).mean()
-# graffs_only = data['source'] == 'graffs'
-# paper_only = data['source'] == 'paper'
-#
-# plt.subplots(figsize=(8, 7))
-#
-# plt.subplot(211)
-# sns.barplot(
-#     x=data[paper_only]['metric'],
-#     y=data[paper_only]['value'],
-#     hue=data[paper_only]['dataset'],
-#     # style=data['source'],
-# )
-# plt.ylim(0, 1)
-# plt.title(r + " paper")
-#
-# plt.subplot(212)
-# sns.barplot(
-#     x=data[graffs_only]['metric'],
-#     y=data[graffs_only]['value'],
-#     hue=data[graffs_only]['dataset'],
-#     # style=data['source'],
-# )
-# plt.ylim(0, 1)
-# plt.title(r + " graffs")
-#
-# plt.show()
 
 # %% Reproduction plot
 
-plt.subplots(figsize=(8, 5))
+plt.subplots(figsize=(8, 4.5))
 
 data = df.copy()
 data['source_robustness'] = data['source'].astype('string') + ", " + data['robustness'].astype('string')
 data = data.sort_values(['source', 'robustness'])
 
-
-for dataset in datasets:
-    data_local = data[data['dataset'] == dataset]
-    sns.lineplot(
-        x=data_local['metric'],
-        y=data_local['value'],
-        hue=data_local['source_robustness'],  # .rename("\\textbf{Robustness measure}"),
-        style=data_local['source_robustness'],  # .rename("\\textbf{Data source}"),
-        estimator='mean',
-        size=True,
-        sizes=[0.5],
-        legend=False,
-        palette=palette_source_robustness,
-        dashes=dashes_source_robustness,
-    )
+#
+# for dataset in datasets:
+#     data_local = data[data['dataset'] == dataset]
+#     sns.lineplot(
+#         x=data_local['metric'],
+#         y=data_local['value'],
+#         hue=data_local['source_robustness'],  # .rename("\\textbf{Robustness measure}"),
+#         style=data_local['source_robustness'],  # .rename("\\textbf{Data source}"),
+#         estimator='mean',
+#         size=True,
+#         sizes=[0.5],
+#         legend=False,
+#         palette=palette_source_robustness,
+#         dashes=dashes_source_robustness,
+#     )
 
 source_robustness_col = data['source_robustness'].rename("\\textbf{source, robustness measure:}")
 sns.lineplot(
@@ -139,13 +107,14 @@ sns.lineplot(
     ci=100,
     palette=palette_source_robustness,
     dashes=dashes_source_robustness,
+    err_kws=dict(linewidth=0)
 )
 
 plt.ylim(-0.05,1.05)
 plt.margins(x=0.07)
 plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0,1,5)))
 plt.grid(color='0.8', linestyle=':', which='major', axis='both')
-plt.title("Comparison of results from The Paper and \\texttt{graffs} (experiment: \\texttt{reproduce}),\n"
+plt.title("Comparison of robustness results from The Paper and \\texttt{graffs} (\\texttt{reproduce} experiment),\n"
           "including 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
 plt.xlabel("\\textsl{Metric}")
 plt.ylabel("Robustness value")
@@ -153,5 +122,3 @@ plt.ylabel("Robustness value")
 plt.tight_layout()
 plt.savefig("plot_reproduction.pdf")
 plt.show()
-
-
