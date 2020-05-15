@@ -138,9 +138,14 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 
 I used a remote high-performance computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
 
-In particular, I worked with the server \texttt{rio.cl.cam.ac.uk} with \ldots
+In particular, I worked with the following servers:
 
-\todo{include computing characteristics}.
+\begin{description}
+    \item[\texttt{rio.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
+    \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
+\end{description}
+
+\todo{include more details on the remote setup}.
 
 \subsubsection*{Setting up the cluster}
 
@@ -189,7 +194,7 @@ The most relevant interfaces are illustrated in \autoref{fig:graphstream_diagram
 The interfaces also provide methods for changing graphs (adding/removing nodes, edges, attributes, etc.).
 In practice the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
 
-For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see definition~\ref{def:graph_matching}).
+For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see \autoref{def:graph_matching}).
 Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used for matching nodes between base and perturbed graphs.
 This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same base graph.
 
@@ -421,7 +426,7 @@ Similar to other concepts, robustness measure classes implement the |RobustnessM
 
 |MetricInfo| uniquely identifies the |Metric| whose robustness to calculate.
 |GraphCollection| is an entity (from \autoref{fig:data_model_classes_diagram}) with a list of |PerturbedGraph|s of one dataset.
-|GraphCollectionMetadata| provides cached\footnotemark{} access to intermediate results regarding the particular |GraphCollection| in the context of the current |Metric|, such as the overall ranking of the given metric over all the perturbed graphs (see Definition~\ref{def:overall_ranking}).
+|GraphCollectionMetadata| provides cached\footnotemark{} access to intermediate results regarding the particular |GraphCollection| in the context of the current |Metric|, such as the overall ranking of the given metric over all the perturbed graphs (see \autoref{def:overall_ranking}).
 \footnotetext{cached, as the overall ranking is calculated only once for each \texttt{GraphCollection} and each \texttt{Metric}, and used for more robustness measures}
 Each |RobustnessMeasure| returns a single |Double| value, which is the numerical result, calculated as described in \autoref{sec:robustness_measures}.
 The |evaluate| function has the |suspend| modifier so that it can suspend and finish asynchronously within the context of Kotlin coroutines (see \autoref{sec:kotlin_coroutines}).

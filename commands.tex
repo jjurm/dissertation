@@ -13,6 +13,10 @@
 \makeatother
 
 \newtheorem{definition}{Definition}[section]
+\newcommand*{\definitionautorefname}{Definition}
+
+% References
+\crefformat{footnote}{#2\footnotemark[#1]#3}
 
 % Math mode
 \newcommand{\Set}[2]{\left\{\, #1 \mid #2 \, \right\}}

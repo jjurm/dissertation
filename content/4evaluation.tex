@@ -38,10 +38,13 @@ graffs experiment run --name reproduce
 As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality (Definitions~\ref{def:closeness_centrality} and~\ref{def:harmonic_centrality}).
 These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take unreasonable amount of time to compute on large graphs. (\todo{evaluating Closeness on one graph takes XY minutes\ldots})
 
+\phantomsection
+\label{para:how_to_compare_results}
 It is important to note that the robustness values from The Paper and \graffs should not be compared directly as there are many details that make the numerical values vary between implementations.
 For example, when ranking nodes according to a metric, The Paper resolved ties randomly for each perturbed graph (which already leads to fluctuations in rankings), while my implementation resolves ties arbitrarily but predictably and constantly across all perturbed graphs of a dataset, with the purpose to improve reliability of robustness measures.
-The Paper also randomly resolved ties when calculating the overall ranking (Definition~\ref{def:overall_ranking}).
+The Paper also randomly resolved ties when calculating the overall ranking (\autoref{def:overall_ranking}).
 Furthermore, there are other nuances that may cause these variations, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity (different values were used in \graffs to generalize the process; see definitions~\ref{def:k_similarity},~\ref{def:alpha_relaxed_k_similarity}), definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
+Instead of comparing results numerically, overall trend is to be considered.
 
 \input{figures/plot_reproduction.tex}
 
@@ -61,17 +64,16 @@ Another way to validate intermediate results is to consider $k$-similarity of pe
 For each dataset \texttt{pvivax}, \texttt{ecoli}, \texttt{yeast}, I generated $85$ graphs thresholded at values between $0.15$ and $0.99$, and calculated the needed metric values for each graph.
 Then I compare the results for 3 chosen metrics on the protein network datasets with the results of The Paper.
 
-\input{figures/plot_rank_similarity.tex}
-\input{figures/plot_relaxed_similarity.tex}
-\afterpage{\clearpage}
+\input{figures/plot_rank_and_relaxed_similarity.tex}
 
 \autoref{fig:plot_rank_similarity} shows $k$-similarity of each pair of graphs at consecutive thresholds, along with plots of the same data from The Paper.
-The $k$-similarity values are used for calculating \texttt{RankContinuity}, which is equal to the proportion of such pairs of consecutive graphs whose $k$-similarity is above the $0.9$ threshold).
+The $k$-similarity values are used for calculating \texttt{RankContinuity}, which is equal to the proportion of such pairs of consecutive graphs whose $k$-similarity is above the $0.9$ threshold (\autoref{def:rank_continuity}).
 
 \autoref{fig:plot_relaxed_similarity} shows $\alpha$-relaxed $k$-similarity between overall ranking and rankings of graphs at individual thresholds.
-$\alpha$-relaxed $k$-similarity is used for calculating \texttt{RankIdentifiability}, which is equal to the minimum similarity value within the $\left[ 0.6, 0.9 \right]$ confidence interval.
+The $\alpha$-relaxed $k$-similarity is used for calculating \texttt{RankIdentifiability}, which is equal to the minimum similarity value within the $\left[ 0.6, 0.9 \right]$ confidence interval (\autoref{def:rank_identifiability}).
 
 The visual plots of the three chosen metrics in each case demonstrate that \graffs's similarity values match those of The Paper closely, in both $k$-similarity and $\alpha$-relaxed $k$-similarity.
+
 
 \section{Validation of random edge deletion}
 
@@ -86,7 +88,7 @@ As calculated, the relative amount of edges deleted when increasing the threshol
 Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm.
 
 To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
-Also note that the rank continuity metric (definition~\ref{def:rank_continuity}) is only applicable to scored datasets, so will not be computed in this experiment.
+Also note that the \texttt{RankContinuity} metric is only applicable to scored datasets, so will not be computed in this experiment.
 
 The experiment was set up using the following commands:
 % @formatter:off
@@ -102,6 +104,8 @@ graffs experiment run --name random-edges
 
 Results are shown in \autoref{fig:plot_random_edges}.
 We can see that RankInstability is able to flag both \texttt{Ego2Nodes} and \texttt{LocalClustering} metrics as relatively unstable, whereas Rank Identifiability only identified \texttt{LocalClustering} as unstable, and moreover with high variance among the datasets.
+
+Note again, that the results of the experiments are not expected to match numerically, due to numerous changes and generalisations in \graffs as opposed to The Paper, only to yield similar behaviour (as explained in \autoref{para:how_to_compare_results}).
 
 
 \section{Extending to unscored datasets}
@@ -138,12 +142,25 @@ graffs experiment run --name unscored
 Overall, the tendency of robustness measures identify the key results from previous experiments: metrics \texttt{Degree}, \texttt{Ego1Edges}, and \texttt{Redundancy} are stable on all datasets.
 The \texttt{facebook} dataset has lower RankIdentifiability of \texttt{Betweenness} and \texttt{Ego2Nodes} metric, and most of the datasets apart from \texttt{internet} have lower values of both robustness measures of the \texttt{LocalClustering} metric.
 
+\autoref{tab:unscored_robustness} shows the numerical results in a table.
+
+There are a number of interesting observations about the new datasets.
+First, there is a non-decreasing tendency of robustness of most metrics on the new datasets, including the \texttt{RankInstability} robustness measure which is $<0.01$ for all metrics for all the datasets apart from the \texttt{facebook} social network.
+
+Second, the \texttt{LocalClustering} metrics is unstable in general, but yields the same stability as other stable metrics for the \texttt{internet} dataset, thus, there must be something interestingly \textsl{different} with the hierarchy of autonomous systems of the Internet.
+Ideally, we would be able to quantify this using some (possibly other) graph metrics.
+
+An interesting thought for the future would be finding a correlation between structure of graphs (whose properties can be quantified using graph metrics) and robustness of some other graph metrics.
+Ideally, one would be able to reason about robustness of graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate \textsl{graph petrurbations}.
+My work does not include, and was not expected to include this kind of analysis due to the limits of its extent -- having enough of data finding correlations between metrics values and robustness of metrics would require an order of magnitude more evaluations.
+However, the \graffs tool I developed is powerful enough to be able to facilitate this kind of analysis, given more time, computing power and resources for further investigation, and it can easily be extended to do so.
+
 
 \section{Performance}
 
 The following plots compare the time it took to evaluate the experiments: \texttt{reproduce}, \texttt{random-edges}, \texttt{unscored}; and the time spent on evaluating each metric.
+The performance of the experiments was measured on the \texttt{rio} computing cluster (see \autoref{sec:computing_cluster}).
 
-I ran the experiments on a computing server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
 
 \todo{include plots}
 

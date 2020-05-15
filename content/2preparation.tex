@@ -778,15 +778,19 @@ Speaking of scored networks, rank continuity of a metric is the similarity betwe
 
 \subsubsection{Rank identifiability}
 
+\begin{definition}[Rank identifiability]\label{def:rank_identifiability}
+\ldots
+\end{definition}
+
 \subsubsection{Rank instability}
 
-\begin{definition}[Rank instability]
+\begin{definition}[Rank instability]\label{def:rank_instability}
     \newcommand*{\args}{\left(M \mid G, \xi, n \right)}\newcommand*{\astar}{A^*\!\args}
     The \textbf{rank instability} measure is defined as:
 
     \begin{flalign}
         &\operatorname{rank\ instability} \args \eqdef \frac{1}{\left\lvert U \right\rvert}\, \mathlarger{\sum}_{v \in U} \frac{range(v)}{n} & \\[10pt]
-        \text{where }\ & A = \astar \quad \text{(an overall ranking, by Definition~\ref{def:overall_ranking})}, \nonumber \\
+        \text{where }\ & A = \astar \quad \text{(an overall ranking, by~\autoref{def:overall_ranking})}, \nonumber \\
         & U = \Set{v \in V}{A(v) > 99\%n}, \nonumber \\[2pt]
         & range : \begin{array}[t]{l}
                       V \to \mathbb{R}\\ v \,\mapsto\,  \max\limits_{i \in \integersto{n}} \left( A^{M(G_i)}(v) \right)  -  \min\limits_{i \in \integersto{n}} \left( A^{M(G_i)}(v) \right)\ ,
