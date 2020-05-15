@@ -1,9 +1,19 @@
-\begin{wrapfigure}[14]{R}{0.5\textwidth}
-    \vspace*{-0.4cm}
-    \includegraphics[width=\linewidth]{plot_edge_deletion_per_step.pdf}
-    \vspace*{-0.7cm}
-    \caption{Relative change in the number of edges at each confidence threshold, in 3 protein networks.
-    Thresholds are spaced at $0.01$ intervals.
-    Overall, around $4\%$ edges are deleted at each threshold.}
-    \label{fig:plot_edge_deletion_per_step}
-\end{wrapfigure}
+\begin{figure}
+    \centering
+    \begin{minipage}{.48\textwidth}
+        \includegraphics[width=\linewidth]{plot_cumulative_confidence_scores.pdf}
+        \vspace*{-0.5cm}
+        \captionof{figure}{Cumulative (right-to-left) distribution of the confidence scores of edges in 3 scored protein interaction networks.
+        The decrease rate in the highlighted interval $[0.6,0.7]$ is used to determine the average ratio of deleted edges at each threshold, seen in \autoref{fig:plot_edge_deletion_per_step}.}
+        \label{fig:plot_cumulative_confidence_scores}
+    \end{minipage}\hfill%
+    \begin{minipage}{.48\textwidth}
+        \vspace*{-0.4cm}
+        \includegraphics[width=\linewidth]{plot_edge_deletion_per_step.pdf}
+        \vspace*{-0.5cm}
+        \captionof{figure}{Relative change in the number of edges at each confidence threshold, in 3 protein networks.
+        Thresholds are spaced at $0.01$ intervals.
+        Overall, around $4\%$ edges are deleted at each threshold.}
+        \label{fig:plot_edge_deletion_per_step}
+    \end{minipage}
+\end{figure}

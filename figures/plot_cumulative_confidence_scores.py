@@ -5,8 +5,7 @@ import matplotlib.font_manager as fm
 from matplotlib import cm, colors
 
 import matplotlib
-from matplotlib.gridspec import GridSpec
-from matplotlib.ticker import MultipleLocator
+from matplotlib.ticker import MultipleLocator, PercentFormatter
 from pandas import Series
 
 from utils import datasets
@@ -32,51 +31,46 @@ df['bin'] = intervals.apply(lambda interval: interval.left)
 
 counts = df.pivot_table(index=["dataset", "bin"], columns=None, values="weight", aggfunc="count") \
     .reset_index().rename({"weight": "count"}, axis=1)
-counts = counts.sort_values(["dataset", "bin"], ascending=False)
-counts['cumsum'] = counts.groupby('dataset')['count'].transform(pd.Series.cumsum)
+
+counts_rel = counts.groupby(['dataset', 'bin']).agg({'count': 'sum'}) \
+    .groupby(level=0).apply(lambda x: x / float(x.sum())).reset_index()
+counts_rel = counts_rel.sort_values(["dataset", "bin"], ascending=False)
+counts_rel['cumsum'] = counts_rel.groupby('dataset')['count'].transform(pd.Series.cumsum)
+
 
 # %%
 
 cmap = cm.get_cmap('tab10')
 norm = colors.Normalize(vmin=0, vmax=9)
 
-plt.subplots(sharex="all", figsize=(9, 2.5))
-gs1 = GridSpec(1, 3)
-gs1.update(wspace=0.12, hspace=0)
+plt.figure(figsize=(4.5, 3))
 
-pos = 0
-for dataset in datasets:
-    data = counts[counts['dataset'] == dataset]
-    ax = plt.subplot(gs1[pos])
-    plt.axvspan(.6, 0.9, color='0.85')
-    plt.bar(
-        x=data['bin'],
-        height=data['cumsum'],
-        color=cmap(norm(pos)),
+plt.axvspan(.6, 0.9, color='0.85')
+
+for i, dataset in enumerate(datasets):
+    data = counts_rel[counts_rel['dataset'] == dataset]
+    plt.plot(
+        data['bin'].astype(float),
+        data['cumsum'],
+        linewidth=1.7,
+        color=cmap(norm(i)),
         label=dataset,
-        width=0.006,
+        # width=0.006,
         alpha=0.8,
     )
 
-    plt.margins(0.02)
-    plt.xticks([0.15, 0.4, 0.6, 0.7, 0.9])
-    plt.xlim(0.14, 1)
-    plt.ticklabel_format(style="sci", axis="y", scilimits=(0, 0))
-    # plt.ylim(0,900000)
-    # noinspection PyUnresolvedReferences
-    ax.set_xticklabels(["0.15", "0.4", "0.6", "0.7", "0.9"])
-    # noinspection PyUnresolvedReferences
-    ax.xaxis.set_minor_locator(MultipleLocator(0.1))
-    plt.grid(axis="x", which='major', linestyle=":", c="0.6")
-    plt.grid(axis="y", which='major')
+plt.xticks([0.15, 0.4, 0.6, 0.7, 0.9])
+plt.gca().set_xticklabels(["0.15", "0.4", "0.6", "0.7", "0.9"])
+plt.gca().xaxis.set_minor_locator(MultipleLocator(0.1))
+plt.gca().yaxis.set_major_formatter(PercentFormatter(xmax=1))
+plt.grid(axis="x", which='major', linestyle=":", c="0.6")
+plt.grid(axis="y", which='major')
 
-    plt.xlabel("Confidence score threshold")
-    if pos == 0:
-        plt.ylabel("Number of edges")
-    plt.legend(loc="upper right")
-    pos += 1
+plt.title('Cumulative confidence score distribution\nin 3 protein networks')
+plt.xlabel("Confidence score threshold")
+plt.ylabel("Number of edges")
+plt.legend(loc="upper right")
 
-plt.suptitle('Cumulative confidence score distribution in protein networks')
-plt.subplots_adjust(wspace=0, hspace=0, bottom=0.18, top=0.84, left=0.05, right=0.98)
+plt.tight_layout()
 plt.savefig("plot_cumulative_confidence_scores.pdf")
 plt.show()
