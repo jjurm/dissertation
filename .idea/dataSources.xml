@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="rio" uuid="2fef983f-5201-49ab-8100-432c784104bb">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:tcp://localhost:9092/~/scratch/db/graffs;AUTO_SERVER=TRUE;CACHE_SIZE=16777216</jdbc-url>
+    </data-source>
+  </component>
+</project>
