@@ -131,7 +131,7 @@ graffs experiment run --name unscored
 Overall, the tendency of robustness measures identify the key results from previous experiments: metrics \texttt{Degree}, \texttt{Ego1Edges}, and \texttt{Redundancy} are stable on all datasets.
 The \texttt{facebook} dataset has lower RankIdentifiability of \texttt{Betweenness} and \texttt{Ego2Nodes} metric, and most of the datasets apart from \texttt{internet} have lower values of both robustness measures of the \texttt{LocalClustering} metric.
 
-\autoref{tab:unscored_robustness} shows the numerical results in a table.
+\Cref{tab:robustness-identifiability,tab:robustness-instability} show the numerical results of \texttt{RankIdentifiability} and \texttt{RankInstability}, respectively, evaluated on the 7 metrics, with combined results for all the datasets I used above.
 
 There are a number of interesting observations about the new datasets.
 First, there is a non-decreasing tendency of robustness of most metrics on the new datasets, including the \texttt{RankInstability} robustness measure which is $<0.01$ for all metrics for all the datasets apart from the \texttt{facebook} social network.
@@ -143,6 +143,8 @@ An interesting thought for the future would be finding a correlation between str
 Ideally, one would be able to reason about robustness of graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate \textsl{graph petrurbations}.
 My work does not include, and was not expected to include this kind of analysis due to the limits of its extent -- having enough of data finding correlations between metrics values and robustness of metrics would require an order of magnitude more evaluations.
 However, the \graffs tool I developed is powerful enough to be able to facilitate this kind of analysis, given more time, computing power and resources for further investigation, and it can easily be extended to do so.
+
+\input{figures/robustness_graffs_tables.tex}
 
 
 \section{Performance}
