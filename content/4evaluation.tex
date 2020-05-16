@@ -159,16 +159,13 @@ This value is useful to compare the \textsl{absolute computational complexity} o
 
 \Cref{fig:perf_timings_matrix} compares the logarithm of the time it took to evaluate each metric on a single graph, in average, taking measurements from the 3 experiments \texttt{reproduce}, \texttt{random-edges}, and \texttt{unscored}.
 We can see that the betweenness centrality is most computation heavy, with the computation taking more than an hour in average for a single graph generated from the \texttt{citation} dataset.
-This is presumably because the \texttt{citation} dataset is much bigger especially in the number of edges compared to the other used datasets.
+This is presumably because the \texttt{citation} dataset is much bigger in the number of edges compared to the other used datasets.
 
 
 
 \todo{include plots}
 
-% reproduce
-%Generate graphs            : 51s
-%Evaluate metrics - run     : 38m 46s
-%Robustness - compute       : 10s
+
 
 
 \section{Releasing \graffs}

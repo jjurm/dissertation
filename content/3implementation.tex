@@ -97,14 +97,14 @@ Performance-wise, Kotlin is comparable to Java.
     \item Concise, reducing the amount of boilerplate code
     \item Safer, preventing a significant number of errors
     \item IDE-friendly, allowing the IDE to help with software engineering
-    \item Employs functional programming paradigms\cite{Bonev}
+    \item Employs functional programming paradigms~\cite{Bonev}
     \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, multi-threaded, platform-independent, secure and easily extensible.
 \end{itemize}
 
 Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiler compiles \texttt{.kt} files to Java-bytecode \texttt{.class} files.
 Kotlin has most of its concepts and features adopted from Java, such as classes, polymorphism, inheritance, so these concepts I will freely use in this work.
 
-Kotlin has a number of advanced features such as improved type safety and reduced boilerplate code\cite{JemerovKotlinAction2017}.
+Kotlin has a number of advanced features such as improved type safety and reduced boilerplate code~\cite{JemerovKotlinAction2017}.
 There is one notable feature of Kotlin: properties.
 Properties are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
 In UML diagrams in this work , instead of presenting fields and methods of each class, listed are methods and properties (in this order).
@@ -188,9 +188,9 @@ The following entities highligh the main concept, and there are some more entiti
 
 A user can create and manage \textsl{graph generators} and \textsl{experiments} using the command line interface (see \autoref{sec:cli}).
 
-\subsection{Using GraphStream}
+\subsection{Using GraphStream}\label{sec:graphstream}
 
-Graphs in memory are stored and manipulated by the GraphStream library\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
+Graphs in memory are stored and manipulated by the GraphStream library~\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
 GraphStream also provides visualisations as opposed to JGraphT.}
 The library consists of 3 modules: \texttt{gs-core} defining the API and underlying structures, \texttt{gs-algo} with various algorithms from graph theory, and \texttt{gs-ui} containing components for visualising graphs.
 
@@ -219,7 +219,7 @@ The attribute key is given my the metric name.
 
 Data of the \graffs tool such as generated graphs, evaluated metrics, robustness measure results as well as any user-defined hyper-parameters are stored in a relational database system.
 The Java Persistence API (JPA)~\cite{BiswasJavaPersistenceAPI2016} provides an abstraction for accessing relational data from Java, Hibernate~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015} is a framework that implements the inteface.
-I used specifically the H2 database engine\cite{MuellerH2DatabaseEngine2006} as the underlying storage for Hibernate.
+I used specifically the H2 database engine~\cite{MuellerH2DatabaseEngine2006} as the underlying storage for Hibernate.
 This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 
 \input{figures_gen/data_model_diagram.tex}
@@ -253,7 +253,7 @@ Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the
 
 \subsection{Java Persistence API}
 
-The Java Persistence API\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for management of relational data in Java.
+The Java Persistence API~\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for management of relational data in Java.
 It describes ways in Java to specify schemas of relational databases and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
 \textsl{Persistence} is an abstract term referring to accessing, managing, and storing entities.
 
@@ -391,7 +391,7 @@ Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending Gra
 
 \subsubsection{RData files}\label{sec:rdata_files}
 
-The Paper\cite{Bozhilova2019} provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a binary file capturing a session of the R language, storing objects from the \texttt{igraph} R package.
+The Paper~\cite{Bozhilova2019} provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a binary file capturing a session of the R language, storing objects from the \texttt{igraph} R package.
 
 To load such files, an option is to convert them manually into another \graffs-readable format, or let \graffs call R to do this conversion under the hood.
 To make \graffs as versatile as possible and not require the R software environment to be installed on the client's computer, I employed the Renjin library\footnote{Rejin official website: \url{https://www.renjin.org/}}, a \enquote{JVM-based interpreter for the R programming language}.
@@ -448,7 +448,7 @@ The |evaluate| function has the |suspend| modifier so that it can suspend and fi
 
 Kotlin supports a concept of \textsl{suspending functions}, i.e. functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
 The context in which a suspending function suspends, is called coroutine.
-Coroutines are a well-known control abstraction in programming languages\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
+Coroutines are a well-known control abstraction in programming languages~\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
 
 Asynchronous computations, delays, or IO operations can be programmed as suspending calls, i.e. functions that are allowed to \textsl{suspend} (or \textsl{pause}) coroutine voluntarily, and return the control back to the caller, then continue whenever their \textsl{continuation} is resumed (or invoked).
 
@@ -458,8 +458,8 @@ A simple solution in Java would be to use |Thread|s, or a library working with t
 This would work but it's heavyweight, not very expressive and not safe (e.g. a failure of an operation in one thread will not automatically cancel following or related tasks in other threads, unless this safety is implemented manually).
 Another option is to use job queueing and an abstract multi-threaded executor, but then specifying inter-task execution order constraints would still be verbose, and running jobs would not be abstracted away from the code defining the jobs.
 
-Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap\cite{AriasFunctionalKotlinExtend2018}.
-They have a similar life cycle and are executed within regular threads, although they are not bound to them\cite{TorresLearningConcurrencyKotlin2018}.
+Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap~\cite{AriasFunctionalKotlinExtend2018}.
+They have a similar life cycle and are executed within regular threads, although they are not bound to them~\cite{TorresLearningConcurrencyKotlin2018}.
 Coroutines allow executing suspending functions.
 
 Suspending functions in Kotlin, when compiled to Java bytecode, are regular functions accepting |Continuation<Int>| as one of the arguments.

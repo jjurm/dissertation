@@ -1,16 +1,18 @@
 \begin{table}
-\centering
-\caption{CPU Computation time of the 3 experiments evaluated by \graffs, run on the \texttt{rio} computing cluster (see \autoref{sec:computing_cluster}).
-\textsl{Total CPU time} is the sum of all times of individual CPU cores spent on evaluating the experiment, and \textsl{Avg CPU time per graph} is that divided by $(\text{number of datasets}) \times (\text{number of graphs generated from each dataset})$.}
-\label{tab:perf_expriments_table}
-\begin{tabular}{|l|r|r|}
-\toprule
-            Experiment &             Total CPU time & Avg CPU time per graph \\
-\midrule
-    \texttt{reproduce} &          13 hours, 17 mins &                 9 mins \\
- \texttt{random-edges} &          22 hours, 36 mins &                15 mins \\
-     \texttt{unscored} &  9 days, 12 hours, 57 mins &        1 hour, 29 mins \\
-\bottomrule
-\end{tabular}
+    \centering
+    \caption{CPU Computation time of the 3 experiments evaluated by \graffs, run on the \texttt{rio} computing cluster (see \autoref{sec:computing_cluster}).
+        \textsl{Total CPU time} is the sum of all times of individual CPU cores spent on evaluating the experiment, and \textsl{Avg CPU time per graph} is that divided by $(\text{number of datasets}) \times (\text{number of graphs generated from each dataset})$.}
+    \label{tab:perf_experiments_table}
+    % @formatter:off
+    \begin{tabular}{|l|r|r|}
+    \toprule
+                Experiment &             Total CPU time & Avg CPU time per graph \\
+    \midrule
+        \texttt{reproduce} &          13 hours, 17 mins &                 9 mins \\
+     \texttt{random-edges} &          22 hours, 36 mins &                15 mins \\
+         \texttt{unscored} &  9 days, 12 hours, 57 mins &        1 hour, 29 mins \\
+    \bottomrule
+    \end{tabular}
+    % @formatter:on
 \end{table}
 

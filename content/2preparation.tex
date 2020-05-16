@@ -28,8 +28,8 @@ Networks obtained from the real-world by experiments, observations, or deduction
 Network errors may stem from measurement errors, approximations, lack of knowledge, lack of experimental evidence or thresholding of scored networks~\cite{Wang2012,MarsdenNetworkDataMeasurement1990,JonesChallengesLimitationsQuantifying2010}.
 These errors may then propagate and cause errors in graph metrics.
 
-Error measures are important to assess how precise or confident an experiment or an observation is.
-A research result without examining its precision or confidence can be considered incomplete.\citeneeded{}
+Error measures are important to assess how precise or confident an experiment or an observation is~\cite{Curran-EverettExplorationsStatisticsStandard2008}.
+\enquote{A reported value whose accuracy is entirely unknown is worthless}~\cite{EisenhartExpressionUncertaintiesFinal1968}.
 
 \parspace
 
@@ -74,12 +74,10 @@ It provides confidence scores for edges, indicating how likely the dataset autho
 Databases HitPredict~\cite{LopezHitPredictVersionComprehensive2015} and IntAct~\cite{OrchardMIntActProjectIntAct2014} and others use a similar approach.
 
 \input{figures/string_network_image.tex}
-\input{figures/histogram_edges.tex}
 
 Edges in the STRING database have confidence scores for various types of evidence, such as scientific experiments, genetic observations (gene fusions, gene co-occurrence), statistical predictions, text mining of scientific articles, or existing knowledge (other available protein interaction databases).
 An approximation of an overall confidence score is calculated for each edge (illustrated in \autoref{fig:string_network_image}).
 The Paper, as well as my dissertation, use only the overall confidence score and do not focus on the biological details of each evidence type.
-\autoref{fig:histogram_edges} shows the distribution of confidence scores in 3 protein interaction networks that are investigated in my work (see \autoref{sec:datasets}).
 
 \subsection{Network thresholding}
 
@@ -129,7 +127,7 @@ In particular, this section will focus introducing high-level concepts of:
 \subsection{Graphs}
 
 Graphs (or networks) from graph theory usually consist of \textit{components} (or nodes, vertices) and \textit{links} between them (edges).
-Some definitions in this subsection are based on the book \textsl{A first course in network theory}\cite{Estrada2017}.
+Some definitions in this subsection are based on the book \textsl{A first course in network theory}~\cite{Estrada2017}.
 
 \begin{definition}[Graph]
     Let $V$ be a finite set of $n$ nodes (or vertices), and let $E \subseteq V \times V$ be a set of edges.\\
@@ -247,7 +245,7 @@ However, for convenience, in the notation the graph argument is often left out w
 \parspace
 
 In this section I describe some of the metrics that are most significant for analysing protein interaction networks, and other graphs used in this project.
-The set of these metrics and their specific definition is based on The Paper\cite{Bozhilova2019}, and on~\cite{MartinHernandez2011}.
+The set of these metrics and their specific definitions are based on The Paper~\cite{Bozhilova2019}, and on a paper summarising graph metrics~\cite{MartinHernandez2011}.
 
 All metrics below are defined for \textsl{undirected} graphs.
 
@@ -297,10 +295,8 @@ It has similar meaning to closeness centrality, and a similar definition.
 \end{definition}
 
 Both \textsl{closeness} and \textsl{harmonic centrality} require the computation of distances between all pairs of nodes.
-I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962} of time complexity $O({\left\lvert V \right\rvert}^3)$.
-An alternative would be running Dijkstra's algorithm~\cite{dijkstra1959note} with time complexity $O({\left\lvert V \right\rvert}^2)$ starting in each node.
-
-\todo{consider Seidel's APD algorithm, od Dijkstra}
+I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962} of time complexity $O({\left\lvert V \right\rvert}^3)$, which came bundled in the graph library I used (\cref{sec:graphstream}).
+A significant improvement could be achieved by running Dijkstra's algorithm~\cite{dijkstra1959note} with time complexity $O(\left\lvert E \right\rvert + \left\lvert V \right\rvert \log \left\lvert V \right\rvert )$ starting in each node, or even better using Seidel's APD algorithm~\cite{SeidelAllPairsShortestPathProblemUnweighted1995}, but that was not the aim of my work.
 
 \subsubsection{Ego network measures}
 
@@ -385,8 +381,6 @@ I used an implementation of PageRank that is described in~\cite{ilprints422}.
 
 \subsection{Ranking}
 
-\todo{maybe move to~\nameref{sec:methods}}
-
 %\begin{definition}[Preorder]
 %    Binary relation $\sqsubseteq$ on some set $P$ is a \textbf{preorder} iff it is reflexive and transitive, i.e.:
 %    \begin{itemize}
@@ -446,11 +440,6 @@ Note, there may be multiple valid rankings if multiple nodes have the same metri
 A ranking just assigns each node a rank (or a position) such that it doesn't violate the ordering by metric values.
 Also, note that each node must be assigned a \textsl{unique} rank, due to the antisymmetry property.
 
-\todo{explain how ties are resolved (in The Paper: randomly)}
-
-\todo{add graph figure with ranked nodes (either labels or node size by rank)}
-
-
 \subsubsection*{Why do we need rankings of nodes?}
 
 When studying robustness of graph metrics, we ultimately aim to assess how stable an analysis using metrics is, on a network coming from an ``imprecise'' source.
@@ -469,6 +458,15 @@ Then, the degree of nodes will principally decrease with increasing confidence t
 
 For different datasets there may other hyper- or hidden parameters in the procedure of obtaining the graph.
 The difference between graphs obtained from the same imprecise source are always some small perturbations that stable metrics should ideally be resilient to.
+
+\subsubsection*{Resolving ties}
+
+An important detail when using ranking vectors is specifying how ties are resolved.
+According to the definitions above, if we have $v_1, v_2 \in V$ with $M(v_1) = M(v_2)$ for some metric $M$, then $\preceq$ is a valid ranking relation with either $v_1 \preceq v_2$ or $v_2 \preceq v_1$.
+In The Paper, such ties were resolved \enquote{at random, independently across different metrics and different thresholds}.
+This may, however, lead to inappropriately lower robustness of metrics due to random oscillations of ranks of nodes, as well as a high degree of variability between results (especially for graphs with small number of nodes).
+
+In \graffs, I assured that ties are resolved arbitrarily but deterministically and constantly across all metrics and thresholds, and even constantly across multiple (perturbed) graphs with the same nodes (see \cref{sec:perturbing_graphs} on perturbing graphs).
 
 \subsection{Robustness}
 
@@ -520,83 +518,65 @@ In particular, this section will discuss mainly the following, in the theoretica
 
 \subsection{Datasets}\label{sec:datasets}
 
-Later in this section I present different kinds of publicly available graph datasets used in this project.
 In my work I distinguish two types of networks: scored and unscored.
-
-\todo{add citations for individual datasets used}
+Later in this section I present different publicly available graph datasets used in this project.
 
 \subsubsection{Scored networks}\label{sec:scored_networks}
 
 In scored networks, the edges are weighted, with each weight, also called the \textbf{score}, representing the likelihood that the edge is true in the real world.
-
 The score is usually a real value between $0$ and $1$.
-
-\input{figures_gen/graph_example_scored_edges.tex}
-
-Scored protein networks are a good example of scored networks.
-\autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{Escherichia coli} dataset from the~\nameref{sec:string_database} where edges in the figures are drawn with the width proportional to their weight.
-
 Scored networks are useful for metric robustness analysis because they naturally provide a way to introduce perturbations to the networks -- by adjusting the confidence threshold.
 
 Using a scored network as-is just by discarding the confidence score is often unacceptable as a large proportion of the network's edges with close-to-zero confidence are likely to be false positives.
 Obtaining a functional network from an almost fully connected clique needs starting with a reasonable confidence threshold.
 Scored databases often state what is the reasonable range of the confidence scores.
 
-\subsubsection{Unscored networks}\label{sec:unscored_datasets}
-
-Unscored networks are just unweighted graphs, therefore not conveying the information about confidence of edges.
-When we apply a confidence threshold to a scored network, discarding the scores, the resulting subgraph with a filtered set of edges is also an unscored network.
-
-There are numerous sources providing interesting unscored network datasets, freely available online.
-
-\paragraph*{Stanford Large Network Dataset Collection~\cite{Large2016}} Provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
-
-\paragraph*{KONECT datasets} The Koblenz Network Collection~\cite{Kunegis2013} provides access to hundreds of network datasets of various types, covering diverse areas such as \enquote{social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks}.
-
-I picked a number of datasets to work with (see the~\nameref{ch:evaluation} chapter) to demonstrate the concept.
-However, the \graffs tool is universal and not bound to any set of datasets.
-I chose the following unscored datasets, considering mainly their size (number of nodes and density; due to associated computational cost), and supposed structure:
-\begin{description}[itemsep=\zerospace]
-    \item[\texttt{airports}]\ Airport–airport flights in the US in 2010~\cite{konect:2016:opsahl-usairport,konect:opsahl11}, from KONECT
-    \item[\texttt{citation}]\ High-energy physics theory citation network~\cite{LeskovecGraphsTimeDensification2005,GehrkeOverview2003KDD2003}, from SNAP Datasets~\cite{Large2016}
-    \item[\texttt{collab}]\ Collaboration network of Arxiv General Relativity category~\cite{LeskovecGraphEvolutionDensification2007}, SNAP Datasets
-    \item[\texttt{facebook}]\ Social circles (friends) from Facebook~\cite{NIPS2012_4532}, from SNAP Datasets
-    \item[\texttt{internet}]\ Internet topology network of autonomous systems~\cite{konect:zhang05,konect:2016:topology}, from KONECT
-\end{description}
-
-There are a number of huge online repositories providing access to thousands networks (outside of the scope of this work), such as the Network Repository~\cite{RossiNetworkDataRepository2015}.
-
-\todo{mention licenses of datasets, and include them on download}
-
-\subsubsection{STRING database}\label{sec:string_database}
-
-\textit{STRING}\cite{Szklarczyk2019} is an open database of scored interactions between proteins.
+\paragraph*{STRING database {\normalfont\cite{Szklarczyk2019}}} An open database of scored interactions between proteins.
 At the time of writing, the database contains over 24M different proteins from over 5K organisms, accounting for over $2 * 10^9$ interactions.
 
-Considering the whole graph as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
+\input{figures_gen/graph_example_scored_edges.tex}
+
+Scored protein networks are a good example of scored networks.
+\autoref{fig:graph_example_scored_edges} shows a small subgraph of the \textsl{Escherichia coli} dataset from the STRING database where edges' width is proportional to their weight.
 
 Note that, generally, one cannot just consider a subgraph of a source graph (such as sub-graph of a social network), because the generated sub-graph doesn't have a meaning, and its characteristic heavily depend on how the graph was generated (for example, in a social network with communities, taking $n$ random nodes adjacent to a certain node would likely result in a more dense graph than taking $n$ random nodes of the whole graph).
 However, we can generate subgraphs of the whole STRING database by considering only proteins of concrete organism.
 Such full-organism networks then describe interactions of proteins within that organism.
+Considering the whole STRING network as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.
 
-In my work, I evaluate robustness on the following datasets taken from the STRING database:
-\begin{itemize}
-    \item Plasmodium vivax (\textsl{pvivax}) -- 3255 nodes, 344691 edges
-    \item Escherichia coli (\textsl{ecoli}) -- 4144 nodes, 583440 edges
-    \item Saccharomyces cerevisiae (\textsl{yeast}) -- 6418 nodes, 939998 edges
-\end{itemize}
-
-The datasets are too large to be visualised as graphs.
-\todo{Figure X} presents the degree distribution of the datasets.
-\todo{Figure Y} shows the effect of thresholding on the average degree.
-
-The STRING database also provides guidance on what the reasonable ranges of the score values are, with the score being `the approximate probability that a predicted link exists between two enzymes (proteins)':
-\begin{itemize}
+The STRING database also provides guidance on what the reasonable ranges of the score values are, with the score being \enquote{the approximate probability that a predicted link exists between two enzymes (proteins)}:
+\begin{itemize}[topsep=5pt]
     \item low confidence -- 0.15 (or better)
     \item medium confidence -- 0.4
     \item high confidence -- 0.7
     \item highest confidence -- 0.9
 \end{itemize}
+
+\input{figures/table_scored_datasets.tex}
+\input{figures/histogram_edges.tex}
+
+In my work, I evaluate robustness on 3 protein networks from the STRING database\footnote{Datasets are taken from the source files of The Paper's analysis instead of the STRING database directly, to match those in The Paper. Available at \url{https://github.com/lbozhilova/measuring_rank_robustness}}, listed in \cref{tab:scored_datasets}.
+The datasets are too large to be visualised as graphs -- \cref{fig:histogram_edges} shows the distribution of confidence scores in the 3 protein interaction networks.
+
+\subsubsection{Unscored networks}\label{sec:unscored_datasets}
+
+Unscored networks are just unweighted graphs, therefore not conveying the information about confidence of edges.
+When we apply a confidence threshold to a scored network, discarding the scores, the resulting subgraph with a filtered set of edges is an unscored network.
+There are numerous online sources providing interesting unscored network datasets.
+
+\paragraph*{SNAP datasets} Stanford Large Network Dataset Collection~\cite{Large2016} of the Stanford Network Analysis Project~\cite{LeskovecSNAPGeneralPurpose2016} provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
+
+\paragraph*{KONECT datasets} The Koblenz Network Collection~\cite{Kunegis2013} provides access to hundreds of network datasets of various types, covering diverse areas such as \enquote{social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks}.
+
+Other huge online repositories such as the Network Repository~\cite{RossiNetworkDataRepository2015} provide access to thousands similar networks (but it's outside of the scope of this work).
+
+I picked a number of datasets to work with (see~\nameref{ch:evaluation}) to demonstrate the concept.
+However, the \graffs tool is universal and not bound to any set of datasets.
+Considering mainly the size of the datasets (number of nodes and density; due to associated computational cost), and supposed structure, I chose those listed in~\cref{tab:unscored_datasets}.
+
+\input{figures/table_unscored_datasets.tex}
+
+\todo{mention licenses of datasets, and include them on download}
 
 \subsection{Perturbing graphs}\label{sec:perturbing_graphs}
 
@@ -637,7 +617,7 @@ So, define:
 
 \subsubsection{Thresholding scored networks}
 
-Various methods were proposed to choose a good baseline threshold, from fixing the value upfront\cite{MeunierAgerelatedChangesModular2009} or after examining a range of values\cite{vanWijkComparingBrainNetworks2010,HorstmannStateDependentProperties2010}, through maximising the threshold given some constraints\cite{BassettAdaptiveReconfigurationFractal2006}, to choosing a value optimising some criterion such as classification rate\cite{ZaninOptimizingFunctionalNetwork2012}.
+Various methods were proposed to choose a good baseline threshold, from fixing the value upfront~\cite{MeunierAgerelatedChangesModular2009} or after examining a range of values~\cite{vanWijkComparingBrainNetworks2010,HorstmannStateDependentProperties2010}, through maximising the threshold given some constraints~\cite{BassettAdaptiveReconfigurationFractal2006}, to choosing a value optimising some criterion such as classification rate~\cite{ZaninOptimizingFunctionalNetwork2012}.
 However, the confidence threshold value is still a hyper-parameter of the graph-obtaining process and robust metrics should respond similarly to all reasonable values of the chosen threshold.
 
 For scored networks, such as protein networks, we can generate perturbed graphs by considering different confidence thresholds (in a reasonable range) of the same scored network.
@@ -651,7 +631,7 @@ Define a \textbf{linear thresholding} graph generator, given a minimum threshold
     &c(v_1, v_2)~\text{is the confidence score of the edge $v_1\,\text{---}\,v_2$} \nonumber
 \end{align}
 
-\todo{generate array of ~8 linearly thresholded graphs to demonstrate this}
+\input{figures_gen/thresholding_array.tex}
 
 \subsubsection{Randomly deleting edges}\label{sec:randomly_removing_edges}
 
@@ -687,13 +667,9 @@ Define an \textbf{edge removing} graph generator, given a proportion of edges to
     &\forall e \in E.\ \chi_e\sim\mathcal{U}(0,1) \nonumber
 \end{align}
 
-\todo{generate array of ~8 linearly thresholded graphs to demonstrate this}
-
-\todo{mention \textsl{initial threshold} parameter}
-
 Unlike linear thresholding, edge removing is applicable to unscored networks (and to scored networks after applying a threshold).
 However, in practice it is useful to specify an \textsl{initial threshold} so that this generator can work on scored networks too, by turning them into unscored.
-Note that keeping all edges and purely discarding the confidence scores would be detrimental, as low-scored edges would make scored networks falsely dense.
+Keeping all edges of scored networks and purely discarding the confidence scores would be detrimental to the graph structure, as low-scored edges would make scored networks appear falsely dense.
 
 \subsection{Evaluating metrics}\label{sec:evaluating_metrics}
 
@@ -733,7 +709,7 @@ Then I explain how I extended two of the measures from scored networks to unscor
 \todo{extend these to unscored networks}
 
 The Paper argues that in the context of bioinformatics, metrics are often used to identify key nodes of graphs, therefore it is natural to focus on the highest ranking nodes only.
-This is also true for networks that are just too large for each node to be inspected individually\citeneeded.
+This is also true for networks that are just too large for each node to be inspected individually.
 Hence, in principle, the three robustness measures test how reliably a metric can identify a certain number of highest-ranked nodes across multiple perturbed graphs.
 
 
