@@ -3,6 +3,8 @@ import matplotlib.font_manager as fm
 
 import matplotlib
 
+from utils import small, bf, tiny, tt, ffloat, modify_tabular
+
 matplotlib.rc('text', usetex=True)
 matplotlib.rcParams['mathtext.fontset'] = 'custom'
 matplotlib.rcParams['mathtext.rm'] = 'Bitstream Vera Sans'
@@ -34,17 +36,6 @@ df = pd.concat(list(
 ))
 
 # %%
-ffloat = lambda v: "%.2f" % (v)
-small = lambda text: "{\\small " + text + "}"
-tiny = lambda text: "{\\footnotesize " + text + "}"
-tt = lambda text: "\\texttt{" + text + "}"
-bf = lambda text: "\\textbf{" + text + "}"
-
-
-def modify_tabular(input, prefix="", postfix=""):
-    return input.replace("\\begin{tabular}", prefix + "\\begin{tabular}", 1) \
-        .replace("\\end{tabular}", "\\end{tabular}" + postfix, 1)
-
 
 def table_for_robustness(robustness_measure):
     data = df[df['robustness'] == robustness_measure]

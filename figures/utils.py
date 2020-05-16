@@ -22,3 +22,15 @@ dashes_source_robustness = {
     (s + ", " + r): (1, 0) if s == 'graffs' else (5, 4)
     for r in robustness_measures for s in sources
 }
+
+
+ffloat = lambda v: "%.2f" % (v)
+small = lambda text: "{\\small " + text + "}"
+tiny = lambda text: "{\\footnotesize " + text + "}"
+tt = lambda text: "\\texttt{" + text + "}"
+bf = lambda text: "\\textbf{" + text + "}"
+
+
+def modify_tabular(input, prefix="", postfix=""):
+    return input.replace("\\begin{tabular}", prefix + "\\begin{tabular}", 1) \
+        .replace("\\end{tabular}", "\\end{tabular}" + postfix, 1)

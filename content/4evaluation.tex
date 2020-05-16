@@ -149,8 +149,13 @@ However, the \graffs tool I developed is powerful enough to be able to facilitat
 
 \section{Performance}
 
-The following plots compare the time it took to evaluate the experiments: \texttt{reproduce}, \texttt{random-edges}, \texttt{unscored}; and the time spent on evaluating each metric.
+\Cref{tab:perf_experiments_table} compares the time it took to evaluate the experiments: \texttt{reproduce}, \texttt{random-edges}, \texttt{unscored}; and the time spent on evaluating each graph.
 The performance of the experiments was measured on the \texttt{rio} computing cluster (see \autoref{sec:computing_cluster}).
+The table measures total CPU times, therefore assuming that $n$ cores run in parallel and the machine executes no other processes in the meantime, the real (wall-clock) duration of each experiment is then $n$-times shorter.
+This value is useful to compare the \textsl{absolute computational complexity} of each experiment, as it does not depend on the number of cores, and neither the fraction of the program that is perfectly parallelised.
+
+\input{figures/perf_experiments_table.tex}
+
 
 
 \todo{include plots}
