@@ -120,7 +120,7 @@ graffs dataset download-demos
 graffs experiment create --name unscored --generator random04 \
     --datasets airports,citation,collab,facebook,internet \
     --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy \
-    --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
+    --robustnessMeasures RankIdentifiability,RankInstability
 graffs experiment run --name unscored
 \end{lstlisting}
 % @formatter:on
@@ -155,6 +155,11 @@ The table measures total CPU times, therefore assuming that $n$ cores run in par
 This value is useful to compare the \textsl{absolute computational complexity} of each experiment, as it does not depend on the number of cores, and neither the fraction of the program that is perfectly parallelised.
 
 \input{figures/perf_experiments_table.tex}
+\input{figures/perf_timings_matrix.tex}
+
+\Cref{fig:perf_timings_matrix} compares the logarithm of the time it took to evaluate each metric on a single graph, in average, taking measurements from the 3 experiments \texttt{reproduce}, \texttt{random-edges}, and \texttt{unscored}.
+We can see that the betweenness centrality is most computation heavy, with the computation taking more than an hour in average for a single graph generated from the \texttt{citation} dataset.
+This is presumably because the \texttt{citation} dataset is much bigger especially in the number of edges compared to the other used datasets.
 
 
 
