@@ -277,7 +277,8 @@ If there are multiple shortest paths between a pair of nodes, the fraction of th
 It measures the reciprocal of the \textsl{farness} of each node to other nodes.
 Nodes with higher closeness centrality are \textsl{closer} to all other nodes.
 
-\begin{definition}[Closeness centrality]\label{def:closeness_centrality}
+\begin{definition}[Closeness centrality]
+    \label{def:closeness_centrality}
     \[CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}\]
 \end{definition}
 
@@ -289,7 +290,8 @@ For disconnected graphs, I set $d(v, i) = \left\lvert V \right\rvert$ to follow 
 A common alternative for disconnected graphs is to compute \textsl{Harmonic centrality}.
 It has similar meaning to closeness centrality, and a similar definition.
 
-\begin{definition}[Harmonic centrality]\label{def:harmonic_centrality}
+\begin{definition}[Harmonic centrality]
+    \label{def:harmonic_centrality}
     \[HC(v) \eqdef \sum_{i \neq v} \frac{1}{d(v, i)}\]
     with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (as in~\cite{MarchioriHarmonySmallworld2000}).
 \end{definition}
@@ -540,17 +542,31 @@ Using a scored network as-is just by discarding the confidence score is often un
 Obtaining a functional network from an almost fully connected clique needs starting with a reasonable confidence threshold.
 Scored databases often state what is the reasonable range of the confidence scores.
 
-\subsubsection{Unscored networks}
+\subsubsection{Unscored networks}\label{sec:unscored_datasets}
 
 Unscored networks are just unweighted graphs, therefore not conveying the information about confidence of edges.
+When we apply a confidence threshold to a scored network, discarding the scores, the resulting subgraph with a filtered set of edges is also an unscored network.
 
-When we apply a confidence threshold to a scored network, discarding the scores, the resulting subgraph with a filtered set of edges is an unscored network.
+There are numerous sources providing interesting unscored network datasets, freely available online.
 
-\parspace
+\paragraph*{Stanford Large Network Dataset Collection~\cite{Large2016}} Provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
 
-Although the \graffs tool built is universal and is not bound to any kind of dataset, I chose a number of datasets to work with to demonstrate the concept.
+\paragraph*{KONECT datasets} The Koblenz Network Collection~\cite{Kunegis2013} provides access to hundreds of network datasets of various types, covering diverse areas such as \enquote{social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks}.
 
-There are multiple online sources providing interesting network datasets.
+I picked a number of datasets to work with (see the~\nameref{ch:evaluation} chapter) to demonstrate the concept.
+However, the \graffs tool is universal and not bound to any set of datasets.
+I chose the following unscored datasets, considering mainly their size (number of nodes and density; due to associated computational cost), and supposed structure:
+\begin{description}[itemsep=\zerospace]
+    \item[\texttt{airports}]\ Airport–airport flights in the US in 2010~\cite{konect:2016:opsahl-usairport,konect:opsahl11}, from KONECT
+    \item[\texttt{citation}]\ High-energy physics theory citation network~\cite{LeskovecGraphsTimeDensification2005,GehrkeOverview2003KDD2003}, from SNAP Datasets~\cite{Large2016}
+    \item[\texttt{collab}]\ Collaboration network of Arxiv General Relativity category~\cite{LeskovecGraphEvolutionDensification2007}, SNAP Datasets
+    \item[\texttt{facebook}]\ Social circles (friends) from Facebook~\cite{NIPS2012_4532}, from SNAP Datasets
+    \item[\texttt{internet}]\ Internet topology network of autonomous systems~\cite{konect:zhang05,konect:2016:topology}, from KONECT
+\end{description}
+
+There are a number of huge online repositories providing access to thousands networks (outside of the scope of this work), such as the Network Repository~\cite{RossiNetworkDataRepository2015}.
+
+\todo{mention licenses of datasets, and include them on download}
 
 \subsubsection{STRING database}\label{sec:string_database}
 
@@ -581,19 +597,6 @@ The STRING database also provides guidance on what the reasonable ranges of the 
     \item high confidence -- 0.7
     \item highest confidence -- 0.9
 \end{itemize}
-
-\subsubsection{Stanford Large Network Dataset Collection}
-
-The \textit{Stanford Large Network Dataset Collection}\cite{Large2016} provides open datasets obtained from real-world data such as social networks, citation networks, web graphs, internet networks, road networks and many more.
-
-\todo{list used datasets}
-
-\subsubsection{KONECT datasets}
-
-Another dataset collection: The Koblenz Network Collection (KONECT)~\cite{Kunegis2013} provides access to hundreds of network datasets of various types.
-Its covers diverse areas such as `social networks, hyperlink networks, authorship networks, physical networks, interaction networks, and communication networks'.
-
-\todo{list used datasets}
 
 \subsection{Perturbing graphs}\label{sec:perturbing_graphs}
 
@@ -770,7 +773,8 @@ The following three rank robustness measures are defined given a metric $M$, a b
 
 Speaking of scored networks, rank continuity of a metric is the similarity between rankings induced at consecutive thresholds.
 
-\begin{definition}[Rank continuity]\label{def:rank_continuity}
+\begin{definition}[Rank continuity]
+    \label{def:rank_continuity}
     \ldots
 \end{definition}
 
@@ -778,13 +782,15 @@ Speaking of scored networks, rank continuity of a metric is the similarity betwe
 
 \subsubsection{Rank identifiability}
 
-\begin{definition}[Rank identifiability]\label{def:rank_identifiability}
-\ldots
+\begin{definition}[Rank identifiability]
+    \label{def:rank_identifiability}
+    \ldots
 \end{definition}
 
 \subsubsection{Rank instability}
 
-\begin{definition}[Rank instability]\label{def:rank_instability}
+\begin{definition}[Rank instability]
+    \label{def:rank_instability}
     \newcommand*{\args}{\left(M \mid G, \xi, n \right)}\newcommand*{\astar}{A^*\!\args}
     The \textbf{rank instability} measure is defined as:
 

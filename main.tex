@@ -52,6 +52,7 @@
 \usepackage{hyphenat}
 \usepackage{ragged2e}
 \usepackage{array}
+\usepackage{titlesec}
 
 \usetikzlibrary{shadows.blur}
 
@@ -92,6 +93,10 @@
 
 \renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make more readable
 \setlength{\parskip}{3pt plus1pt minus1pt}
+\titlespacing{\paragraph}{%
+    0pt}{%              left margin
+    0pt}{% space before (vertical)
+    1em}%               space after (horizontal)
 
 %https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat
 \renewcommand{\floatpagefraction}{.8}%
