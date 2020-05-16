@@ -29,7 +29,7 @@ df['weight'] = df['weight'].astype(float) / 1000
 cmap = cm.get_cmap('tab10')
 norm = colors.Normalize(vmin=0, vmax=9)
 
-plt.subplots(sharex="all", sharey="all", figsize=(10,3))
+plt.subplots(sharex="all", sharey="all", figsize=(8,2.5))
 gs1 = GridSpec(1,3)
 gs1.update(wspace=0.12, hspace=0)
 
@@ -61,7 +61,7 @@ for dataset in datasets:
     pos += 1
 
 plt.suptitle('Confidence score distribution in protein networks')
-plt.subplots_adjust(wspace=0, hspace=0, bottom=0.15, left=0.05, right=0.98)
+plt.subplots_adjust(wspace=0, hspace=0, bottom=0.18, left=0.06, right=0.98)
 plt.savefig("histogram_edges.pdf")
 plt.show()
 

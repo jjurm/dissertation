@@ -34,7 +34,9 @@
 \newcommand{\parspace}{\bigskip}
 
 % Lists
-\setlist[itemize]{itemsep=0pt}
+\newlength{\zerospace}
+\setlength{\zerospace}{0pt plus2pt}
+\setlist[itemize]{itemsep=\zerospace}
 
 \newlist{todolist}{itemize}{2}
 \setlist[todolist]{label=$\square$}
@@ -45,6 +47,8 @@
 \makeatletter
 \g@addto@macro\@floatboxreset\centering
 \makeatother
+
+\captionsetup{aboveskip=4pt plus3pt minus1pt,belowskip=0pt plus3pt,justification=justified}
 
 % Directory trees
 \def\FTdir(#1,#2,#3){%
@@ -116,8 +120,10 @@
     xleftmargin=2\parindent,
 }
 \lstset{%! Suppress = NonMatchingIf
+    aboveskip=\smallskipamount,
     basicstyle=\ttfamily\color{black}\lst@ifdisplaystyle\fontsize{10pt}{10pt}\selectfont\fi,
     belowcaptionskip=8pt,
+    belowskip=\smallskipamount,
     breaklines=true,
     escapechar=¦,
     frame=single,

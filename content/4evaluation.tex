@@ -10,7 +10,7 @@ Referring to the~\nameref{ch:proposal}, I met all success criteria of the projec
 \end{todolist}
 
 For the evaluation of \graffs, I designed the following experiments:
-\begin{description}
+\begin{description}[itemsep=\zerospace]
     \item[\texttt{reproduce}] focuses on reproducing some results from The Paper, following the setup from The Paper as closely as possible
     \item[\texttt{random-edges}] validates whether random edge deletion is a suitable graph generation method, by applying the same pipeline as in \texttt{repr} just with random edge deletion
     \item[\texttt{unscored}] applies the random edge deletion method to new, unscored, datasets
@@ -113,7 +113,7 @@ Note again, that the results of the experiments are not expected to match numeri
 Having validated that randomly removing edges is a reasonable method for generating small perturbations in unscored graphs, we can now proceed to evaluating robustness of multiple metrics on multiple interesting datasets.
 I have chosen the following datasets, considering mainly their size (number of nodes and density; due to associated computational cost), and supposed structure.
 
-\begin{description}
+\begin{description}[itemsep=\zerospace]
     \item[airports]\ Airport–airport flights in the US in 2010~\cite{konect:2016:opsahl-usairport,konect:opsahl11}, from KONECT~\cite{Kunegis2013}
     \item[citation]\ High-energy physics theory citation network~\cite{LeskovecGraphsTimeDensification2005,GehrkeOverview2003KDD2003}, from SNAP Datasets~\cite{Large2016}
     \item[collab]\ Collaboration network of Arxiv General Relativity category~\cite{LeskovecGraphEvolutionDensification2007}, SNAP Datasets

@@ -50,6 +50,8 @@
 %! Suppress = MultipleIncludes
 \usepackage{afterpage}
 \usepackage{hyphenat}
+\usepackage{ragged2e}
+\usepackage{array}
 
 \usetikzlibrary{shadows.blur}
 
@@ -89,7 +91,7 @@
 \widowpenalty1000%
 
 \renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make more readable
-\setlength{\parskip}{3pt}
+\setlength{\parskip}{3pt plus1pt minus1pt}
 
 %https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat
 \renewcommand{\floatpagefraction}{.8}%

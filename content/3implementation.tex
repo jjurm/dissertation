@@ -141,8 +141,8 @@ I used a remote high-performance computing facility provided by the Systems Rese
 In particular, I worked with the following servers:
 
 \begin{description}
-    \item[\texttt{rio.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
-    \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (32 cores in total), and 128 GiB RAM installed.
+    \item[\texttt{rio.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM
+    \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (24 cores in total), and 128 GiB RAM
 \end{description}
 
 \todo{include more details on the remote setup}.
@@ -219,7 +219,7 @@ This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 
 \autoref{fig:data_model_diagram} shows the entities that the program persists in the database, as explained below.
 Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the user creates and later refers to with their name.
-\begin{description}
+\begin{description}[itemsep=\zerospace]
     \item[\texttt{PerturbedGraph}]
     stores a serialised version of the \texttt{Graph} object, inclucing all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
     It also stores metadata, such as a hash which distinguishes the graph from other graphs beloging to the same \texttt{GraphCollection} coming from the same graph generator.
@@ -250,7 +250,7 @@ The Java Persistence API\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API spec
 It describes ways in Java to specify schemas of relational databases and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
 \textsl{Persistence} is an abstract term referring to accessing, managing, and storing entities.
 
-The Hibernate framework~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015}, an object-relational mapping tool, provides a concrete implementation of JPA.
+The Hibernate framework~\cite{ElliottHibernateDeveloperNotebook2004}, an object-relational mapping tool, provides a concrete implementation of JPA~\cite{BauerJavaPersistenceHibernate2015}.
 I use Hibernate as the intermediate layer between the \texttt{core} module of \graffs and the underlying H2 database that is completely abstracted away from the \graffs code (\autoref{fig:orm_kotlin_h2_diagram}).
 
 \input{figures/orm_kotlin_h2_diagram.tex}
@@ -346,7 +346,7 @@ Datasets are located, and are expected to be located, in the `data' directory in
 Each sub-directory represents a dataset identified by the sub-directory's name.
 \graffs supports loading files of two different types of files:
 
-\begin{description}
+\begin{description}[itemsep=\zerospace]
     \item \hyperref[sec:edge_files]{\textbf{Edge files}} -- text format with each line containing a pair of adjacent nodes
     \item \hyperref[sec:rdata_files]{\textbf{\texttt{RData} files}} -- binary files that store objects created in the R language~\cite{RCoreTeamLanguageEnvironmentStatistical2009}
 \end{description}
