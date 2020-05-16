@@ -145,6 +145,11 @@ In particular, I worked with the following servers:
     \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (24 cores in total), and 128 GiB RAM
 \end{description}
 
+The \graffs tool is programmed in a way which utilizes many threads to allow parallel computing.
+There are a number of frameworks that can aid in high-performance computing, and I analysed a few.
+I installed and experimented with Apache Spark~\cite{ZahariaApacheSparkUnified2016}, and investigated a number of other off-the-shelf products such as Apache Storm and Spring Boot -- although these libraries support computation across multiple machines, they are more heavyweight.
+To make \graffs portable as part of the flexibility goal, I opted in for a solution that does not require installing or setting up such framework for running the tool, in particular the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}), with the small tradeoff that this does not allow distributed computing across multiple machines out of the box.
+
 \todo{include more details on the remote setup}.
 
 \subsubsection*{Setting up the cluster}
@@ -185,7 +190,9 @@ A user can create and manage \textsl{graph generators} and \textsl{experiments} 
 
 \subsection{Using GraphStream}
 
-Graphs in memory are stored and manipulated by the GraphStream library\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}
+Graphs in memory are stored and manipulated by the GraphStream library\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
+GraphStream also provides visualisations as opposed to JGraphT.}
+The library consists of 3 modules: \texttt{gs-core} defining the API and underlying structures, \texttt{gs-algo} with various algorithms from graph theory, and \texttt{gs-ui} containing components for visualising graphs.
 
 \input{figures_gen/graphstream_diagram.tex}
 
