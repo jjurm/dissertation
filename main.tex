@@ -10,7 +10,7 @@
 %eprint=false
 ]{biblatex}
 \usepackage[pdfborder={0 0 0}]{hyperref}    % turns references into hyperlinks
-\usepackage[margin=25mm]{geometry}  % adjusts page layout
+\usepackage[margin=2cm,top=24mm,bottom=24mm]{geometry}  % adjusts page layout
 \usepackage{graphicx}  % allows inclusion of PDF, PNG and JPG images
 \usepackage{verbatim}
 \usepackage{docmute}   % only needed to allow inclusion of proposal.tex
@@ -93,12 +93,18 @@
 \clubpenalty1000%
 \widowpenalty1000%
 
+% Spacing
 \renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make more readable
 \setlength{\parskip}{3pt plus1pt minus1pt}
 \titlespacing{\paragraph}{%
     \parindent}{%              left margin
     0pt}{% space before (vertical)
     1em}%               space after (horizontal)
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+
 
 %https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat
 \renewcommand{\floatpagefraction}{.8}%
@@ -234,7 +240,7 @@
     % the appendices
     \appendix
 
-
+    \newgeometry{margin=25mm}
     \chapter{Project Proposal}\label{ch:proposal}
     \input{proposal.tex}
 

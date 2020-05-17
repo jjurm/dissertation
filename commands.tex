@@ -62,6 +62,12 @@
 
 \captionsetup{aboveskip=4pt plus3pt minus1pt,belowskip=0pt plus3pt,justification=justified}
 
+% Epigraph
+\setlength\epigraphwidth{8.5cm}
+\setlength\epigraphrule{0pt}
+\let\originalepigraph\epigraph
+\renewcommand\epigraph[2]{\originalepigraph{\textit{#1}}{--- #2}}
+
 % Directory trees
 \def\FTdir(#1,#2,#3){%
     \FTfile(#1,{{\color{black!40!white}\faFolderOpen}\hspace{0.2em}#3})
