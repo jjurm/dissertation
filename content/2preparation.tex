@@ -717,7 +717,7 @@ Both similarities quantify a relationship between two rankings with meaning simi
 \begin{definition}[$\bm{k}$-similarity]
     \label{def:k_similarity}
     The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
-    \[ M_k(A_\theta, A_\mu \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
+    \[ \operatorname{Sim}_k(A_\theta, A_\mu) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.
 \end{definition}
 
@@ -729,7 +729,7 @@ The following $\alpha$-relaxed $k$-similarity accounts for situations where the 
 \begin{definition}[$\bm{\alpha}$-relaxed $\bm{k}$-similarity]
     \label{def:alpha_relaxed_k_similarity}
     The \textbf{$\bm{\alpha}$-relaxed $\bm{k}$-similarity} of two rankings $A_\theta, A$ is the proportion of the $100k\%$ highest ranking nodes in $A$ which are also within $100k\bm{a}\%$ highest ranking nodes in $A_\theta$:
-    \[ M_k^\alpha(A_\theta, A \mid k) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
+    \[ \operatorname{Sim}_k^\alpha(A_\theta, A) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k\bm{\alpha}) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
     where $\alpha > 0$, $k, k\alpha \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A$.
 \end{definition}
 
@@ -751,37 +751,45 @@ This measure utilises the fact that graphs are generated in a sequence -- this i
 \newcommand*{\astar}{A^*\!\args}
 \begin{definition}[Rank continuity]
     \label{def:rank_continuity}
+    \vspace{-0.4cm}
     \begin{flalign*}
         \begin{split}
             &\operatorname{rank\ continuity} \args \eqdef \\
-            &\qquad \frac{ \norm{\Set{(i, k) \in \integersto{n-1} \times \mathcal{K}}{ M_k\left(A^{M(G_{\mathlarger{i}})}, A^{M(G_{\mathlarger{i+1}})} \mid k \right) \geq 0.9 }} }{ (n - 1)\norm{\mathcal{K}} }
+            &\qquad \frac{ \norm{\Set{(i, k) \in \integersto{n-1} \times \mathcal{K}}{ \operatorname{Sim}_k\left(A^{M(G_{\mathlarger{i}})}, A^{M(G_{\mathlarger{i+1}})} \right) \geq 0.9 }} }{ (n - 1)\norm{\mathcal{K}} }
         \end{split} \\[6pt]
         \text{where }\ & \mathcal{K} = \Setenum{ 0.001, 0.002, \dots, 0.05 }, \nonumber \\
         & \xi(G) \generates{n} G_1, G_{i+1}, \dots, G_{n}, \nonumber \\
-        & M_k(\boldsymbol{\cdot}, \boldsymbol{\cdot} \mid k)\ \ \text{is $k$-similarity of two rankings, by~\autoref{def:k_similarity}} \nonumber
+        & \operatorname{Sim}_k(\dotp, \dotp)\ \ \text{is $k$-similarity of two rankings, by~\autoref{def:k_similarity}} \nonumber
     \end{flalign*}
 \end{definition}
 
-Secondly, the rank identifiability measure attempts to quantify, how well ranks imposed by a metric on perturbed graphs resemble the overall ranking.
+Secondly, the \textsl{rank identifiability} measure attempts to quantify, how well ranks imposed by a metric on perturbed graphs resemble the overall ranking.
 Taking $\alpha$-relaxed $k$-similarity values between ranks of perturbed graphs and an overall ranking (with respect to a metric), rank identifiability is defined as their minimum.
 The role of the $\alpha$ coefficient is \enquote{to allow for more user control when the rankings compared are not interpreted in the same way}~\cite{Bozhilova2019}.
 
 \begin{savenotes}
 \begin{definition}[Rank identifiability]
     \label{def:rank_identifiability}
+    \vspace{-0.4cm}
     \begin{flalign*}
-        &\operatorname{rank\ identifiability} \args \eqdef \min\limits_{i \in \integersto{n}} M_k^\alpha(A^{M(G_{\mathlarger{i}})}, A^* \mid k) \\[10pt]
+        &\operatorname{rank\ identifiability} \args \eqdef \min\limits_{i \in \integersto{n}} \operatorname{Sim}_k^\alpha(A^{M(G_{\mathlarger{i}})}, A^* ) \\[10pt]
         \text{where }\ & A^* \quad \text{is an overall ranking, by~\autoref{def:overall_ranking}}, \nonumber \\
         & \xi(G) \generates{n} G_1, G_{i+1}, \dots, G_{n}\,, \nonumber \\
         & k \approx 0.023478,\,\footnote{The Paper uses slightly different value of $k$ for each dataset, so in order to generalise this process I set $k$ to be a constant value calculated as the average of the values used in The Paper.} \nonumber \\
         & \alpha = 1.5, \nonumber \\
-        & M_k^\alpha(\boldsymbol{\cdot}, \boldsymbol{\cdot} \mid k)\ \ \text{is $\alpha$-relaxed $k$-similarity of two rankings, by~\autoref{def:k_similarity}} \nonumber
+        & \operatorname{Sim}_k^\alpha(\dotp, \dotp)\ \ \text{is $\alpha$-relaxed $k$-similarity of two rankings, by~\autoref{def:k_similarity}} \nonumber
     \end{flalign*}
 \end{definition}
 \end{savenotes}
 
+Finally \textsl{rank instability} measures how much the rank of each individual node changes.
+$U$ is the set of the $1\%$ highest ranked nodes according to the overall ranking $A^*\!\left(M \mid G, \xi, n \right)$.
+Then, for each node $v \in U$, we calculate a range of \textsl{ranks} that the node attains across the generated graphs.
+Rank instability is then the average scaled range for the nodes in $U$.
+
 \begin{definition}[Rank instability]
     \label{def:rank_instability}
+    \vspace{-0.4cm}
     \begin{flalign*}
         &\operatorname{rank\ instability} \args \eqdef \frac{1}{\left\lvert U \right\rvert}\, \mathlarger{\sum}_{v \in U}\, \frac{\operatorname{range}(v)}{n} & \\[10pt]
         \text{where }\ & U = \Set{v \in V}{A^* (v) > 99\%n}, \nonumber \\[2pt]
@@ -794,9 +802,6 @@ The role of the $\alpha$ coefficient is \enquote{to allow for more user control 
     \end{flalign*}
 \end{definition}
 
-In the definition, $U$ is the set of the $1\%$ highest ranked nodes according to the overall ranking $A^*\!\left(M \mid G, \xi, n \right)$.
-Then, for each node $v$, we calculate a range of \textsl{ranks} that the node holds across the generated graphs $G_1$ to $G_n$.
-Finally, the rank instability measure is calculated as the average scaled range for the $1\%$ highest ranked nodes in $U$.
 
 \parspace
 
