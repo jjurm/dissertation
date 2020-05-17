@@ -36,7 +36,7 @@ graffs experiment run --name reproduce
 % @formatter:on
 
 As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality (Definitions~\ref{def:closeness_centrality} and~\ref{def:harmonic_centrality}).
-These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take unreasonable amount of time to compute on large graphs. (\todo{evaluating Closeness on one graph takes XY minutes\ldots})
+These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take unreasonable amount of time to compute on large graphs.
 
 \phantomsection
 \label{para:how_to_compare_results}
@@ -169,5 +169,8 @@ This is presumably because the \texttt{citation} dataset is much bigger in the n
 
 
 \section{Releasing \graffs}
+
+\todo{Make graffs citable}
+%https://guides.github.com/activities/citable-code/
 
 \subsection{Licensing}

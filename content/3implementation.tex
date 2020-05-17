@@ -22,7 +22,7 @@ The target user is a researcher or anyone who would benefit from assessing the s
 
 \graffs supports the following features:
 
-\begin{enumerate}
+\begin{enumerate}[itemsep=0pt,topsep=5pt]
     \item Store, load input graphs in various formats, and represent them in a unified memory structure
     \item Run algorithms that compute metrics on graphs
     \item Generate graphs by applying perturbations to given input graphs
@@ -59,8 +59,7 @@ This is a challenge in all the following areas:
     \item \textbf{Resolving ties}
 
     Methods that are not inherently stochastic but require pseudo-randomness to resolve ties must also be reproducible.
-    An example is generating a visual layout for graphs such as in \autoref{fig:simple_graph}.
-    This layout algorithm needs to resolve ties when starting with a graph where nodes have no position.
+    An example is ranking nodes of a graph according to metric values, or generating a visual layout for graphs such as in \autoref{fig:simple_graph}.
 
     Again, a solution is to base such flow on an input seed.
 
@@ -115,7 +114,7 @@ The repository can be found at \url{https://github.com/jjurm/graffs}.
 
 \subsection{Build automation}
 
-The project uses Gradle\citeneeded for project management.
+The project uses Gradle~\cite{BerglundBuildingTestingGradle2011} for project management.
 Split into different modules, Gradle also helps to keep the structure well defined and manages builds of each module separately (which is called a multi-project build in Gradle).
 
 Project configuration rules are set up using the \texttt{build.gradle} files (one in the root directory, then one within each module) with a number of plugins to facilitate the following and more:
@@ -126,9 +125,6 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
     \item Helps with version numbering
     \item Generates HTML API documentation for Kotlin and Java classes
 \end{enumerate}
-
-
-\todo{maybe put all subsections below somewhere at the end of Implementation}
 
 \subsection{Computing cluster}\label{sec:computing_cluster}
 
@@ -336,7 +332,7 @@ All results, namely generated graphs with nodes including calculated values of e
 Running the experiment is a computationally intensive task, mainly due to metric evaluation (which certainly depends on the chosen metrics).
 To mitigate this, I employed the following:
 \begin{itemize}[topsep=5pt]
-    \item Optimised the program for computation speed by applying performance engineering principles \todo{elaborate}
+    \item Optimised the program for computation speed by applying performance engineering principles
     \item Allow parallel computation
     \item I ran extensive experiments on a high-performance computing facility (from \autoref{sec:computing_cluster})
 \end{itemize}
@@ -488,7 +484,7 @@ java -jar graffs.jar [ARGS]
 \end{lstlisting}
 % @formatter:on
 
-Clikt\citeneeded is a \enquote{multiplatform command line interface parsing for Kotlin} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
+Clikt is a \enquote{multiplatform command line interface parsing for Kotlin}\footnote{Available at \url{https://github.com/ajalt/clikt}} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
 The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
 
 The \graffs tool provides many commands (loading datasets, creating and accessing graph generators, creating and running experiments, and so on).
@@ -506,7 +502,7 @@ Further, \autoref{lst:graffs_cli_examples} shows an example output of some of th
 
 \section{Documentation}
 
-The Kotlin code is documented using the \texttt{KDoc} language and an HTML documentation is generated using the \texttt{Dokka} tool (similar to \texttt{JavaDoc}).\citeneeded
+The Kotlin code is documented using the \texttt{KDoc} language and an HTML documentation is generated using the \texttt{Dokka} tool (similar to \texttt{JavaDoc}).
 
 I wrote the documentation in code most thoroughly for public classes, and their members that need clarification on their behaviour or usage.
 
