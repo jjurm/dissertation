@@ -712,7 +712,7 @@ This is also true for networks that are just too large for each node to be inspe
 Hence, in principle, the three robustness measures test how reliably a metric can identify a certain number of highest-ranked nodes across multiple perturbed graphs.
 
 For that, I will first define the notion of $k$-similarity and $\alpha$-relaxed $k$-similarity, as proposed in The Paper.
-Both similarities quantify a relationship between two rankings with meaning similar to rank correlation coefficient, but take into account the highest-ranked nodes only.
+Both similarities quantify the correlation between two rankings (similar to Spearman or Kendall rank correlation coefficients), but these take into account the highest-ranked nodes only, therefore suiting mainly applications where identification of highest-ranking nodes is important.
 
 \begin{definition}[$\bm{k}$-similarity]
     \label{def:k_similarity}
@@ -735,13 +735,9 @@ The following $\alpha$-relaxed $k$-similarity accounts for situations where the 
 
 For example, if $A_\theta$ is obtained by ranking a perturbed graph and $A$ is an overall ranking (of multiple perturbed graphs), relaxed $k$-similarity may be used to identify whether the top 10 nodes overall, i.e. in $G$, are among the top 20 for the particular observed threshold, i.e. in $G_\theta$.
 
-\todo{other robustness measures:~\cite{BorgattiRobustnessCentralityMeasures2006}}
-
-\todo{The Paper also refers to:} Rank similarity typically measured by a rank correlation coefficient such as Spearman or Kendall.
-
 \parspace
 
-The following three rank robustness measures are defined given a metric $M$, a base graph $G$, a graph generator $\xi$, and the number of perturbed graphs to generate $n$.
+Consequently, following rank robustness measures are defined given a metric $M$, a base graph $G$, a graph generator $\xi$, and the number of perturbed graphs to generate $n$.
 
 Speaking of scored networks, \textsl{rank continuity} of a metric is the similarity between rankings induced at consecutive thresholds.
 It is defined as the proportion of pairs of consecutive graphs (e.g. thresholded at consecutive values), for which the $k$-similarity of node rankings is above $0.9$.
@@ -802,9 +798,7 @@ Rank instability is then the average scaled range for the nodes in $U$.
     \end{flalign*}
 \end{definition}
 
-
 \parspace
 
-\todo{include some cool figures to demonstrate the three robustness measures}
-
-
+Apart of the robustness measures above, there are other approaches one could investigate, outside of the scope of this work.
+For example, Borgatti et al.~\cite{BorgattiRobustnessCentralityMeasures2006} suggest \enquote{Number of nodes in both the top $10\%$ of the true network and of the observed network, divided by the number of nodes}, and \enquote{Square of the Pearson correlation between true centralities and observed centralities} as robustness measures -- these could be further investigated in future research.

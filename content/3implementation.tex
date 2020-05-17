@@ -8,17 +8,15 @@ A working version is published on GitHub\footnote{\url{https://github.com/jjurm/
 
 The purpose of this project is to develop a methodology and tool, i.e. a framework, to help study graph metrics, and empirically analyse their robustness in particular.
 
-\input{figures/overview_prop_diagram.tex}
+\graffs is a command-line tool written in Kotlin that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:brief_pipeline} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} starting with graph datasets and ending up with deductions about each metric's \textsl{robustness}.
 
-\graffs is a command-line tool written in Kotlin\citeneeded that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:overview_prop_diagram} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} where we start with graph datasets and end up with deductions about each metric's
-
+\input{brief_pipeline.tex}
 
 \section{Design goals}\label{sec:design-goals}
 
 The following are technical requirements I set for the project.
 Overall, I aim this tool to be reusable for similar projects, either by directly invoking the compiled binary, or by using it as a dependency, or by forking and extending it.
-
-\todo{specify who is the target user of \graffs}
+The target user is a researcher or anyone who would benefit from assessing the stability of graph metrics evaluated on arbitrary graphs.
 
 \subsection{Supported features}
 
@@ -108,8 +106,6 @@ Kotlin has a number of advanced features such as improved type safety and reduce
 There is one notable feature of Kotlin: properties.
 Properties are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
 In UML diagrams in this work , instead of presenting fields and methods of each class, listed are methods and properties (in this order).
-
-\todo{diagram of Kotlin, Gradle, Git, server}
 
 \subsection{Version Control System}
 
