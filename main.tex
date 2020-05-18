@@ -76,17 +76,16 @@
 ]
 \renewcommand{\ttdefault}{jbmono}
 
-
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
 %\makeatother
 
-%LC_NUMERIC="en_GB.UTF-8"
-%printf "%'d" "$(texcount -1 -merge -utf8 -sum main.tex | tr -d '\n')"
-\newcommand{\wordcountScript}{texcount -1 -merge -q -utf8 -sum main.tex}
+% @formatter:off
+\bash[stdoutFile=wordcount.tex]
+texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
+\END
+% @formatter:on
 
-
-%\pdfsuppresswarningpagegroup=1
 
 \raggedbottom                           % try to avoid widows and orphans
 \sloppy
@@ -124,6 +123,7 @@
 \include{commands}
 
 \begin{document}
+    %TC:ignore
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Title
@@ -165,7 +165,7 @@
     % Proforma, table of contents and list of figures
 
     \pagestyle{plain}
-    \section*{Declaration}
+    \chapter*{Declaration}
 
     I, Juraj Mi\v{c}ko of Jesus College, being a candidate for Part II of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
 
@@ -186,31 +186,46 @@
     \chapter*{Proforma}
 
     {\large
-        \begin{tabular}{ll}
-            Name: & \textbf{Juraj Mi\v{c}ko}                            \\
-            College: & \textbf{Jesus College}                                        \\
-            Project Title: & \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}                    \\
-            Examination: & \textbf{Computer Science Tripos -- Part II Project},
-            \\ & \textbf{June 2020}        \\
-            Word Count: & \textbf{\splice{\wordcountScript}\footnotemark{}}                                    \\
-            Project Originator: & Dr Timothy Griffin                                \\
-            Supervisor: & Dr Timothy Griffin                                        \\
-        \end{tabular}
+        \begin{savenotes}
+            \begin{tabular}{ll}
+                Candidate number: & \textbf{2343F}                            \\
+                College: & \textbf{Jesus College}                                        \\
+                Project Title: & \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}                    \\
+                Examination: & \textbf{Computer Science Tripos -- Part II, 2020} \\
+                Word Count: & \textbf{\input{wordcount.tex}\footnote{This word count was computed using \texttt{texcount -1 -merge -q -utf8 -sum main.tex}}}                                    \\
+                Line Count: & \textbf{5694} \footnote{This total lines of code count was computed using:\\ \verbatiminput{count-lines.sh} } \\
+                Project Originator: & \textbf{Dr Timothy Griffin}                               \\
+                Supervisor: & \textbf{Dr Timothy Griffin}                                        \\
+            \end{tabular}
+        \end{savenotes}
     }
-    \footnotetext{This word count was computed using \texttt{\wordcountScript}}
 
     \section*{Original aims of the project}
 
+    Networks are commonly analysed using graph metrics to identify their key properties.
+    However, real-world data is inherently imprecise, leading to inaccuracies in the measured metric values.
+    A paper by Bozhilova et al.~\cite{Bozhilova2019} tackles a similar problem, quantifying robustness of metrics in scored protein interaction networks.
+
+    The project would first follow their experimental approach to produce similar results.
+    Second, it would extend the concept of rank robustness of metrics to unscored networks, studying how susceptible they are to small perturbations in graphs.
+    The result should be a tool that facilitates (computation-heavy) experiments of measuring robustness of metrics on many network datasets.
 
 
     \section*{Work completed}
 
-    \todo{include courses this project was based on}
+    I designed a way to analyse robustness of graph metrics on unscored networks, advancing the concept of rank robustness from the paper by Bozhilova et al.
+    I built a command-line tool \graffs from scratch in Kotlin, for carrying out large-scale computation-heavy experiments of measuring robustness of metrics, in an efficient, flexible, and reproducible way.
+    I set up a high-performance computing environment and reproduced expected results as well as derived new interesting results.
+
+    The project met all success criteria.
+    As an extension, I proposed further research within this novel field and published \graffs as open-source, ready to be reused and extended.
+
 
     \section*{Special difficulties}
 
+    Due to world-wide measures related to the COVID-19 pandemic, I was held restricted in Azerbaijan for 6 weeks, uncertain about possible repatriation travels, then spent two weeks in a compulsory government quarantine facility and in self-isolation in Slovakia, before returning home to a working environment.
 
-
+    I was approved a two-week extension which largely accounted for these circumstances, and had no other special difficulties.
 
 
     \tableofcontents
@@ -231,7 +246,7 @@
 %    \addcontentsline{toc}{chapter}{[Work in progress]}
 %    \input{content/0work-in-progress.tex}
 
-
+    %TC:endignore
     \chapter{Introduction}\label{ch:introduction}
     \input{content/1introduction.tex}
 
@@ -250,6 +265,7 @@
 
     \chapter{Conclusion}\label{ch:conclusion}
     \input{content/5conclusion.tex}
+    %TC:ignore
 
 %    \input{content/0scratch.tex}
 
@@ -269,4 +285,5 @@
     \chapter{Project Proposal}\label{ch:proposal}
     \input{proposal.tex}
 
+    %TC:endignore
 \end{document}
