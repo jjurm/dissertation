@@ -58,8 +58,6 @@
 
 \usetikzlibrary{shadows.blur}
 
-\addbibresource{refs.bib}
-
 \newfontfamily\jbmono{JetBrainsMono}[
     Path = fonts/JetBrainsMono-1.0.3/ttf/,
     Extension = .ttf,
@@ -75,6 +73,9 @@
     Scale = 0.87,
 ]
 \renewcommand{\ttdefault}{jbmono}
+
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\small}
 
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}

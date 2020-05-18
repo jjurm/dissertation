@@ -77,10 +77,10 @@ The visual plots of the three chosen metrics in each case demonstrate that \graf
 
 \section{Validation of random edge deletion}
 
-\input{figures/plot_edge_deletion_per_step.tex}
-
 Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
 The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach, comparing robustness results of the same metrics, on the same datasets, just with a different graph-generating method.
+
+\input{figures/plot_edge_deletion_per_step.tex}
 
 To start, I needed to choose the $\delta$ parameter for $\mathlarger{^{ER} \mathlarger{\xi}}_\delta$, the edge-removing graph generator (see \autoref{eq:edge_removing_generator}).
 Taking distribution of confidence scores (\autoref{fig:histogram_edges}), I derived its right-to-left cumulative distribution (\autoref{fig:plot_cumulative_confidence_scores}) and differentiated to get a decrease rate at each threshold, as seen in \autoref{fig:plot_edge_deletion_per_step}.
@@ -163,14 +163,8 @@ This is presumably because the \texttt{citation} dataset is much bigger in the n
 
 
 
-\todo{include plots}
-
-
-
 
 \section{Releasing \graffs}
 
 \todo{Make graffs citable}
 %https://guides.github.com/activities/citable-code/
-
-\subsection{Licensing}
