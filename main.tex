@@ -24,7 +24,7 @@
 \usepackage{amssymb}
 \usepackage{csquotes}
 \usepackage[
-%nottoc,
+    nottoc,
     notlot,
     notlof
 ]{tocbibind}
@@ -55,6 +55,7 @@
 \usepackage{titlesec}
 \usepackage{booktabs}
 \usepackage{epigraph}
+\usepackage{chngcntr}
 
 \usetikzlibrary{shadows.blur}
 
@@ -73,9 +74,10 @@
     Scale = 0.87,
 ]
 \renewcommand{\ttdefault}{jbmono}
+\renewcommand*{\bibfont}{\small}
 
 \addbibresource{refs.bib}
-\renewcommand*{\bibfont}{\small}
+\graphicspath{{figures/}{figures_gen/}{images/}}
 
 %\makeatletter
 %\g@addto@macro{\UrlBreaks}{\UrlOrds}
@@ -101,9 +103,13 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
     0pt}{% space before (vertical)
     1em}%               space after (horizontal)
 
-\titleformat{\chapter}[display]
-{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
-\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+%\titleformat{\chapter}[display]
+%{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+%\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+
+\titleformat{\chapter}[block]
+{\normalfont\huge\bfseries}{\thechapter.}{1em}{\Huge}
+\titlespacing*{\chapter}{0pt}{-19pt}{30pt}
 
 
 %https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat
@@ -117,7 +123,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
 
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{4}
-\graphicspath{{figures/}{figures_gen/}{images/}}
+\counterwithout{footnote}{chapter}
 \allowdisplaybreaks
 
 
@@ -147,7 +153,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
     \vspace*{45mm}
     \begin{center}
         \LARGE
-        \textbf{Framework for empirical analysis of graph metric robustness} \\[5mm]
+        \textbf{Framework for Empirical Analysis of Graph Metric Robustness} \\[5mm]
 
         \vspace{5mm}
         \includegraphics[height=9cm]{cover_graph_img.png}
@@ -160,11 +166,12 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
         \today  % today's date
     \end{center}
 
-    \newpage
+    \clearpage
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Proforma, table of contents and list of figures
 
+    \pagenumbering{roman}
     \pagestyle{plain}
     \chapter*{Declaration}
 
@@ -190,11 +197,10 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
         \begin{savenotes}
             \begin{tabular}{ll}
                 Candidate number: & \textbf{2343F}                            \\
-                College: & \textbf{Jesus College}                                        \\
-                Project Title: & \textbf{Framework for empirical analysis} \\ & \textbf{of graph metric robustness}                    \\
+                Project Title: & \textbf{Framework for Empirical Analysis} \\ & \textbf{of Graph Metric Robustness}                    \\
                 Examination: & \textbf{Computer Science Tripos -- Part II, 2020} \\
                 Word Count: & \textbf{\input{wordcount.tex}\footnote{This word count was computed using \texttt{texcount -1 -merge -q -utf8 -sum main.tex}}}                                    \\
-                Line Count: & \textbf{5694} \footnote{This total lines of code count was computed using:\\ \verbatiminput{count-lines.sh} } \\
+                Line Count: & \textbf{5694} \footnote{This total lines of code count was computed using:\verbatiminput{count-lines.sh} } \\
                 Project Originator: & \textbf{Dr Timothy Griffin}                               \\
                 Supervisor: & \textbf{Dr Timothy Griffin}                                        \\
             \end{tabular}
@@ -204,12 +210,12 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
     \section*{Original aims of the project}
 
     Networks are commonly analysed using graph metrics to identify their key properties.
-    However, real-world data is inherently imprecise, leading to inaccuracies in the measured metric values.
+    However, real-world data can be inherently imprecise, leading to inaccuracies in the measured metric values.
     A paper by Bozhilova et al.~\cite{Bozhilova2019} tackles a similar problem, quantifying robustness of metrics in scored protein interaction networks.
 
-    The project would first follow their experimental approach to produce similar results.
-    Second, it would extend the concept of rank robustness of metrics to unscored networks, studying how susceptible they are to small perturbations in graphs.
-    The result should be a tool that facilitates (computation-heavy) experiments of measuring robustness of metrics on many network datasets.
+    The project will first follow their experimental approach to produce similar results.
+    Second, it will extend the concept of rank robustness of metrics to unscored networks, studying how susceptible they are to small perturbations in graphs.
+    The result will be a tool that facilitates experiments of measuring robustness of metrics on many network datasets.
 
 
     \section*{Work completed}
@@ -224,24 +230,23 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
 
     \section*{Special difficulties}
 
-    Due to world-wide measures related to the COVID-19 pandemic, I was held restricted in Azerbaijan for 6 weeks, uncertain about possible repatriation travels, then spent two weeks in a compulsory government quarantine facility and in self-isolation in Slovakia, before returning home to a working environment.
+    Due to world-wide measures related to the COVID-19 pandemic, I was held in Azerbaijan for 6 weeks, uncertain about possible repatriation travels, then spent two weeks in a compulsory government quarantine facility and in self-isolation in Slovakia, before returning home to a working environment.
 
     I was approved a two-week extension which largely accounted for these circumstances, and had no other special difficulties.
 
 
     \tableofcontents
+    \clearpage
 
-    \listoffigures
-
-    \listoftables
-
-    \lstlistoflistings
+    %\listoffigures
+    %\listoftables
+    %\lstlistoflistings
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % now for the chapters
 
+    \pagenumbering{arabic}
     \pagestyle{headings}
-
 
 %    \chapter*{[Work in progress]}
 %    \addcontentsline{toc}{chapter}{[Work in progress]}
