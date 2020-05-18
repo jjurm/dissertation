@@ -33,7 +33,7 @@ df = pd.read_csv('plot_relaxed_similarity_graffs.csv')
 # Betweenness
 metrics = ["Degree", "Betweenness", "LocalClustering"]
 
-plt.subplots(figsize=(12, 3.5), sharey="all", nrows=1, ncols=3)
+plt.subplots(figsize=(10, 3), sharey="all", nrows=1, ncols=3)
 
 
 def plot_metric(metric, pos):
@@ -52,7 +52,7 @@ def plot_metric(metric, pos):
         palette=datasets_bozhilova_colors
     )
 
-    plt.xlim(0.1, 1)
+    plt.xlim(0.13, 1)
     plt.ylim(0, 1.02)
     plt.gca().yaxis.set_major_locator(MultipleLocator(0.25))
     plt.xticks([0.15, 0.4, 0.6, 0.7, 0.9, 1])
@@ -62,7 +62,7 @@ def plot_metric(metric, pos):
     plt.xlabel("Threshold")
 
     if pos == 1:
-        plt.ylabel("$\\alpha$\,-relaxed $k\,$-similarity")
+        plt.ylabel("$\\alpha$\\,-relaxed $k\\,$-similarity")
     else:
         plt.ylabel("")
         # noinspection PyUnresolvedReferences
