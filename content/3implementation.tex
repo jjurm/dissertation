@@ -128,8 +128,7 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 
 \subsection{Computing cluster}\label{sec:computing_cluster}
 
-I used a remote high-performance computing facility provided by the Systems Research Group (\url{https://www.cl.cam.ac.uk/research/srg/}), sponsored by Dr Andrew Moore (\url{andrew.moore@cl.cam.ac.uk}).
-
+I used a remote high-performance computing facility\footnote{sponsored by Dr Andrew Moore, from the System Research Group at the Computer Laboratory, University of Cambridge: \url{https://www.cl.cam.ac.uk/research/srg/}} provided by the Systems Research Group.
 In particular, I worked with the following servers:
 
 \begin{description}
@@ -141,6 +140,8 @@ The \graffs tool is programmed in a way which utilizes many threads to allow par
 There are a number of frameworks that can aid in high-performance computing, and I analysed a few.
 I installed and experimented with Apache Spark~\cite{ZahariaApacheSparkUnified2016}, and investigated a number of other off-the-shelf products such as Apache Storm and Spring Boot -- although these libraries support computation across multiple machines, they are more heavyweight.
 To make \graffs portable as part of the flexibility goal, I opted in for a solution that does not require installing or setting up such framework for running the tool, in particular the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}), with the small tradeoff that this does not allow distributed computing across multiple machines out of the box.
+
+Although \graffs is not made such that it's instance can run across multiple machines in a distributed way, it is capable and straightforward to manually run multiple instances at different machines with a shared database, each machine contributing to a different part of the evaluation.
 
 \subsubsection*{Setting up the cluster}
 
@@ -438,7 +439,7 @@ This follows the~\nameref{sec:reproducibility} principle set in~\nameref{sec:des
 
 \subsection{Visualising graphs \& producing figures}
 
-\todo{todo}
+\todo{add brief description, or remove completely}
 
 
 \section{Parallelism using Kotlin coroutines}
@@ -492,17 +493,13 @@ java -jar graffs.jar [ARGS]
 
 Clikt is a \enquote{multiplatform command line interface parsing for Kotlin}\footnote{Available at \url{https://github.com/ajalt/clikt}} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
 The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
+With the help of Clikt, I generated scripts allowing automatic command and parameter completion within bash.
 
 The \graffs tool provides many commands (loading datasets, creating and accessing graph generators, creating and running experiments, and so on).
 Commands are grouped based on their context and the objects that they operate on, and can further have sub-commands.
 Those are together structured in a tree-like hierarchy.
 The hierarchy is shown in \autoref{fig:cli_commands_hierarchy}.
-
-\input{figures_gen/cli_commands_hierarchy.tex}
-
 Further, \autoref{lst:graffs_cli_examples} shows an example output of some of the commands.
 
+\input{figures_gen/cli_commands_hierarchy.tex}
 \lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the help text printed by the command-line tool}, float, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}
-
-\todo{Describe Clikt features such as command completion}
-
