@@ -12,6 +12,7 @@ The purpose of this project is to develop a methodology and tool, i.e. a framewo
 
 \input{figures/brief_pipeline.tex}
 
+
 \section{Design goals}\label{sec:design-goals}
 
 The following are technical requirements I set for the project.
@@ -149,13 +150,16 @@ Although \graffs is not made such that it's instance can run across multiple mac
 
 The project is structured in the following modules, using multi-project builds in Gradle:
 \begin{itemize}
-    \item \texttt{core} - APIs for structures, metrics, generators, etc., as well as the core data model for storing data in the database
-    \item \texttt{storage} - accessing and loading graphs/datasets stored in the filesystem
-    \item \texttt{generators} - graph generators
+    \item \texttt{api} - interfaces of structures, metrics, generators
+    \item \texttt{db} - database data model
+    \item \texttt{graph} - graph generators, loading datasets from filesystem
+    \item \texttt{robustness} - node ranking, rank similarities, robustness measures
     \item \texttt{metrics} - graph metrics
-    \item \texttt{robustness} - robustness measures
-    \item \texttt{cli} - code for command-line interface
+    \item \texttt{cli} - command-line interface: creating and evaluating experiments, visualising graphs, generating rank similarity plots, etc.
+    \item \texttt{figures} - code for automating generation of some figures in this report
 \end{itemize}
+
+Python code for generating charts for this report, and SQL code for extracting the data from the database, is kept with the LaTeX sources of this dissertation.
 
 
 \section{Data model}
