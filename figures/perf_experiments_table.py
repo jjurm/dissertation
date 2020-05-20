@@ -1,6 +1,6 @@
 import pandas as pd
 
-from utils import tt
+from utils import tt, modify_tabular
 
 
 def format_duration(t):
@@ -33,8 +33,7 @@ df = df[cols]
 
 df['Experiment'] = df['Experiment'].apply(lambda e: tt(e))
 
-
-#%%
+# %%
 
 with open("perf_experiments_table.tex", "w") as f:
     f.write("")
@@ -45,8 +44,8 @@ with open("perf_experiments_table.tex", "w") as f:
         caption="CPU Computation time of the 3 experiments evaluated by \\graffs, run on the \\texttt{rio} computing cluster (see \\autoref{sec:computing_cluster}).\n"
                 "\\textsl{Total CPU time} is the sum of all times of individual CPU cores spent on evaluating the experiment, "
                 "and \\textsl{Avg CPU time per graph} is that divided by $(\\text{number of datasets}) \\times (\\text{number of graphs generated from each dataset})$.",
-        label="tab:perf_expriments_table",
+        label="tab:perf_experiments_table",
     )
+    latex = modify_tabular(latex, prefix="\scalebox{0.8}{\n", postfix="\n}")
     f.write(latex + "\n")
     f.write("")
-

@@ -20,7 +20,7 @@ experiment_datasets = {
 }
 datasets = list(d for k, l in experiment_datasets.items() for d in l)
 assert (len(datasets) == len(set(datasets)))  # assert no duplicates (ambiguity)
-robustness_measures = ['RankIdentifiability', 'RankInstability']
+robustness_measures = ['RankContinuity', 'RankIdentifiability', 'RankInstability']
 
 # %%
 df = pd.read_excel("robustness_graffs.xlsx")
@@ -39,9 +39,7 @@ df = pd.concat(list(
 
 def table_for_robustness(robustness_measure):
     data = df[df['robustness'] == robustness_measure]
-    metrics = data['metric'].unique()
     datasets = data['dataset'].unique()
-    experiments = data['experiment'].unique()
     # each count should be 1
     # data.groupby(["metric", "dataset"])['value'].count()
 
@@ -50,12 +48,7 @@ def table_for_robustness(robustness_measure):
     pivot.columns = pivot.columns.astype(list)
     pivot = pivot.reset_index()  # .rename({"index": }, axis=1)
 
-    if len(experiments) == 1:
-        experiments_str = "experiment \\texttt{" + experiments[0] + "}"
-    else:
-        experiments_str = "experiments \\texttt{" + ("}, \\texttt{".join(experiments[:-1])) + "} and \\texttt{" + \
-                          experiments[-1] + "}"
-    column_format = "|l|" + "|".join(
+    column_format = "|p{40mm}|" + "|".join(
         "c" * (len(datasets)) for experiment, datasets in experiment_datasets.items()) + "|"
 
     latex = pivot.to_latex(
@@ -65,18 +58,33 @@ def table_for_robustness(robustness_measure):
         caption=robustness_measure + " of " + str(len(metrics)) + " metrics on " +
                 str(len(datasets)) + " datasets (" + experiments_str + ")",
         label="tab:robustness-" + robustness_measure[4:].lower(),
-        # column_format="|l|r|r|r|r|r|r|r|r|",
         column_format=column_format,
         header=[small(bf(robustness_measure))] + [tiny(tt(col)) for col in datasets],
         formatters=[lambda v: small(v)] + [lambda v: small(ffloat(v))] * len(datasets),
     )
-    latex = modify_tabular(latex, prefix="\scalebox{0.9}{\n", postfix="\n}")
+    latex = modify_tabular(latex, in_table=False, prefix="\scalebox{0.8}{\n", postfix="\n}")
     return latex
 
 
 with open("robustness_graffs_tables.tex", "w") as f:
-    f.write("{\\setlength{\\tabcolsep}{5pt}\n")
-    for robustness in robustness_measures:
+    f.write("\\begin{table}{\\setlength{\\tabcolsep}{5pt}\\renewcommand{\\arraystretch}{0.85}\n")
+
+    experiments = df['experiment'].unique()
+    if len(experiments) == 1:
+        experiments_str = "experiment \\texttt{" + experiments[0] + "}"
+    else:
+        experiments_str = "experiments \\texttt{" + ("}, \\texttt{".join(experiments[:-1])) + "} and \\texttt{" + \
+                          experiments[-1] + "}"
+    caption = "Robustness measures \\texttt{" + ("}, \\texttt{".join(robustness_measures[:-1])) + "} and \\texttt{" + \
+              robustness_measures[-1] + "} of " + str(len(metrics)) + " metrics on " \
+              + str(len(datasets)) + " datasets (" + experiments_str + ")"
+
+    #f.write("\\caption{" + caption + "}\\label{tab:robustness_results}\n")
+    for i, robustness in enumerate(robustness_measures):
+        if i>0:
+            f.write("\\vspace*{2mm}\n")
+        # f.write("\\subfloat{")
         latex = table_for_robustness(robustness)
-        f.write(latex + "\n")
-    f.write("}")
+        f.write(latex)
+        # f.write("}\n")
+    f.write("}\\end{table}\n")

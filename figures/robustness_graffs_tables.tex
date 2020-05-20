@@ -1,44 +1,55 @@
-{\setlength{\tabcolsep}{5pt}
-\begin{table}
-\centering
+\begin{table}{\setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{0.85}
+\caption{RankContinuity of 7 metrics on 8 datasets (experiments \texttt{random-edges} and \texttt{unscored})}
+\label{tab:robustness-continuity}
+\scalebox{0.8}{
+\begin{tabular}{|p{40mm}|ccc|ccccc|}
+\toprule
+{\small \textbf{RankContinuity}} & {\footnotesize \texttt{ecoli}} & {\footnotesize \texttt{pvivax}} & {\footnotesize \texttt{yeast}} & {\footnotesize \texttt{airports}} & {\footnotesize \texttt{citation}} & {\footnotesize \texttt{collab}} & {\footnotesize \texttt{facebook}} & {\footnotesize \texttt{internet}} \\
+\midrule
+                     Betweenness &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 0.83} &                   {\small 0.70} &                     {\small 1.00} &                     {\small 1.00} \\
+                          Degree &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
+                       Ego1Edges &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
+                       Ego2Nodes &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 0.97} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
+                 LocalClustering &                  {\small 0.23} &                   {\small 0.10} &                  {\small 0.07} &                     {\small 0.60} &                     {\small 0.07} &                   {\small 0.33} &                     {\small 1.00} &                     {\small 0.00} \\
+                        PageRank &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
+                      Redundancy &                  {\small 0.87} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 0.73} \\
+\bottomrule
+\end{tabular}
+}
+\vspace*{2mm}
 \caption{RankIdentifiability of 7 metrics on 8 datasets (experiments \texttt{random-edges} and \texttt{unscored})}
 \label{tab:robustness-identifiability}
-\scalebox{0.9}{
-\begin{tabular}{|l|ccc|ccccc|}
+\scalebox{0.8}{
+\begin{tabular}{|p{40mm}|ccc|ccccc|}
 \toprule
 {\small \textbf{RankIdentifiability}} & {\footnotesize \texttt{ecoli}} & {\footnotesize \texttt{pvivax}} & {\footnotesize \texttt{yeast}} & {\footnotesize \texttt{airports}} & {\footnotesize \texttt{citation}} & {\footnotesize \texttt{collab}} & {\footnotesize \texttt{facebook}} & {\footnotesize \texttt{internet}} \\
 \midrule
-                          Betweenness &                  {\small 0.99} &                   {\small 1.00} &                  {\small 0.99} &                     {\small 0.97} &                     {\small 0.93} &                   {\small 0.99} &                     {\small 1.00} &                     {\small 0.99} \\
-                               Degree &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
-                            Ego1Edges &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
-                            Ego2Nodes &                  {\small 0.98} &                   {\small 1.00} &                  {\small 0.93} &                     {\small 0.97} &                     {\small 0.88} &                   {\small 0.99} &                     {\small 1.00} &                     {\small 0.99} \\
-                      LocalClustering &                  {\small 0.48} &                   {\small 0.50} &                  {\small 0.94} &                     {\small 0.65} &                     {\small 0.70} &                   {\small 0.63} &                     {\small 1.00} &                     {\small 0.60} \\
-                             PageRank &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 0.97} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
-                           Redundancy &                  {\small 1.00} &                   {\small 1.00} &                  {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} &                   {\small 1.00} &                     {\small 1.00} &                     {\small 1.00} \\
+                          Betweenness &                  {\small 0.93} &                   {\small 0.94} &                  {\small 0.94} &                     {\small 0.97} &                     {\small 0.83} &                   {\small 0.81} &                     {\small 1.00} &                     {\small 0.91} \\
+                               Degree &                  {\small 0.99} &                   {\small 1.00} &                  {\small 0.99} &                     {\small 1.00} &                     {\small 0.98} &                   {\small 0.97} &                     {\small 1.00} &                     {\small 1.00} \\
+                            Ego1Edges &                  {\small 0.94} &                   {\small 1.00} &                  {\small 0.95} &                     {\small 1.00} &                     {\small 0.98} &                   {\small 0.98} &                     {\small 1.00} &                     {\small 0.97} \\
+                            Ego2Nodes &                  {\small 0.94} &                   {\small 0.97} &                  {\small 0.74} &                     {\small 0.92} &                     {\small 0.35} &                   {\small 0.82} &                     {\small 1.00} &                     {\small 0.86} \\
+                      LocalClustering &                  {\small 0.09} &                   {\small 0.13} &                  {\small 0.34} &                     {\small 0.14} &                     {\small 0.07} &                   {\small 0.29} &                     {\small 1.00} &                     {\small 0.13} \\
+                             PageRank &                  {\small 0.99} &                   {\small 0.97} &                  {\small 0.96} &                     {\small 1.00} &                     {\small 0.94} &                   {\small 0.89} &                     {\small 1.00} &                     {\small 0.99} \\
+                           Redundancy &                  {\small 0.85} &                   {\small 0.98} &                  {\small 0.98} &                     {\small 0.92} &                     {\small 0.99} &                   {\small 0.97} &                     {\small 1.00} &                     {\small 0.80} \\
 \bottomrule
 \end{tabular}
 }
-\end{table}
-
-\begin{table}
-\centering
+\vspace*{2mm}
 \caption{RankInstability of 7 metrics on 8 datasets (experiments \texttt{random-edges} and \texttt{unscored})}
 \label{tab:robustness-instability}
-\scalebox{0.9}{
-\begin{tabular}{|l|ccc|ccccc|}
+\scalebox{0.8}{
+\begin{tabular}{|p{40mm}|ccc|ccccc|}
 \toprule
 {\small \textbf{RankInstability}} & {\footnotesize \texttt{ecoli}} & {\footnotesize \texttt{pvivax}} & {\footnotesize \texttt{yeast}} & {\footnotesize \texttt{airports}} & {\footnotesize \texttt{citation}} & {\footnotesize \texttt{collab}} & {\footnotesize \texttt{facebook}} & {\footnotesize \texttt{internet}} \\
 \midrule
-                      Betweenness &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
-                           Degree &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.00} &                   {\small 0.00} &                     {\small 0.00} &                     {\small 0.00} \\
-                        Ego1Edges &                  {\small 0.01} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
-                        Ego2Nodes &                  {\small 0.01} &                   {\small 0.00} &                  {\small 0.04} &                     {\small 0.01} &                     {\small 0.06} &                   {\small 0.00} &                     {\small 0.00} &                     {\small 0.00} \\
-                  LocalClustering &                  {\small 0.13} &                   {\small 0.10} &                  {\small 0.02} &                     {\small 0.31} &                     {\small 0.23} &                   {\small 0.55} &                     {\small 0.00} &                     {\small 0.08} \\
-                         PageRank &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.00} &                   {\small 0.00} &                     {\small 0.00} &                     {\small 0.00} \\
-                       Redundancy &                  {\small 0.02} &                   {\small 0.01} &                  {\small 0.01} &                     {\small 0.01} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
+                      Betweenness &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.01} &                     {\small 0.00} &                     {\small 0.01} &                   {\small 0.02} &                     {\small 0.00} &                     {\small 0.01} \\
+                           Degree &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
+                        Ego1Edges &                  {\small 0.01} &                   {\small 0.01} &                  {\small 0.01} &                     {\small 0.01} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
+                        Ego2Nodes &                  {\small 0.01} &                   {\small 0.00} &                  {\small 0.02} &                     {\small 0.02} &                     {\small 0.05} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.01} \\
+                  LocalClustering &                  {\small 0.04} &                   {\small 0.08} &                  {\small 0.04} &                     {\small 0.12} &                     {\small 0.12} &                   {\small 0.16} &                     {\small 0.00} &                     {\small 0.09} \\
+                         PageRank &                  {\small 0.00} &                   {\small 0.00} &                  {\small 0.00} &                     {\small 0.00} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.00} \\
+                       Redundancy &                  {\small 0.02} &                   {\small 0.01} &                  {\small 0.01} &                     {\small 0.02} &                     {\small 0.01} &                   {\small 0.01} &                     {\small 0.00} &                     {\small 0.01} \\
 \bottomrule
 \end{tabular}
 }
-\end{table}
-
-}
+}\end{table}

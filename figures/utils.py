@@ -31,6 +31,10 @@ tt = lambda text: "\\texttt{" + text + "}"
 bf = lambda text: "\\textbf{" + text + "}"
 
 
-def modify_tabular(input, prefix="", postfix=""):
-    return input.replace("\\begin{tabular}", prefix + "\\begin{tabular}", 1) \
+def modify_tabular(input, prefix="", postfix="", in_table=True):
+    if not in_table:
+        input = input.replace("\\begin{table}\n\\centering\n", "")
+        input = input.replace("\\end{table}\n", "")
+    input = input.replace("\\begin{tabular}", prefix + "\\begin{tabular}", 1) \
         .replace("\\end{tabular}", "\\end{tabular}" + postfix, 1)
+    return input
