@@ -86,14 +86,13 @@ As calculated, the relative amount of edges deleted when increasing the threshol
 Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm.
 
 To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
-Also note that the \texttt{RankContinuity} metric is only applicable to scored datasets, so will not be computed in this experiment.
 
 The experiment was set up using the following commands:
 % @formatter:off
 \begin{lstlisting}[language=bash]
 graffs dataset download-demos
 graffs generator create --name random04 --method removing-edges --params 0.04,600 -n 31 --seed 7
-graffs experiment create --name random-edges --datasets pvivax,ecoli,yeast --generator random04 --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability
+graffs experiment create --name random-edges --datasets pvivax,ecoli,yeast --generator random04 --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
 graffs experiment run --name random-edges
 \end{lstlisting}
 % @formatter:on
@@ -118,7 +117,7 @@ graffs dataset download-demos
 graffs experiment create --name unscored --generator random04 \
     --datasets airports,citation,collab,facebook,internet \
     --metrics Betweenness,Degree,Ego1Edges,Ego2Nodes,LocalClustering,PageRank,Redundancy \
-    --robustnessMeasures RankIdentifiability,RankInstability
+    --robustnessMeasures RankIdentifiability,RankInstability,RankContinuity
 graffs experiment run --name unscored
 \end{lstlisting}
 % @formatter:on
