@@ -1,3 +1,63 @@
+\chapter{Graph theory}\label{ch:graph_theory}
+
+Standard definitions of relevant concepts from graph theory, based mostly on \textsl{A first course in network theory}~\cite{Estrada2017}.
+
+\begin{definition}[Graph]
+    Let $V$ be a finite set of $n$ nodes (or vertices), and let $E \subseteq V \times V$ be a set of edges.\\
+    A \textbf{graph} $G$ is a pair $(V, E)$.\\
+    $V$ is the \textbf{node set} of $G$, and $E$ is the \textbf{edge set} of $G$.
+\end{definition}
+
+\begin{definition}[Graph properties]
+    \begin{itemize}[leftmargin=*]
+        \item $G$ is \textbf{reflexive} iff $\forall v \in V.\ (v, v) \in E$
+        \item $G$ is \textbf{anti-reflexive} iff $\forall v \in V.\ (v, v) \notin E$
+        \item $G$ is \textbf{undirected} (or equally \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Rightarrow (v_2, v_1) \in E$
+        \item $G$ is \textbf{directed} iff it is not undirected
+        \item $G$ is a \textbf{simple graph} iff it is undirected and anti-reflexive
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Relations on graphs]
+    \begin{itemize}[leftmargin=*]
+        \item $G' = (V', E')$ is a \textbf{subgraph} of $G = (V, E)$ iff $V' \subseteq V$ and $E' \subseteq E$
+        \item Let $G_1 = (V_1, E_1)$ and $G_2 = (v_2, E_2)$, then $G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2)$ is the \textbf{union} of the two graphs, and $G_1 \cap G_2 = (V_1 {\cap} V_2, E_1 {\cap} E_2)$ is the \textbf{intersection} of the two graphs.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Node adjacency]
+    \begin{itemize}[leftmargin=*]
+        \item In an undirected graph, $v_1$ is \textbf{adjacent} to $v_2$ iff $(v_1, v_2) \in E$
+        \item A \textbf{loop} is an edge of the form $(v, v)$.
+        Note that simple graphs have no loops.
+        \item Define $\deg^-(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left\lvert \Set{v' \in V}{(v, v') \in E} \right\rvert$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
+        If the graph is undirected, then $\deg^-(v) = \deg^+(v) = \deg(v)$ is called \textbf{degree}.
+        \item For $G = (V, E)$ with $V = \integersto{n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
+        \[ a_{ij} = \begin{cases}
+                        1, & \textnormal{if}\ (i, j) \in E \\
+                        0, & \textnormal{if}\ (i, j) \notin E
+        \end{cases} \]
+        for $1 \leq i, j \leq n$.
+
+        Note that adjacency matrix of undirected graph is symmetric.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Connectedness]
+    \begin{itemize}[leftmargin=*]
+        \item $u, v$ are \textbf{connected nodes} is there exists a path between $u, v$ in $G$, i.e. if $(A^k)_{uv} = 1$ for some $k\in \mathbb{N}$.
+        \item $G = (V, E)$ is \textbf{connected graph} if $\forall v_1, v_2 \in V. v_1, v_2$ are connected nodes.
+        \item A subgraph $G' \subseteq G$ is a \textbf{(connected) component} iff $G'$ is a maximal connected subgraph of $G$.
+
+        Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
+    \end{itemize}
+
+    \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
+
+    Note that a giant component may not exist, if more components have maximum number of nodes.
+\end{definition}
+
+
 \chapter{Usage of \graffs}
 
 \lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the command-line help text of some subcommands, printed by \graffs}, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}

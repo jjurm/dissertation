@@ -1,21 +1,14 @@
 This chapter consists of understanding the problem from the mathematical and research point of view.
-First, I explain in detail why measuring robustness of graph metrics is an important and novel field, describing in detail the work done in ``The Paper'' that this dissertation is based on.
-Further, I introduce specific definitions of graph metrics and robustness measures that I use in the implementation.
+I explain in detail why measuring robustness of graph metrics is an important and novel field, describing the work done in The Paper, then I introduce definitions of graph metrics and robustness measures used in the implementation.
 
 
 \section{Graphs and metrics}
 
-%The total data (created, captured or replicated) in the world by 2018 was estimated to be 18 zettabytes in 2018 and is expected to reach 175 zettabytes by 2025~\cite{ReinselDigitizationWorldEdge2018}.
-Ever-increasing data sources and applications of data science force researchers and data scientists to use tools such as graph theory to model real-world problems.
-Graph theory has been used to help solve problems in the field of information technology, engineering, biology, chemistry, social systems, geography, linguistics and many more ~\cite{FouldsGraphTheoryApplications2012}.
-Graphs, or networks (nodes and edges), can capture many types of entities and their relations in the real world.
-A simple example is a social network in which nodes may represent people and edges represent existence of relationships between pairs of people.
-
+Ever-increasing data sources and their applications force researchers to use tools such as graph theory to model real-world problems, such as in information technology, engineering, biology, chemistry, social systems, geography, linguistics and many more~\cite{FouldsGraphTheoryApplications2012}.
 Graph theory proved especially useful when analysing large structures of data that cannot simply be visualised or otherwise analysed by investigating individual entities.
-The word \textsl{network} is often used in this context to refer to large instances of graphs stemming from real systems, as opposed to graphs referring more to the mathematical concept itself.
-Graph \textsl{statistics} (e.g. size, average degree, diameter, radius) have been invented to help mathematically describe properties of arbitrarily large graphs, such as betweenness centrality.
-Further, graph \textsl{metrics} (such as betweenness centrality, closeness centrality, eccentricity) quantify properties of individual nodes.
-For example a person represented by a node with high closeness centrality is considered to be \textsl{closer} to others in terms of number of hops needed, in other words can spread information in the network faster.
+Graph \textsl{statistics} (e.g. size, average degree, diameter, radius) help mathematically describe properties of arbitrarily large graphs.
+Further, graph \textsl{metrics} (such as betweenness centrality, closeness centrality, eccentricity) quantify properties of individual nodes.\footnotemark{}
+\footnote{For example a person in a social network represented by a node with high closeness centrality is considered to be \textsl{closer} to others in terms of number of hops needed, in other words can spread information in the network faster.}
 
 
 \section{Introduction to confidence}
@@ -111,112 +104,25 @@ The Paper studies robustness of 25 different \textsl{node} metrics only, i.e. gr
 
 \section{Mathematical background}\label{sec:math_background}
 
-In this section I review background material on graph theory and examining graph metric robustness, and fix terms I will use later to avoid ambiguity in further chapters.
+In this section I review background material on graph theory and fix terms to later avoid ambiguity.
+I introduce graph metrics, ranking, and graph metric robustness.
 
-In particular, this section will focus introducing high-level concepts of:
-\begin{itemize}
-    \item relevant bits of graph theory
-    \item graph metrics
-    \item ranking
-    \item metric robustness
-\end{itemize}
-
-\subsection{Graphs}
-
-Graphs (or networks) from graph theory usually consist of \textit{components} (or nodes, vertices) and \textit{links} between them (edges).
-Some definitions in this subsection are based on the book \textsl{A first course in network theory}~\cite{Estrada2017}.
-
-\begin{definition}[Graph]
-    Let $V$ be a finite set of $n$ nodes (or vertices), and let $E \subseteq V \times V$ be a set of edges.\\
-    A \textbf{graph} $G$ is a pair $(V, E)$.\\
-    $V$ is the \textbf{node set} of $G$, and $E$ is the \textbf{edge set} of $G$.
-\end{definition}
-
-Real-world data (or datasets) in the form of graphs are also called \textbf{networks}.
-Still, I may interchange the words \textsl{graph}, \textsl{network} and \textsl{dataset}, but generally:
-\begin{itemize}
-    \item \textsl{dataset} is data stored in its raw form, such as a file downloaded from the Internet
-    \item \textsl{network} is the real-world graph-like data conveyed by a dataset
-    \item \textsl{graph} is a hypothetical structure, also a mathematical interface or representation that algorithms work with
-\end{itemize}
-
-\begin{definition}[Graph properties]
-    \begin{itemize}[leftmargin=*]
-        \item $G$ is \textbf{reflexive} iff $\forall v \in V.\ (v, v) \in E$
-        \item $G$ is \textbf{anti-reflexive} iff $\forall v \in V.\ (v, v) \notin E$
-        \item $G$ is \textbf{undirected} (or equally \textbf{symmetric}) iff $\forall v_1, v_2 \in V.\ (v_1, v_2) \in E \Rightarrow (v_2, v_1) \in E$
-        \item $G$ is \textbf{directed} iff it is not undirected
-        \item $G$ is a \textbf{simple graph} iff it is undirected and anti-reflexive
-    \end{itemize}
-\end{definition}
-
-Graphs I use in this project are all \textsl{simple graphs} (unless stated otherwise), i.e. edges are undirected (or bi-directional), and always span two different nodes.
+Graphs (or networks) from graph theory consist of \textit{nodes} (or vertices, components) and \textit{edges} between them (links).
+Formally, let \textbf{graph} $G$ be a pair $(V, E)$ of a finite set of $n$ \textbf{nodes} $V$ and a set of \textbf{edges} $E \subseteq V \times V$.
+In this work I also use standard definitions of graph properties, relations on graphs, node adjacency and connectedness~\cite{Estrada2017}.
+Those are omitted here for brevity, but included in \cref{ch:graph_theory} for reference.
 
 \input{figures_gen/simple_graph.tex}
 
-\autoref{fig:simple_graph} is an illustration of a connected simple graph with 110 nodes and 151 edges.
-I used graphs like this for testing purposes when developing \graffs.
+Graphs I use in this project are all \textsl{simple graphs} (unless stated otherwise), i.e. edges are undirected (or bi-directional) and without loops.
+\autoref{fig:simple_graph} is an illustration of a connected simple graph with 110 nodes and 151 edges, one of those I used for testing purposes when developing \graffs.
 
-\begin{definition}[Relations on graphs]
-    \begin{itemize}[leftmargin=*]
-        \item $G' = (V', E')$ is a \textbf{subgraph} of $G = (V, E)$ iff $V' \subseteq V$ and $E' \subseteq E$
-        \item Let $G_1 = (V_1, E_1)$ and $G_2 = (v_2, E_2)$, then $G_1 \cup G_2 = (V_1 \cup V_2, E_1 \cup E_2)$ is the \textbf{union} of the two graphs, and $G_1 \cap G_2 = (V_1 {\cap} V_2, E_1 {\cap} E_2)$ is the \textbf{intersection} of the two graphs.
-    \end{itemize}
-\end{definition}
-
-\begin{definition}[Node adjacency]
-    \begin{itemize}[leftmargin=*]
-        \item In an undirected graph, $v_1$ is \textbf{adjacent} to $v_2$ iff $(v_1, v_2) \in E$
-        \item A \textbf{loop} is an edge of the form $(v, v)$.
-        Note that simple graphs have no loops.
-        \item Define $\deg^-(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert$ to be the \textbf{indegree} of $v$, and $\deg^+(v) = \left\lvert \Set{v' \in V}{(v, v') \in E} \right\rvert$ to be the \textbf{outdegree} of $v$, in other words, the number of incoming and outcoming edges, respectively.
-        If the graph is undirected, then $\deg^-(v) = \deg^+(v) = \deg(v)$ is called \textbf{degree}.
-        \item For $G = (V, E)$ with $V = \integersto{n}$, define $A = (a_{ij})$ to be the \textbf{adjacency matrix} of $G$ where
-        \[ a_{ij} = \begin{cases}
-                        1, & \textnormal{if}\ (i, j) \in E \\
-                        0, & \textnormal{if}\ (i, j) \notin E
-        \end{cases} \]
-        for $1 \leq i, j \leq n$.
-
-        Note that adjacency matrix of undirected graph is symmetric.
-    \end{itemize}
-\end{definition}
-
-\begin{definition}[Connectedness]
-    \begin{itemize}[leftmargin=*]
-        \item $u, v$ are \textbf{connected nodes} is there exists a path between $u, v$ in $G$, i.e. if $(A^k)_{uv} = 1$ for some $k\in \mathbb{N}$.
-        \item $G = (V, E)$ is \textbf{connected graph} if $\forall v_1, v_2 \in V. v_1, v_2$ are connected nodes.
-        \item A subgraph $G' \subseteq G$ is a \textbf{(connected) component} iff $G'$ is a maximal connected subgraph of $G$.
-
-        Note that all components of a graph are disjoint, therefore each node belongs to exactly one component.
-    \end{itemize}
-
-    \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
-
-    Note that a giant component may not exist, if more components have maximum number of nodes.
-\end{definition}
+I may interchange the words \textsl{graph}, \textsl{network} and \textsl{dataset}, but generally: \textsl{dataset} is data stored in its raw form, such as a file downloaded from the Internet; \textsl{network} is the real-world graph-like data conveyed by a dataset; and \textsl{graph} is a hypothetical structure, a mathematical representation, and an interface ofr algorithms.
 
 \input{figures_gen/disconnecting_graph.tex}
 
 Most of real-world networks (such as social networks, citation networks and even protein interaction networks) contain a single giant component, and some small isolated components.
 For example, in \autoref{fig:disconnecting_graph}, the red nodes form a giant component of the graph.
-
-
-%\subsubsection{Networks}
-%
-%Moving towards real-world data, graphs often emerge from a certain source in the world.
-%Just a few examples of the data possibly represented by graphs include social networks, road networks, computer networks, protein interaction networks, citation networks, web networks and so on.
-%In this work I distinguish graphs and networks, although I may sometimes interchange these two.
-%
-%\begin{definition}[Network]
-%    A \textbf{network} is a graph whose nodes or edges can have attributes $\textnormal{attr}_v, \textnormal{attr}_e : \Sigma^* \rightarrow \mathbb{U}$ for some set of possible identifiers $\Sigma^*$ (such as a language over an alphabet $\Sigma$) and a value domain $\mathbb{U}$ (such as $\mathbb{R}$ or $\mathbb{R}^2$)
-%\end{definition}
-%
-%Graphs and networks allow capturing the same structure, however, the main difference is that nodes of a network are \textit{identifiable}, while we rarely consider \textit{identity} of graph nodes.
-%%This is because nodes and edges of graphs coming from real-world are often (nearly) isomorphic to real-world objects and relations between them.
-%There may be either an exact or inexact matching between nodes/edges in the graph and objects/relations in the real world where the data came from (depending on whether the dataset is an approximation of the world).
-%I will often use networks when describing knowledge of the world.
-%
 
 \subsection{Graph metrics}
 
