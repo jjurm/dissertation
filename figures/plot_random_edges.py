@@ -20,7 +20,7 @@ matplotlib.rcParams['mathtext.tt'] = prop.get_name()
 columns = ['experiment', 'robustness', 'dataset', 'metric', 'value']
 metrics = ['Betweenness', 'Degree', 'Ego1Edges', 'Ego2Nodes', 'LocalClustering', 'PageRank', 'Redundancy']
 datasets = ['pvivax', 'ecoli', 'yeast']
-robustness_measures = ['RankIdentifiability', 'RankInstability']
+robustness_measures = ['RankIdentifiability', 'RankInstability', 'RankContinuity']
 random_edges_experiment = 'random-edges'
 experiments = ['paper', 'reproduce', random_edges_experiment]
 
@@ -78,9 +78,9 @@ df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(8, 5), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(9, 6), sharex=True, squeeze=True)
 
-gs1 = GridSpec(2, 1)
+gs1 = GridSpec(3, 1)
 gs1.update(hspace=0.02)
 
 
@@ -126,26 +126,28 @@ def plot_for_robustness(robustness_measure, pos):
     )
 
     plt.margins(x=0.07)
-    if pos == 0:
-        plt.ylim(0.15, 1.05)
-        ax1.set_xticklabels([])
-        ax1.set_xlabel(None)
-    elif pos == 1:
-        plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
-        plt.ylim(0, 0.15)
     plt.gca().yaxis.set_minor_locator(plticker.MultipleLocator(0.05))
     plt.grid(color='0.8', linestyle=':', which='both', axis='both')
 
     plt.ylabel("Rank " + robustness_measure[4:])
+    return ax1
 
 
-plot_for_robustness('RankIdentifiability', 0)
+plot_for_robustness('RankContinuity', 0)
 plt.title("Validating \\texttt{random-edges} experiment agains \\texttt{reproduce} and results of The Paper,\n"
           "using 2 robustness measures on 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
+plt.ylim(0.115, 1.04)
+plt.gca().set_xticklabels([])
+plt.gca().set_xlabel(None)
 
-plot_for_robustness('RankInstability', 1)
+plot_for_robustness('RankIdentifiability', 1)
+plt.ylim(0.115, 1.04)
+
+plot_for_robustness('RankInstability', 2)
 plt.xlabel("\\textsl{Metric}")
+plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
+plt.ylim(0, 0.115)
 
-plt.subplots_adjust(left=0.09, right=0.97, top=0.90)
+plt.subplots_adjust(left=0.07, right=0.97, top=0.92, bottom=0.08)
 plt.savefig("plot_random_edges.pdf")
 plt.show()

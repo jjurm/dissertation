@@ -4,4 +4,4 @@ SELECT g.EXPERIMENT as experiment, g.DATASET as dataset, p.ID as graph_id,
 FROM PERTURBEDGRAPH_TIMINGS t
 LEFT JOIN PERTURBEDGRAPH p on t.PERTURBEDGRAPH = p.ID
 LEFT JOIN GRAPHCOLLECTION g on p.GRAPHCOLLECTION = g.ID
-WHERE g.EXPERIMENT IN ('reproduce-perf', 'random-edges-perf', 'unscored-perf')
+WHERE g.EXPERIMENT IN ('reproduce', 'random-edges', 'unscored')

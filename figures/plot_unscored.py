@@ -20,7 +20,7 @@ matplotlib.rcParams['mathtext.tt'] = prop.get_name()
 columns = ['experiment', 'robustness', 'dataset', 'metric', 'value']
 metrics = ['Betweenness', 'Degree', 'Ego1Edges', 'Ego2Nodes', 'LocalClustering', 'PageRank', 'Redundancy']
 datasets = ['airports', 'facebook', 'collab', 'internet', 'citation']
-robustness_measures = ['RankIdentifiability', 'RankInstability']
+robustness_measures = ['RankIdentifiability', 'RankInstability', 'RankContinuity']
 experiment_name = 'unscored'
 experiments = [experiment_name]
 
@@ -44,7 +44,8 @@ df_combined = df_combined[df_combined['robustness'].isin(robustness_measures)]
 # %% Sort columns
 
 # Decide metric order
-avgs = df_combined[df_combined['experiment'] == experiment_name].groupby(['metric', 'robustness'], as_index=False).mean()
+avgs = df_combined[df_combined['experiment'] == experiment_name].groupby(['metric', 'robustness'],
+                                                                         as_index=False).mean()
 by_metrics = avgs.pivot_table(values='value', index='metric', columns='robustness', aggfunc='mean')
 by_metrics['robustness_overall'] = by_metrics['RankIdentifiability'] - by_metrics['RankInstability']
 by_metrics = by_metrics.drop(robustness_measures, axis=1)
@@ -61,21 +62,16 @@ df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(8, 4.5), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(9, 6), sharex=True, squeeze=True)
 
-gs1 = GridSpec(2, 1)
-gs1.update(hspace=0.0)
+gs1 = GridSpec(3, 1)
+gs1.update(hspace=0.02)
 
 
 # noinspection PyUnresolvedReferences
 def plot_for_robustness(robustness_measure, pos):
-    ax1 = plt.subplot(gs1[pos])
+    plt.subplot(gs1[pos])
     data = df[df['robustness'] == robustness_measure]
-    palette_experiment = {
-        "paper": palette_robustness_light[robustness_measure],
-        "reproduce": palette_robustness[robustness_measure],
-        experiment_name: palette_robustness_dark[robustness_measure],
-    }
 
     sns.lineplot(
         x=data['metric'],
@@ -85,26 +81,29 @@ def plot_for_robustness(robustness_measure, pos):
     )
 
     plt.margins(x=0.05)
-    if pos == 0:
-        plt.ylim(0.5, 1.04)
-        ax1.set_xticklabels([])
-        ax1.set_xlabel(None)
-    elif pos == 1:
-        plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
-        plt.ylim(-0.04, 0.5)
     plt.gca().yaxis.set_minor_locator(plticker.MultipleLocator(0.05))
     plt.grid(color='0.8', linestyle=':', which='both', axis='both')
+
+    if pos != 2:
+        plt.gca().set_xticklabels([])
+        plt.gca().set_xlabel(None)
 
     plt.ylabel("Rank " + robustness_measure[4:])
 
 
-plot_for_robustness('RankIdentifiability', 0)
+plot_for_robustness('RankContinuity', 0)
 plt.title("The \\texttt{unscored} experiment: RankIdentifiability and RankInstability\n"
           "computed on 7 metrics and 5 new unscored datasets")
+plt.ylim(0.1, 1.04)
 
-plot_for_robustness('RankInstability', 1)
+plot_for_robustness('RankIdentifiability', 1)
+plt.ylim(0.1, 1.04)
+
+plot_for_robustness('RankInstability', 2)
 plt.xlabel("\\textsl{Metric}")
+plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
+plt.ylim(-0.02, 0.17)
 
-plt.tight_layout()
+plt.subplots_adjust(left=0.07, right=0.97, top=0.92, bottom=0.08)
 plt.savefig("plot_unscored.pdf")
 plt.show()

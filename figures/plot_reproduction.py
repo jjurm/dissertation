@@ -75,7 +75,7 @@ df = df.sort_values(['robustness', 'metric'])
 
 # %% Reproduction plot
 
-plt.subplots(figsize=(8, 4.5))
+plt.subplots(figsize=(9, 4.5))
 
 data = df.copy()
 data['source_robustness'] = data['source'].astype('string') + ", " + data['robustness'].astype('string')
