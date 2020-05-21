@@ -5,10 +5,10 @@ Then I introduce definitions of graph metrics and robustness measures used in th
 
 \section{Graphs and metrics}
 
-Ever-increasing data sources and their applications force researchers to use tools such as graph theory to model real-world problems, innvolving fields such as engineering, biology, chemistry, social systems, and many more~\cite{FouldsGraphTheoryApplications2012}.
-Graph theory proved especially useful when analysing large structures of data which cannot simply be visualised or otherwise analysed by investigating individual entities.
-Graph \textsl{statistics} (e.g. size, average degree, diameter, radius) help mathematically describe properties of arbitrarily large graphs.
-Further, graph \textsl{metrics} (such as betweenness centrality, closeness centrality, eccentricity) quantify properties of individual nodes.\footnote{For example a person in a social network represented by a node with high closeness centrality is considered to be \textsl{closer} to others in terms of number of hops needed, in other words, can spread information in the network faster.}
+Ever-increasing applications of data force researchers to use tools such as graph theory to model real-world problems, involving fields such as engineering, biology, chemistry, social systems, and many more~\cite{FouldsGraphTheoryApplications2012}.
+Graph theory proved especially useful when analysing large structures of data which cannot simply be visualised.
+Graph \textsl{statistics} (e.g. size, diameter, radius) help describe properties of arbitrarily large graphs.
+Further, graph \textsl{metrics} (betweenness centrality, closeness centrality, eccentricity, etc.) quantify properties of individual nodes.
 
 
 \section{Introduction to confidence}
@@ -17,7 +17,7 @@ Error measures are important in assessing how precise or confident an experiment
 \enquote{A reported value whose accuracy is entirely unknown is worthless}~\cite{EisenhartExpressionUncertaintiesFinal1968}.
 Confidence scores, confidence intervals, and error ranges signal or approximate the extent to which the observed result is reliable.
 
-Networks obtained from the real-world by experiments, observations, or deductions may contain errors too, such as missing nodes or edges, false positives, uncertain nodes or edges, and falsely aggregated nodes.
+Networks obtained from the real-world by experiments, observations, or deductions may contain errors too, such as missing components, false positives, uncertain nodes or edges, and falsely aggregated nodes.
 Network errors may stem from measurement errors, approximations, lack of knowledge, lack of experimental evidence or thresholding of scored networks~\cite{Wang2012,MarsdenNetworkDataMeasurement1990,JonesChallengesLimitationsQuantifying2010}.
 These errors may then propagate to errors in graph metrics.
 
@@ -38,11 +38,9 @@ The study, with main concepts explained below, proposes ways to quantify robustn
 
 \subsection{Protein networks}
 
-Protein interaction networks (PINs), also called protein-protein interaction (PPI) networks, are an example of a prominent research field relying on graph theory.
-Nodes in protein networks represent proteins present in cells of organisms and edges represent interactions between them, often labelled to convey additional information.
-
-Studying them helps in understanding physiology of biological cells and developing drugs as they generally affect protein interactions.
-For example, highly connected proteins and hubs of proteins in a cell are shown to be most essential for its survival~\cite{JeongLethalityCentralityProtein2001,HeWhyHubsTend2006}.
+Protein interaction networks (PINs) are an example of a prominent research field relying on graph theory.
+Nodes represent proteins present in cells of organisms and edges represent interactions between proteins, often labelled to convey additional information.
+Studying them helps in understanding physiology of biological cells and developing drugs as they generally affect protein interactions.\footnote{For example, highly connected proteins and hubs of proteins in a cell are shown to be most essential for its survival~\cite{JeongLethalityCentralityProtein2001,HeWhyHubsTend2006}.}
 
 Protein networks have a specific structure: nodes represent proteins and weighted (or scored) edges represent the presence of interactions between proteins.
 It is assumed that such interactions are mutual, therefore the formed graph is undirected.
@@ -54,9 +52,9 @@ It is assumed that such interactions are mutual, therefore the formed graph is u
 The weight of each edge in protein networks represents a confidence score which may be a value, or a set of values, describing some sort of \textsl{likelihood} that the given interaction is true, given the available evidence.
 They do \textsl{not} indicate the strength or intensity of the interaction, which would be a different property.
 
-As an example, the STRING database~\cite{Szklarczyk2019} used in The Paper is an open collection that contains known and predicted protein-protein interactions.
+As an example, the STRING database~\cite{Szklarczyk2019} used in The Paper is an open collection containing known and predicted protein-protein interactions.
 It provides confidence scores for edges, indicating how likely the dataset authors consider an interaction to be true, given the available evidence.
-Databases HitPredict~\cite{LopezHitPredictVersionComprehensive2015} and IntAct~\cite{OrchardMIntActProjectIntAct2014} and others use a similar approach.
+Databases HitPredict~\cite{LopezHitPredictVersionComprehensive2015} and IntAct~\cite{OrchardMIntActProjectIntAct2014} and others use a similar approach of confidence scores.
 
 \input{figures/string_network_image_and_ecoli_giant.tex}
 
@@ -67,7 +65,7 @@ The Paper, as well as my dissertation, use for simplicity only the overall confi
 \subsection{Network thresholding}
 
 When researching protein interactions, in practice, a \textbf{threshold} is chosen and then a protein interaction network is formed from the database considering only interactions (edges) whose confidence score is greater than the selected threshold, to only take into account interactions of sufficiently high quality.
-Thresholding edges of sufficient confidence is a common step before further graph analysis.
+Thresholding edges of sufficient confidence is a common and necessary step before further graph analysis.
 
 \autoref{fig:ecoli_giant_at_900} shows an example of a protein network.
 
@@ -75,7 +73,7 @@ Thresholding edges of sufficient confidence is a common step before further grap
 
 As The Paper remarks, metric evaluation can be susceptible to the choice of the threshold.
 However, a useful metric should lead to similar results across networks obtained at different reasonable confidence score thresholds.
-Hence, the point of studying metric robustness or \textsl{stability} is a way to assess how reliable the results are on a graph derived from a given threshold.
+Hence, the point of studying metric robustness, or stability, is a way to assess how reliable the results are on a graph derived from a given threshold.
 
 When measuring robustness of node metrics, numerical values of metrics will undoubtedly depend on the chosen threshold.\footnote{For example, the degree and the clustering coefficient of each node will indeed monotonically decline with declining density of the network, which monotonically declines as we increase the confidence threshold.}
 For this reason, The Paper assesses robustness based on the \textbf{rankings} of nodes induced by each metric.
@@ -139,43 +137,40 @@ They are all defined for \textsl{undirected} graphs only.
 
 \subsubsection*{Centralities}
 
-One of the simplest metrics calculates the \textsl{degree} of each node, which is often considered a centrality measure, indicating that nodes with higher degree are more important in the network.
-\begin{definition}[Degree (centrality)]
-    \vspace*{-7mm}
-    \begin{equation*}
-        DC(v) \eqdef \deg(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert
-    \end{equation*}
-\end{definition}
+One of the simplest metrics calculates the \textsl{degree} of each node, often considered as a centrality measure, indicating that nodes with higher degree are more important in the network.
+\begin{flalign}
+    \qquad\text{Degree:}\quad DC(v) \eqdef \deg(v) = \left\lvert \Set{v' \in V}{(v', v) \in E} \right\rvert
+\end{flalign}
 
 \textsl{Betweenness centrality} is calculated for each node $v$ as the number of all shortest paths passing through that node, for all pairs of nodes.
 If there are multiple shortest paths between a pair of nodes, the fraction of those passing through $v$ are considered.
-\begin{definition}[Betweenness centrality]
-    \vspace*{-5mm}
-    \begin{equation*}
-        B(v) \eqdef \sum_{\substack{s,t \in V \\ s \ne v \ne t}} \frac{ \sigma_{st}(v) }{ \sigma_{st} }
-    \end{equation*}
-    where $\sigma_{st}$ is the number of shortest paths between $s$ and $t$, and $\sigma_{st}(v)$ is the number of those that pass through $v$.
-\end{definition}
+\begin{equation}
+    \text{Betweenness:}\quad B(v) \eqdef \sum_{\substack{s,t \in V \\ s \ne v \ne t}} \frac{ \sigma_{st}(v) }{ \sigma_{st} }\,,
+\end{equation}
+where $\sigma_{st}$ is the number of shortest paths between $s$ and $t$, and $\sigma_{st}(v)$ is the number of those that pass through $v$.
 
-\textsl{Closeness centrality} of a node $v$ is the reciprocal value of the sum of $d(v, i)$, i.e. the distances from that node to all other nodes $i$ in the graph.
+\textsl{Closeness centrality} of a node $v$ is the reciprocal value of the sum of $d(v, i)$, i.e., the distances from that node to all other nodes $i$ in the graph.
 It measures the reciprocal of the \textsl{farness} of each node to other nodes.
-\begin{definition}[Closeness centrality]
-    \label{def:closeness_centrality}
-    \vspace*{-5mm}
-    \[CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}\]
-\end{definition}
+\begin{equation}
+    \label{eqn:closeness_centrality}
+    \text{Closeness:}\quad CC(v) \eqdef \frac{1}{\sum_{i \neq v} d(v, i)}
+\end{equation}
 
 This is sound for connected graphs, however, $d(v, i)$ is undefined if $v, i$ belong to two different components of the graph.
 For disconnected graphs, I set $d(v, i) = \left\lvert V \right\rvert$, following the approach in The Paper.
 
 \input{figures_gen/simplegraph_by_some_metrics.tex}
 
-\begin{definition}[Harmonic centrality]
-    \label{def:harmonic_centrality}
-    \vspace*{-5mm}
-    \[HC(v) \eqdef \sum_{i \neq v} \frac{1}{d(v, i)}\]
-    with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (as in~\cite{MarchioriHarmonySmallworld2000}).
-\end{definition}
+\textsl{Harmonic centrality} is a similar measure of \textsl{farness}.
+\begin{equation}
+    \label{eqn:harmonic_centrality}
+    \text{Harmonic:}\quad HC(v) \eqdef \sum_{i \neq v} \frac{1}{d(v, i)},
+\end{equation}
+with $1 / d(v, i) = 0$ for disconnected nodes $v, i$ (as in~\cite{MarchioriHarmonySmallworld2000}).
+
+\begin{wrapfigure}[11]{R}{0.23\linewidth}
+    \input{figures/ego_network.tex}
+\end{wrapfigure}
 
 Both \textsl{closeness} and \textsl{harmonic centrality} require the computation of distances between all pairs of nodes.
 I used an implementation of the Floyd–Warshall algorithm~\cite{FloydAlgorithm97Shortest1962} of time complexity $O({\left\lvert V \right\rvert}^3)$, which came bundled in the graph library I used (\cref{sec:graphstream}).
@@ -185,55 +180,46 @@ A significant improvement could be achieved by running Dijkstra's algorithm~\cit
 
 Ego networks are local subgraphs centered around a particular node in the network.
 Step-$n$ ego network (also called ego-$n$ network) of a node $v$ is a subgraph including $v$ (the \textsl{ego} node), all nodes reachable from $v$ in at most $n$ hops (the \textsl{alter} nodes), and all edges among these (see \autoref{fig:ego_network}).
-For simplicity, $\ego_n$ below are defined just as a subset of nodes $V$.
+For simplicity, sets $\ego_n$ below are defined just as a subset of nodes $V$.
 
-\begin{definition}[ego-$\mathbf{n}$ network]
-    For a graph $G = (V, E)$, define inductively $\ego_n : V \rightarrow \mathcal{P}(V)$:
-    \begin{align*}
-        \ego_0(v) &\eqdef \left\{\, v \, \right\} \\
-        \forall n \in \mathbb{N}.\ \ego_{n+1} (v) &\eqdef \ego_n \cup \Set{v' \in V}{ \exists v'' \in \ego_n(v).\ (v', v'') \in E }
-    \end{align*}
-\end{definition}
+For a graph $G = (V, E)$, define inductively $\ego_n : V \rightarrow \mathcal{P}(V)$:
+\begin{align}
+    \text{ego-$\mathbf{n}$ network:} \nonumber \\
+    \ego_0(v) &\eqdef \left\{\, v \, \right\} \\
+    \forall n \in \mathbb{N}.\ \ego_{n+1} (v) &\eqdef \ego_n \cup \Set{v' \in V}{ \exists v'' \in \ego_n(v).\ (v', v'') \in E }
+\end{align}
 
 Ego metrics are node metrics whose value depends only on properties of local ego network(s).
-I chose and implemented 3 interesting ego metrics used also in The Paper.
+I chose and implemented 2 interesting ego metrics used also in The Paper: ego-$\mathbf{1}$ edges, and ego-$\mathbf{2}$ nodes.
 
-\noindent
-\begin{minipage}{0.73\linewidth}
-    \begin{definition}[ego-$\mathbf{1}$ edges]
-        \vspace*{-5mm}\noindent
-        \[ E\mathit{1}E (v) = \left\lvert \Set{(v', v'') \in E}{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert \]
-    \end{definition}
-    \begin{definition}[ego-$\mathbf{2}$ nodes]
-        \vspace*{-5mm}
-        \[ E\mathit{2}N (v) = \left\lvert \ego_2(v) \right\rvert \]
-    \end{definition}
-    \begin{definition}[ego-$\mathbf{1/2}$ nodes ratio]
-        \vspace*{-5mm}
-        \[ ER(v) = \frac{ \left\lvert \ego_1(v) \right\rvert }{ \left\lvert \ego_2(v) \right\rvert } \]
-    \end{definition}
-\end{minipage}\hfill%
-\begin{minipage}{0.23\linewidth}
-    \input{figures/ego_network.tex}
-\end{minipage}
+\begin{equation}
+    \text{Ego1Edges:}\quad E\mathit{1}E (v) = \left\lvert \Set{(v', v'') \in E}{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert
+\end{equation}
+\begin{equation}
+    \text{Ego2Nodes:}\quad E\mathit{2}N (v) = \left\lvert \ego_2(v) \right\rvert
+\end{equation}
+%    \begin{definition}[ego-$\mathbf{1/2}$ nodes ratio]
+%        \vspace*{-5mm}
+%        \[ ER(v) = \frac{ \left\lvert \ego_1(v) \right\rvert }{ \left\lvert \ego_2(v) \right\rvert } \]
+%    \end{definition}
 
 \textsl{Local clustering} measures the proportion of existing and all possible edges among neighbours of $v$, defined as in~\cite{WattsCollectiveDynamicsSmallworld1998}.
 Following that, \textsl{redundancy} node metric is defined as the extent that $v$'s neighbours are adjacent to each other as well, according to~\cite{borgatti1997structural}.
-\begin{definition}[Local clustering]
-    \vspace*{-2mm}
-    Let $k = \deg(v)$, the degree of $v$, then
-    \[
-        LC(v) \eqdef
-        \begin{dcases}
-            0, &\text{if } k = 0,1 \\
-            \frac{ \left\lvert \Set{ (v', v'') \in E }{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert }{ k (k-1) / 2 } \quad &otherwise
-        \end{dcases}
-    \]
-\end{definition}
-\begin{definition}[Redundancy]
-    \[ R(v) \eqdef LC (v) \times (\deg(v) - 1) \]
-    Note that for $k \leq 1$, $LC(v) = R(v) = 0$.
-\end{definition}
+
+Let $k = \deg(v)$, the degree of $v$, then
+\begin{multline}
+    \text{LocalClustering:}\nonumber \\
+    LC(v) \eqdef
+    \begin{dcases}
+        0, &\text{if } k = 0,1 \\
+        \frac{ \left\lvert \Set{ (v', v'') \in E }{ v' \in \ego_1(v) \wedge v'' \in \ego_1(v) } \right\rvert }{ k (k-1) / 2 } \quad &otherwise
+    \end{dcases}
+\end{multline}
+
+\begin{equation}
+    \text{Redundancy:}\quad R(v) \eqdef LC (v) \times (\deg(v) - 1)
+\end{equation}
+Note that for $k \leq 1$, $LC(v) = R(v) = 0$.
 
 \subsubsection*{Page rank}
 
@@ -351,13 +337,13 @@ Scored networks naturally provide a way to introduce perturbations to the networ
 Using a scored network as-is just by discarding the confidence score is usually unacceptable as many low-confidence edges would be false positives.
 Obtaining a functional network from an almost fully connected clique needs thresholding at a reasonable value, and scored databases often state reasonable ranges of the confidence scores.
 
+\input{figures_gen/graph_example_scored_edges.tex}
+
 \paragraph*{STRING database {\normalfont\cite{Szklarczyk2019}}.} An open database of scored interactions between proteins.
 At the time of writing, the database contains over 24M different proteins from over 5K organisms, accounting for over $2 * 10^9$ interactions.
 Protein networks are a good example of scored networks (see \cref{fig:graph_example_scored_edges}).
 Considering the whole STRING network as an input for this project would be unsuitable because of its size, but for the evaluation, sub-graphs of proteins of only certain organisms will be used.\footnote{Generally, one cannot just consider a subgraph of a source graph as its characteristics heavily depend on how the subgraph was produced (for example, in a social network with communities, taking $n$ random nodes adjacent to a certain node would likely result in a more dense graph than taking $n$ random nodes of the whole graph).
 However, in the STRING database, we can generate subgraphs by considering full-organism networks, containing only protein interactions of a concrete organism.}
-
-\input{figures_gen/graph_example_scored_edges.tex}
 
 The scores of the STRING database are \enquote{the approximate probability that a predicted link exists between two enzymes (proteins)}, with the following guidance on the reasonable ranges of score values:
 \begin{itemize}[topsep=5pt,itemsep=-4pt]
@@ -387,8 +373,6 @@ I picked a few datasets (listed in~\cref{tab:unscored_datasets}) to demonstrate 
 Other huge online repositories such as the Network Repository~\cite{RossiNetworkDataRepository2015} provide access to thousands similar networks (outside of the scope of this work), which are also compatible with \graffs.
 
 \input{figures/table_unscored_datasets.tex}
-
-\todo{mention licenses of datasets, and include them on download}
 
 \subsection{Perturbing graphs}\label{sec:perturbing_graphs}
 
@@ -490,14 +474,14 @@ For that, I will first define the notion of $k$-similarity and $\alpha$-relaxed 
 Both similarities quantify the correlation between two rankings (similar to Spearman or Kendall rank correlation coefficients), but these take into account the highest-ranked nodes only, therefore suiting mainly applications where identification of highest-ranking nodes is important.
 
 \begin{savenotes}
-\begin{definition}[$\bm{k}$-similarity]
-    \label{def:k_similarity}
-    \vspace*{-2mm}
-    The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
-    \[ \operatorname{Sim}_k(A_\theta, A_\mu) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
-    where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.\footnote{\label{foot:v_intersection_equal}As none of the used graph generators methods change the set of nodes, $V^{\cap}$ is equal to the sets of nodes of the two graphs.}\\
-    Note that this measure of rank similarity is symmetric.
-\end{definition}
+    \begin{definition}[$\bm{k}$-similarity]
+        \label{def:k_similarity}
+        \vspace*{-2mm}
+        The \textbf{$\bm{k}$-similarity} of two rankings $A_\theta, A_\mu$ is the overlap between their $100k\%$ highest ranking nodes:
+        \[ \operatorname{Sim}_k(A_\theta, A_\mu) = \frac{\left\lvert \Set{v \in V^{\cap}}{ A_\theta(v) > N(1-k) \wedge A_\mu(v) > N(1-k) } \right\rvert}{Nk} \]
+        where $k \in \left( 0, 1 \right]$ and $V^{\cap}$ is the intersection of domains of $A_\theta, A_\mu$.\footnote{\label{foot:v_intersection_equal}As none of the used graph generators methods change the set of nodes, $V^{\cap}$ is equal to the sets of nodes of the two graphs.}\\
+        Note that this measure of rank similarity is symmetric.
+    \end{definition}
 \end{savenotes}
 
 The following $\alpha$-relaxed $k$-similarity accounts for situations where the two rankings don't carry the same meaning and are interpreted differently.
