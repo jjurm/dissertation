@@ -1,4 +1,6 @@
-\chapter{Graph theory}\label{ch:graph_theory}
+\chapter{Mathematical definitions}\label{ch:math_definitions}
+
+\section{Graph theory}
 
 Standard definitions of relevant concepts from graph theory, based mostly on \textsl{A first course in network theory}~\cite{Estrada2017}.
 
@@ -25,7 +27,7 @@ Standard definitions of relevant concepts from graph theory, based mostly on \te
     \end{itemize}
 \end{definition}
 
-\begin{definition}[Node adjacency]
+\begin{definition_with_break}[Node adjacency]
     \begin{itemize}[leftmargin=*]
         \item In an undirected graph, $v_1$ is \textbf{adjacent} to $v_2$ iff $(v_1, v_2) \in E$
         \item A \textbf{loop} is an edge of the form $(v, v)$.
@@ -41,7 +43,7 @@ Standard definitions of relevant concepts from graph theory, based mostly on \te
 
         Note that adjacency matrix of undirected graph is symmetric.
     \end{itemize}
-\end{definition}
+\end{definition_with_break}
 
 \begin{definition}[Connectedness]
     \begin{itemize}[leftmargin=*]
@@ -54,8 +56,32 @@ Standard definitions of relevant concepts from graph theory, based mostly on \te
 
     \item A \textbf{giant component} of a graph is a single component that has more nodes than any other component of the graph.
 
-    Note that a giant component may not exist, if more components have maximum number of nodes.
+    Note that a giant component may not exist if more components have the maximum number of nodes.
 \end{definition}
+
+
+\section{Ranking}
+
+These definitions precede those in \cref{sec:ranking}.
+
+\begin{definition}[Partial order]
+    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{partial order} iff it is antisymmetric preorder, i.e.:
+    \begin{itemize}
+        \item $\forall a, b \in P.\ a \sqsubseteq a$ \tabto{7.3cm}(reflexivity)
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+        \item $\forall a, b \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq a) \implies a = b$ \tabto{7.3cm}(antisymmetry)
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Total order]
+    A binary relation $\sqsubseteq$ on some set $P$ is a \textbf{total order} iff it is a partial order and a connex relation, i.e.:
+    \begin{itemize}
+        \item $\forall a, b, c \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq c) \implies a \sqsubseteq c$ \tabto{7.3cm}(transitivity)
+        \item $\forall a, b \in P.\ (a \sqsubseteq b \wedge b \sqsubseteq a) \implies a = b$ \tabto{7.3cm}(antisymmetry)
+        \item $\forall a, b \in P.\ a \sqsubseteq b \vee b \sqsubseteq a$ \tabto{7.3cm}(connexity, implies reflexivity)
+    \end{itemize}
+\end{definition}
+
 
 
 \chapter{Usage of \graffs}

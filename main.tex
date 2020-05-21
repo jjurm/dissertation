@@ -56,6 +56,9 @@
 \usepackage{booktabs}
 \usepackage{epigraph}
 \usepackage{chngcntr}
+\usepackage{subcaption}
+\usepackage{mdframed}
+\usepackage[bottom]{footmisc}
 
 \usetikzlibrary{shadows.blur}
 
@@ -79,9 +82,8 @@
 \addbibresource{refs.bib}
 \graphicspath{{figures/}{figures_gen/}{images/}}
 
-%\makeatletter
-%\g@addto@macro{\UrlBreaks}{\UrlOrds}
-%\makeatother
+%TC:macro \cmt [ignore]
+%TC:macro \url 1
 
 % @formatter:off
 \bash[stdoutFile=wordcount.tex]
@@ -96,8 +98,8 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
 \widowpenalty1000%
 
 % Spacing
-\renewcommand{\baselinestretch}{1.1}    % adjust line spacing to make more readable
-\setlength{\parskip}{3pt plus1pt minus1pt}
+\renewcommand{\baselinestretch}{1.08}    % adjust line spacing to make more readable
+\setlength{\parskip}{2pt plus2pt minus1pt}
 \titlespacing{\paragraph}{%
     \parindent}{%              left margin
     0pt}{% space before (vertical)
@@ -199,7 +201,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
                 Candidate number: & \textbf{2343F}                            \\
                 Project Title: & \textbf{Framework for Empirical Analysis} \\ & \textbf{of Graph Metric Robustness}                    \\
                 Examination: & \textbf{Computer Science Tripos -- Part II, 2020} \\
-                Word Count: & \textbf{\input{wordcount.tex}\footnote{This word count was computed using \texttt{texcount -1 -merge -q -utf8 -sum main.tex}}}                                    \\
+                Word Count: & \textbf{\input{wordcount.tex}\footnote{This word count was computed using: \texttt{texcount -1 -merge -q -utf8 -sum main.tex}}}                                    \\
                 Line Count: & \textbf{5694} \footnote{This total lines of code count was computed using:\verbatiminput{count-lines.sh} } \\
                 Project Originator: & \textbf{Dr Timothy Griffin}                               \\
                 Supervisor: & \textbf{Dr Timothy Griffin}                                        \\

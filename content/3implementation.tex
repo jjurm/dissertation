@@ -358,7 +358,7 @@ Datasets may additionally contain an \texttt{info.txt} file holding a human-read
 The \texttt{GraphLoader} abstract class (\autoref{lst:code_graphloader}) is to be implemented in both cases.
 \lstinputlisting[label={lst:code_graphloader}, caption={The \texttt{GraphLoader} abstract class, providing a contract for implementations to load graphs}, float=ht, language=Kotlin, firstline=6]{GraphLoader.kt}
 
-\subsubsection{Edge files}\label{sec:edge_files}
+\subsubsection*{Edge files}\label{sec:edge_files}
 
 A common pure format of storing network structure (without any metadata) is to list the edges line by line, with each line containing unique identifiers of two nodes.
 The set of nodes is then implicitly defined by the set of all distinct node identifiers present in the file.
@@ -380,7 +380,7 @@ Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending Gra
     \item Recognise if a line has 3 tokens instead of 2, in which case parse and store it as the weight of the edge
 \end{itemize}
 
-\subsubsection{RData files}\label{sec:rdata_files}
+\subsubsection*{RData files}\label{sec:rdata_files}
 
 The Paper~\cite{Bozhilova2019} provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a binary file capturing a session of the R language, storing objects from the \texttt{igraph} R package.
 

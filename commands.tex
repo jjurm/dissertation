@@ -12,7 +12,25 @@
 \def\@endtheorem{\endquote\endtrivlist}
 \makeatother
 
-\newtheorem{definition}{Definition}[section]
+%\newtheorem{definition}{Definition}[section]
+\mdfdefinestyle{myenvs}{%
+    hidealllines=true,%
+    nobreak=true,
+    leftmargin=0pt,
+    rightmargin=0pt,
+    innerleftmargin=0pt,
+    innerrightmargin=0pt,
+}
+\mdfdefinestyle{myenvs_with_breaks}{%
+    hidealllines=true,%
+    nobreak=false,
+    leftmargin=0pt,
+    rightmargin=0pt,
+    innerleftmargin=0pt,
+    innerrightmargin=0pt,
+}
+\newmdtheoremenv[style=myenvs]{definition}{Definition}[section]
+\newmdtheoremenv[style=myenvs_with_breaks]{definition_with_break}[definition]{Definition}
 \newcommand*{\definitionautorefname}{Definition}
 
 % References
