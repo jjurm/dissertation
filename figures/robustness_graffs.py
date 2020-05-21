@@ -16,7 +16,7 @@ metrics = ['Betweenness', 'Degree', 'Ego1Edges', 'Ego2Nodes', 'LocalClustering',
 # each dataset should have data only from one experiment
 experiment_datasets = {
     "random-edges": ['pvivax', 'ecoli', 'yeast'],
-    "unscored": ['airports', 'facebook', 'collab', 'internet', 'citation'],
+    "unscored": ['airports', 'collab', 'citation', 'facebook', 'internet'],
 }
 datasets = list(d for k, l in experiment_datasets.items() for d in l)
 assert (len(datasets) == len(set(datasets)))  # assert no duplicates (ambiguity)
@@ -38,8 +38,8 @@ df = pd.concat(list(
 # %%
 
 def table_for_robustness(robustness_measure):
+    global datasets
     data = df[df['robustness'] == robustness_measure]
-    datasets = data['dataset'].unique()
     # each count should be 1
     # data.groupby(["metric", "dataset"])['value'].count()
 
@@ -62,12 +62,12 @@ def table_for_robustness(robustness_measure):
         header=[small(bf(robustness_measure))] + [tiny(tt(col)) for col in datasets],
         formatters=[lambda v: small(v)] + [lambda v: small(ffloat(v))] * len(datasets),
     )
-    latex = modify_tabular(latex, in_table=False, prefix="\scalebox{0.8}{\n", postfix="\n}")
+    latex = modify_tabular(latex, in_table=False, prefix="\scalebox{1}{\n", postfix="\n}")
     return latex
 
 
 with open("robustness_graffs_tables.tex", "w") as f:
-    f.write("\\begin{table}{\\setlength{\\tabcolsep}{5pt}\\renewcommand{\\arraystretch}{0.85}\n")
+    f.write("\\begin{table}{\\setlength{\\tabcolsep}{5pt}\\renewcommand{\\arraystretch}{1}\n")
 
     experiments = df['experiment'].unique()
     if len(experiments) == 1:
@@ -77,7 +77,7 @@ with open("robustness_graffs_tables.tex", "w") as f:
                           experiments[-1] + "}"
     caption = "Robustness measures \\texttt{" + ("}, \\texttt{".join(robustness_measures[:-1])) + "} and \\texttt{" + \
               robustness_measures[-1] + "} of " + str(len(metrics)) + " metrics on " \
-              + str(len(datasets)) + " datasets (" + experiments_str + ")"
+              + str(len(datasets)) + " datasets (from " + experiments_str + ")"
 
     #f.write("\\caption{" + caption + "}\\label{tab:robustness_results}\n")
     for i, robustness in enumerate(robustness_measures):

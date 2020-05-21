@@ -62,7 +62,7 @@ df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(9, 6), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(9, 5.8), sharex=True, squeeze=True)
 
 gs1 = GridSpec(3, 1)
 gs1.update(hspace=0.02)
@@ -92,7 +92,7 @@ def plot_for_robustness(robustness_measure, pos):
 
 
 plot_for_robustness('RankContinuity', 0)
-plt.title("The \\texttt{unscored} experiment: RankIdentifiability and RankInstability\n"
+plt.title("The \\texttt{unscored} experiment: 3 robustness measures "
           "computed on 7 metrics and 5 new unscored datasets")
 plt.ylim(0.1, 1.04)
 
@@ -102,8 +102,8 @@ plt.ylim(0.1, 1.04)
 plot_for_robustness('RankInstability', 2)
 plt.xlabel("\\textsl{Metric}")
 plt.gca().yaxis.set_major_locator(plticker.FixedLocator(np.linspace(0, 1, 11)))
-plt.ylim(-0.02, 0.17)
+plt.ylim(-0.01, 0.17)
 
-plt.subplots_adjust(left=0.07, right=0.97, top=0.92, bottom=0.08)
+plt.subplots_adjust(left=0.07, right=0.97, top=0.94, bottom=0.08)
 plt.savefig("plot_unscored.pdf")
 plt.show()

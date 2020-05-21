@@ -78,7 +78,7 @@ df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(9, 6), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(9, 5.8), sharex=True, squeeze=True)
 
 gs1 = GridSpec(3, 1)
 gs1.update(hspace=0.02)
@@ -135,7 +135,7 @@ def plot_for_robustness(robustness_measure, pos):
 
 plot_for_robustness('RankContinuity', 0)
 plt.title("Validating \\texttt{random-edges} experiment agains \\texttt{reproduce} and results of The Paper,\n"
-          "using 2 robustness measures on 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
+          "using 3 robustness measures on 7 metrics across 3 datasets (\\texttt{pvivax}, \\texttt{ecoli}, \\texttt{yeast})")
 plt.ylim(0.115, 1.04)
 plt.gca().set_xticklabels([])
 plt.gca().set_xlabel(None)
