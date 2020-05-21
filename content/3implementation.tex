@@ -122,7 +122,7 @@ JUnit 5 testing framework was used to write unit tests (42 in total), making sur
 I used a remote high-performance computing facility\footnote{sponsored by Dr Andrew Moore, from the System Research Group at the Computer Laboratory, University of Cambridge: \url{https://www.cl.cam.ac.uk/research/srg/}} provided by the Systems Research Group.
 In particular, I worked with the following servers:
 
-\begin{description}
+\begin{description}[itemsep=-4pt]
     \item[\texttt{rio.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM
     \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (24 cores in total), and 128 GiB RAM
 \end{description}
@@ -136,16 +136,21 @@ This has a tradeoff that distributed computing across multiple machines is not s
 
 \subsection{Project modules}
 
+\input{figures/module_dependency_matrix.tex}
+
 The project is structured in the following modules, using multi-project builds in Gradle:
 \begin{itemize}[itemsep=-2pt,topsep=5pt]
     \item \texttt{api} - interfaces of structures, metrics, generators
     \item \texttt{db} - database data model
-    \item \texttt{graph} - graph generators, loading datasets from filesystem
-    \item \texttt{robustness} - node ranking, rank similarities, robustness measures
     \item \texttt{metrics} - graph metrics
+    \item \texttt{robustness} - node ranking, rank similarities, robustness measures
+    \item \texttt{graph} - graph generators, loading datasets from filesystem
     \item \texttt{cli} - command-line interface: creating and evaluating experiments, visualising graphs, generating rank similarity plots, etc.
     \item \texttt{figures} - code for automating generation of some figures in this report
 \end{itemize}
+
+\Cref{fig:module_dependency_matrix} shows the inter-module dependencies.
+An extended dependency matrix in \cref{fig:classes_dependency_matrix} in \cref{ch:appendix_kotlin_figures} lists all project files.
 
 
 \section{Data model}
@@ -398,8 +403,7 @@ Other plots relying on the code of \graffs (such as \cref{fig:simple_graph}) are
 Other, independent plots, such as those in the~\nameref{ch:evaluation} chapter, are generated using Python and SQL, and the code is kept with the LaTeX sources of this dissertation.
 
 
-\section{Parallelism using Kotlin coroutines}
-\label{sec:kotlin_coroutines}
+\section{Parallelism using Kotlin coroutines}\label{sec:kotlin_coroutines}
 
 Kotlin supports the concept of \textsl{suspending functions}, i.e., functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
 The context in which a suspending function suspends, is called coroutine.

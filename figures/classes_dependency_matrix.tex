@@ -1,0 +1,10 @@
+\begin{figure}
+    \includegraphics[width=\linewidth]{classes_dependency_matric.png}
+    \caption{Dependency matrix between Kotlin files of \graffs (excluding tests), visualised by the IntelliJ IDEA editor.
+    Each of the 7 groups corresponds to a module, namely: \texttt{figures}, \texttt{cli}, \texttt{graph}, \texttt{metric}, \texttt{robustness}, \texttt{db}, \texttt{api}.
+    Cell in $i$-th row from the top and $j$-th column from the left corresponds to the dependency of $j$-th file on $i$-th file.
+    Modules and files are ordered from more dependent (top) to less dependent (bottom).}
+    \label{fig:classes_dependency_matrix}
+    \footnotesize\justify\vspace{-0.4\baselineskip}
+    The highlighted rows and columns show the directed dependency of the \texttt{ExperimentSubcommand} class (green), which provides the \texttt{graffs experiment} command-line subcommands, on the 5 JPA entity classes from \cref{fig:data_model_classes_diagram} (yellow).
+\end{figure}
