@@ -1,14 +1,12 @@
-This chapter describes first the overall structure of the project, its technical requirements (which can and later be used as part of the evaluation) and then dives into the implementation of individual modules.
-
-I refer to this project by its name \textsl{graffs}.
+This chapter describes first the overall structure of the project, its technical requirements and then dives into the implementation of individual modules of \graffs.
 A working version is published on GitHub\footnote{\url{https://github.com/jjurm/graffs}} along with its source code.
 
 
 \section{Overview}
 
-The purpose of this project is to develop a methodology and tool, i.e. a framework, to help study graph metrics, and empirically analyse their robustness in particular.
+The purpose of this project is to develop a methodology and framework, i.e. a tool, to help study graph metrics, and empirically analyse their robustness in particular.
 
-\graffs is a command-line tool written in Kotlin that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:brief_pipeline} is a diagram explaining the natural flow of the program, i.e. the \textsl{main pipeline} starting with graph datasets and ending up with deductions about each metric's \textsl{robustness}.
+\graffs is a command-line tool written in Kotlin that can load/store datasets of different formats, generate perturbed graphs, evaluate metrics, and calculate robustness values. \autoref{fig:brief_pipeline} explains the natural flow of the program, i.e. the \textsl{main pipeline} starting with graph datasets and ending up with deductions about each metric's \textsl{robustness}.
 
 \input{figures/brief_pipeline.tex}
 
@@ -23,8 +21,8 @@ The target user is a researcher or anyone who would benefit from assessing the s
 
 \graffs supports the following features:
 
-\begin{enumerate}[itemsep=0pt,topsep=5pt]
-    \item Store, load input graphs in various formats, and represent them in a unified memory structure
+\begin{enumerate}[itemsep=-2pt,topsep=0pt]
+    \item Load input graphs in various formats, and represent them in a unified memory structure
     \item Run algorithms that compute metrics on graphs
     \item Generate graphs by applying perturbations to given input graphs
     \item Run experiments by evaluating metrics on generated graphs in a systematic manner
@@ -43,11 +41,8 @@ For this reason, one of the goals is to make the program efficient and runnable 
 
 \subsection{Reproducibility}\label{sec:reproducibility}
 
-It is important for all results in research to be reproducible.
-By \textsl{reproducibility} of \graffs I mean the guarantee that one can exactly reproduce any results produced by the program.
-I.e. when the program is run two times with the same input and hyper-parameters, it must produce the same output.
-And by \textsl{the same output} I mean producing the same robustness results, images, tables, numbers up to a bit-wise match where applicable.
-
+It is important for results and outcomes in this field to be reproducible.
+By \textsl{reproducibility} of \graffs I mean the guarantee that, given the same input, one can exactly reproduce any results produced by the program including the same robustness values, images, tables, numbers up to a bit-wise match where applicable.
 This is a challenge in all the following areas:
 \begin{itemize}
     \item \textbf{Stochastic processes}
@@ -55,77 +50,72 @@ This is a challenge in all the following areas:
     Methods based on stochastic processes or randomness must be reproducible.
     An example of a stochastic method are graph generators.
 
-    These can be made reproducible done by generating all randomness starting off with a given seed for the generator.
+    \graffs makes these reproducible by generating all randomness starting off with a given seed for the generator.
 
     \item \textbf{Resolving ties}
 
-    Methods that are not inherently stochastic but require pseudo-randomness to resolve ties must also be reproducible.
+    Methods that require pseudo-randomness to resolve ties must also be reproducible.
     An example is ranking nodes of a graph according to metric values, or generating a visual layout for graphs such as in \autoref{fig:simple_graph}.
-
     Again, a solution is to base such flow on an input seed.
 
     \item \textbf{External factors}
 
-    Unpredictability introduced by the operating system and other external factors must be accounted for, so that the program still produces the same results even if run on a different supported machine, in a different environment.
-    This is more challenging in a concurrent environment when it must be made sure the produced output does not depend on any factors such as uncertainty and unpredictability of the OS's thread scheduler.
-
-    These issues are resolved using a robust programming language and concurrency synchronisation approaches.
+    Unpredictability introduced by external factors such as the machine, operating system, thread scheduling, time or other factors, must be accounted for.
+    These issues are resolved using a robust programming language and by appropriately synchronising parts of the program where this is relevant.
 \end{itemize}
 
 \subsection{Flexibility}
 
 The program must be flexible enough, in particular the following:
-\begin{enumerate}
+\begin{enumerate}[topsep=5pt,itemsep=0pt]
     \item Usable on all widely used machines and operating systems
-    \item Accepting input datasets (and any input parameters) in common formats
+    \item Accepting input datasets (and any input parameters) in common formats, in particular those datasets mentioned in \cref{sec:datasets}
     \item As a library, it must provide modular access to individual parts of the program, so that it is easy to use \graffs as a dependency in future projects of a similar kind
 \end{enumerate}
 
 
 \section{Architecture}
 
-In this section I explain major decisions about the program, such as the choice of the Kotlin language, and Git, Gradle tools.
+I built \graffs in the Kotlin programming language, with the help of Git and Gradle, and here I explain why.
 
 \subsection{Kotlin language}
 
-I used the programming language \textbf{Kotlin}, mainly for the following reasons.
-It is by nature similar to Java and can be used together with other Java code in a single project.
-Performance-wise, Kotlin is comparable to Java.
-\begin{itemize}
-    \item Concise, reducing the amount of boilerplate code
+\textbf{Kotlin}~\cite{JemerovKotlinAction2017} was chosen mainly for the following reasons.
+\begin{itemize}[topsep=5pt]
     \item Safer, preventing a significant number of errors
+    \item Concise, reducing the amount of boilerplate code
     \item IDE-friendly, allowing the IDE to help with software engineering
-    \item Employs functional programming paradigms~\cite{Bonev}
+    \item Employs functional programming paradigms~\cite{Bonev}, which allows focusing on high-level concepts
     \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, multi-threaded, platform-independent, secure and easily extensible.
 \end{itemize}
 
-Using Kotlin in the project still allows including any libraries written in Java, as Kotlin compiler compiles \texttt{.kt} files to Java-bytecode \texttt{.class} files.
-Kotlin has most of its concepts and features adopted from Java, such as classes, polymorphism, inheritance, so these concepts I will freely use in this work.
+Kotlin is by nature similar to Java and can be used together with other Java code or libraries in a single project, as Kotlin compiler compiles \texttt{.kt} files to Java-bytecode \texttt{.class} files.
+It adopted most concepts from Java, such as classes, polymorphism, inheritance, which I heavily use in the project.
+Performance-wise, Kotlin is comparable to Java.
 
-Kotlin has a number of advanced features such as improved type safety and reduced boilerplate code~\cite{JemerovKotlinAction2017}.
-There is one notable feature of Kotlin: properties.
-Properties are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
-In UML diagrams in this work , instead of presenting fields and methods of each class, listed are methods and properties (in this order).
+There is one notable feature of Kotlin: properties, which are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
+In UML diagrams below, properties are presented instead of fields.
 
 \subsection{Version Control System}
 
-The source code of the \graffs tool is stored in a Git repository, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
-
-The repository can be found at \url{https://github.com/jjurm/graffs}.
+The source code of the \graffs tool is stored in a Git repository\footnote{The repository can be found at \url{https://github.com/jjurm/graffs}}, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
+The commit hash, for example, is used to produce a commit-specific version code when packaging \graffs.
 
 \subsection{Build automation}
 
 The project uses Gradle~\cite{BerglundBuildingTestingGradle2011} for project management.
-Split into different modules, Gradle also helps to keep the structure well defined and manages builds of each module separately (which is called a multi-project build in Gradle).
+Split into different modules, Gradle also helps to keep the structure well defined and manages builds of each module separately.
 
 Project configuration rules are set up using the \texttt{build.gradle} files (one in the root directory, then one within each module) with a number of plugins to facilitate the following and more:
-\begin{enumerate}
-    \item Defines the structure of the project, such as the directories for each module, and source and build directories of each
-    \item Automates the process of compiling the code, running tests and producing deployable \texttt{jar}s
+\begin{enumerate}[topsep=5pt,itemsep=0pt]
+    \item Defines the structure of the project, such as source and build directories for each module
     \item Manages and automatically downloads dependencies
-    \item Helps with version numbering
-    \item Generates HTML API documentation for Kotlin code documented using the \texttt{KDoc} language\footnote{Using the \texttt{Dokka} tool, similar to \texttt{JavaDoc}}
+    \item Automates the process of code compilation, unit testing and producing deployable \texttt{jar}s
+    \item Generates HTML API documentation from the \texttt{KDoc} language\footnote{Using the \texttt{Dokka} tool, similar to \texttt{JavaDoc}}
 \end{enumerate}
+
+JUnit 5 testing framework was used to write unit tests (42 in total), making sure that the functionality of managing graphs and evaluating metrics does not diverge from what is expected.
+\graffs can easily be build from sources by running |gradle build|, which downloads dependencies, compiles modules, runs tests and produces the |cli/build/libs/graffs-last.jar| file that has all necessary libraries bundled and can be run directly.
 
 \subsection{Computing cluster}\label{sec:computing_cluster}
 
@@ -140,14 +130,14 @@ In particular, I worked with the following servers:
 The \graffs tool is programmed in a way which utilizes many threads to allow parallel computing.
 There are a number of frameworks that can aid in high-performance computing, and I analysed a few.
 I installed and experimented with Apache Spark~\cite{ZahariaApacheSparkUnified2016}, and investigated a number of other off-the-shelf products such as Apache Storm and Spring Boot -- although these libraries support computation across multiple machines, they are more heavyweight.
-To make \graffs portable as part of the flexibility goal, I opted in for a solution that does not require installing or setting up such framework for running the tool, in particular the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}), with the small tradeoff that this does not allow distributed computing across multiple machines out of the box.
+To make \graffs portable as part of the flexibility goal, I opted in for a solution that does not require installing or setting up such framework, in particular for the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}).
 
-Although \graffs is not made such that it's instance can run across multiple machines in a distributed way, it is capable and straightforward to manually run multiple instances at different machines with a shared database, each machine contributing to a different part of the evaluation.
+This has a tradeoff that distributed computing across multiple machines is not supported natively, however, \graffs is made so that it is straightforward to manually run multiple instances at different machines with a shared database, each machine contributing to a different part of the evaluation.
 
 \subsection{Project modules}
 
 The project is structured in the following modules, using multi-project builds in Gradle:
-\begin{itemize}
+\begin{itemize}[itemsep=-2pt,topsep=5pt]
     \item \texttt{api} - interfaces of structures, metrics, generators
     \item \texttt{db} - database data model
     \item \texttt{graph} - graph generators, loading datasets from filesystem
@@ -157,58 +147,48 @@ The project is structured in the following modules, using multi-project builds i
     \item \texttt{figures} - code for automating generation of some figures in this report
 \end{itemize}
 
-Python code for generating charts for this report, and SQL code for extracting the data from the database, is kept with the LaTeX sources of this dissertation.
-
 
 \section{Data model}
 
-The \graffs tool uses a number of libraries to represent graphs in memory, define a data model, and store data in a relational database.
-This section explains how the data of the program is persisted.
-
-The following entities highligh the main concept, and there are some more entities stored in the database.
+The main concept is based on the three persisted entities:
 \begin{itemize}[topsep=5pt]
     \item \textsl{Graph} storing its nodes, edges (and their attributes)
     \item \textsl{Graph generator} is an object capable of producing a number of graphs, given a dataset.
     \item \textsl{Experiment} is a description of a computational task involving:
-    \begin{enumerate}[topsep=5pt]
+    \begin{enumerate}[topsep=0pt,itemsep=0pt]
         \item generating graphs from given input datasets using a given graph generator
-        \item evaluating a given set of metrics on all generated graphs
-        \item evaluate given robustness measures on all metrics over all datasets of the experiment
+        \item evaluating a given set of metrics on all perturbed graphs
+        \item evaluating given robustness measures on all metrics over all datasets
     \end{enumerate}
 \end{itemize}
 
 A user can create and manage \textsl{graph generators} and \textsl{experiments} using the command line interface (see \autoref{sec:cli}).
+The \graffs tool uses a number of libraries to represent graphs in memory, define a data model, and store data in a relational database.
 
 \subsection{Using GraphStream}\label{sec:graphstream}
 
-Graphs in memory are stored and manipulated by the GraphStream library~\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs. You can generate, import, export, measure, layout and visualize them}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
+Graphs in memory are stored and manipulated by the GraphStream library~\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
 GraphStream also provides visualisations as opposed to JGraphT.}
 The library consists of 3 modules: \texttt{gs-core} defining the API and underlying structures, \texttt{gs-algo} with various algorithms from graph theory, and \texttt{gs-ui} containing components for visualising graphs.
+Even though library allows working with dynamic graphs (changing over time), this project only uses static graphs.
+
+The GraphStream library provides a solid base for numerous features in this project such as loading graph files, storing them in various formats, and visualisations.
+The library also contains an implementation of some graph metrics.
+In practice, the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
 
 \input{figures_gen/graphstream_diagram.tex}
 
 The library is based around the \texttt{Graph} interface, which provides access to \texttt{Node}s and \texttt{Edge}s of each graph.
 The most relevant interfaces are illustrated in \autoref{fig:graphstream_diagram} (heavily simplified).
+All \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used for matching corresponding nodes between base and perturbed graphs.
 The interfaces also provide methods for changing graphs (adding/removing nodes, edges, attributes, etc.).
-In practice the library's interfaces contain many more links and methods (e.g. for handling directed graphs) that are not relevant in the context of this project.
 
-For evaluation of robustness, we need to be able to compare (ranks of) values of a specific node between two or more generated graphs, therefore we need to be able to preserve mapping of nodes of a generated graph to nodes in the original dataset (see \autoref{def:graph_matching}).
-Note that all \texttt{Element}s (i.e. \texttt{Node}s, \texttt{Edge}s and even \texttt{Graph}s) have an \texttt{id} field which will be used for matching nodes between base and perturbed graphs.
-This makes evaluation of robustness more straightforward as ranks of nodes in respect to a given metric can be compared across multiple graphs generated from the same base graph.
-
-The GraphStream library also provides a solid base for numerous features in this project such as loading graph files, storing them in various formats, and visualisations.
-The GraphStream library allows working with dynamic graphs (changing over time), my project only uses static graphs.
-The library also contains an implementation of some graph metrics.
-
-\parspace
-
-The \texttt{Graph} object from the GraphStream library stores (references) all nodes and edges, along with attributes.
-In my project, if a metric has been evaluated on a graph, the metric's value for each node is stored as the \texttt{Node}'s attribute, all contained within the \texttt{Graph} object.
-The attribute key is given my the metric name.
+The \texttt{Graph} object from the GraphStream library stores (references to) all nodes and edges, along with their attributes.
+Calculated metric values of each node, as well as some metadata, is stored as each \texttt{Elements}'s attribute, with the attribute key being the metric name.
 
 \subsection{Relational model}
 
-Data of the \graffs tool such as generated graphs, evaluated metrics, robustness measure results as well as any user-defined hyper-parameters are stored in a relational database system.
+Data such as generated graphs, evaluated metrics, robustness measure results as well as any user-defined hyper-parameters are stored in a relational database system.
 The Java Persistence API (JPA)~\cite{BiswasJavaPersistenceAPI2016} provides an abstraction for accessing relational data from Java, Hibernate~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015} is a framework that implements the inteface.
 I used specifically the H2 database engine~\cite{MuellerH2DatabaseEngine2006} as the underlying storage for Hibernate.
 This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
@@ -219,27 +199,22 @@ This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the user creates and later refers to with their name.
 \begin{description}[itemsep=\zerospace]
     \item[\texttt{PerturbedGraph}]
-    stores a serialised version of the \texttt{Graph} object, inclucing all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
-    It also stores metadata, such as a hash which distinguishes the graph from other graphs beloging to the same \texttt{GraphCollection} coming from the same graph generator.
-    For example in the case graphs are generated by \hyperref[sec:randomly_removing_edges]{randomly removing edges}, the starting seed value of the generator of the particular graph is used as its hash.
+    stores a serialised version of the \texttt{Graph} object, with its metadata (how it was generated), inclucing all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
 
     \item[\texttt{GraphCollection}]
-    represents an (ordered) collection of \texttt{PerturbedGraph}s.
-    It also keeps track of which datasets the graphs were generated from.
+    represents an (ordered) collection of \texttt{PerturbedGraph}s, and keeps track of which datasets the graphs were generated from.
 
     \item[\texttt{GraphGenerator}]
-    is an entity that stores user-defined rules for generating graphs from a dataset.
-    Once a graph generator is defined and created, it can universally be used on multiple input datasets.
-    The parameters of a generator include the name of the method to use (such as \texttt{linear-thresholding}), number of perturbed graphs to generate from each input dataset, seed, and any additional numeric parameters specific to each generator.
+    stores user-defined rules for generating graphs from a dataset.
+    The parameters include the \texttt{method} to use (such as \texttt{linear-thresholding}), number \texttt{n} of perturbed graphs to generate from each input dataset, seed, and any additional numeric parameters specific to each generator.
+    One graph generator can be used across multiple experiments.
 
     \item[\texttt{Experiment}]
-    an entity that encapsulates a concept of evaluating multiple \textsl{robustness measures} of multiple \textsl{metrics} on multiple \textsl{datasets}, using a specific graph generator.
-    With an existing generator, the user defines an experiment, which can then be evaluated (see \autoref{sec:main_pipeline}).
+    encapsulates a concept of evaluating multiple \textsl{robustness measures} of multiple \textsl{metrics} on multiple \textsl{datasets}, using a specific graph generator.
 
     \item[\texttt{Robustness}]
-    an entity that stores a single result of evaluating a \textsl{robustness measure} of a \textsl{metric}, on a set of perturbed graphs originating from a certain \textsl{dataset}.
-    These robustness values each belong to its parent \texttt{Experiment}.
-    Note (\autoref{fig:data_model_diagram}) that the four fields \texttt{experiment}, \texttt{dataset}, \texttt{metric}, \texttt{robustnessMeasure} together form the primary key.
+    stores a single result of evaluating a \textsl{robustness measure} of a \textsl{metric}, on a set of perturbed graphs originating from a certain \textsl{dataset}.
+    Note that the four fields \texttt{experiment}, \texttt{dataset}, \texttt{metric}, \texttt{robustnessMeasure} together form the primary key (\autoref{fig:data_model_diagram}).
 \end{description}
 
 \subsection{Java Persistence API}
@@ -253,74 +228,60 @@ I use Hibernate as the intermediate layer between the \texttt{core} module of \g
 
 \input{figures/orm_kotlin_h2_diagram.tex}
 
-\input{figures_gen/data_model_classes_diagram.tex}
-
 Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{entity classes} written in Kotlin that have the following functions:
 \begin{itemize}[topsep=5pt,label=$\bm{\rightarrow}$]
     \item \textbf{Data model definition}, seen in \autoref{fig:data_model_diagram}
 
     JPA provides a number of Java annotations to define entities (\texttt{@Entity}), their fields (\texttt{@Column}), constraints such as foreign key constraint (\texttt{@OneToMany}, \texttt{@ManyToOne} and others), and metadata such as rules for fetching data from database (e.g. \texttt{@Basic(fetch = FetchType.LAZY)} for lazy fetching of a field).
-    Data model is inferred from these annotations that are processed during compile time
+    Data model is inferred from these annotations during compile time.
 
-    Hibernate then abstracts away also operations such as creating and updating the database schema, which are configured in the \texttt{hibernate.cfg.xml} file (for example it creates a database from scratch if it doesn't exist).
+    Hibernate then abstracts away also operations such as creating and updating the database schema.
+    See \autoref{lst:kotlin_experiment_entity} for a full code listing of the \texttt{Experiment} entity using JPA annotations.
 
-    See \autoref{lst:kotlin_experiment_entity} for an example entity class using the JPA annotations.
+    \lstinputlisting[label={lst:kotlin_experiment_entity}, caption={The \texttt{Experiment} class written in Kotlin. Note especially the annotations which are enough to define the JPA data model.}, float, firstline=11,language=Kotlin]{Experiment.kt}
 
     \item \textbf{Metamodel generation}
 
     Taking the annotated entity classes during compile time, Hibernate generates a \textsl{metamodel} class for each entity to allow writing type-safe queries.
     For example, the \texttt{Experiment\_} class is generated from the \texttt{Experiment} entity, with corresponding fields (such as \texttt{Experiment\_.name} of type \texttt{SingularAttribute<NamedEntity, String>}, or \texttt{Experiment\_.generator} of type \texttt{SingularAttribute<Experiment, GraphGenerator>}).
-
     See \autoref{lst:jpa_typed_query} for an illustration how generated metamodel classes aid in writing type-safe queries.
-
-    \lstinputlisting[label={lst:jpa_typed_query}, linerange=jpa_typed_query0-jpa_typed_query1, caption={A toy example of using typed JPA queries. Note the \texttt{Experiment\_} metamodel class generated by Hibernate with (meta)fields corresponding to entities' fields}, float, language=Kotlin]{listings.kts}
 
     \item \textbf{Object-relational mapping}
 
     The classes (\autoref{fig:data_model_classes_diagram}) themselves carry the data managed by Hibernate.
-    This means that other modules such as \texttt{generators} and \texttt{robustness} can use entity classes, while they are also managed by Hibernate.
-
+    Other modules such as \texttt{robustness} and \texttt{cli} can use entity classes, while they are also managed by Hibernate.
     Hibernate is responsible for loading data into entity objects as well as persisting such objects.
     See \autoref{lst:hibernate_load_entity} for an illustration.
-
-    \lstinputlisting[label={lst:hibernate_load_entity}, linerange=hibernate_load_entity0-hibernate_load_entity1, caption={A toy example of Hibernate loading and persisting an \texttt{Experiment} object.}, float, language=Kotlin]{listings.kts}
 \end{itemize}
-
-
-\autoref{lst:kotlin_experiment_entity} presents a full code listing of the \texttt{Experiment} entity.
-
-\lstinputlisting[label={lst:kotlin_experiment_entity}, caption={The \texttt{Experiment} class written in Kotlin. Note especially the annotations which are enough to define the JPA data model.}, float, firstline=11,language=Kotlin]{Experiment.kt}
 
 \subsection{H2 Database}
 
 I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based on SQL language) for storing entities, considering the following:
-\begin{itemize}[topsep=5pt]
+\begin{itemize}[topsep=5pt,itemsep=-2pt]
     \item Very fast; small footprint on the system in terms of installation complexity, program size, and cost of backround maintenance
-    \item Easily embeddable, as it implements the JDBC API (Java Database Connectivity API, used by Hibernate too)
+    \item Easily embeddable, as it implements the JDBC API (Java Database Connectivity API, used by Hibernate, too)
     \item Supports in-memory databases (good for testing)
     \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
 \end{itemize}
+Graphs are stored in the database purely as serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
+One an experiment is done, SQL queries such as \autoref{lst:sql_robustness} can be used to manually retrieve the data.
 
-\subsubsection*{Storing graphs in database}
-
-Considering exporting graphs to various formats, I chose to store them purely as serialised \texttt{Graph} objects, including: \texttt{Node}s, \texttt{Edges}, and their attributes.
+\lstinputlisting[label={lst:sql_robustness}, caption={An example of a SQL query for retrieving robustness values of the three experiments described in the~\nameref{ch:evaluation} chapter.}, float, language=SQL]{../figures/robustness_graffs.sql}
 
 
 \section{Main pipeline}\label{sec:main_pipeline}
 
-In this section I explain the steps of \graffs involved in calculating robustness measures of metrics.
-In summary, the normal steps are:
-\begin{enumerate}
+In this section I explain the steps a user needs to invoke to calculate robustness of metrics:
+\begin{enumerate}[topsep=5pt,itemsep=0pt]
     \item \textbf{Obtain datasets}, for example use demo datasets downloadable by the \graffs tool or provide any custom datasets
-    \item \textbf{Define graph generator}, i.e. a way to generate new graphs from these datasets
+    \item \textbf{Define graph generator}, i.e., a way to generate new graphs from these datasets
     \item \textbf{Define an experiment} specifying a set of datasets to start with, a graph generator to use, a set of metrics to asses, and a set of robustness measures to evaluate stability of those metrics.
-    \item \textbf{Run the experiment} computation (a computationally intensive task, which may, depending on the inputs and the environment, run in the order of magnitude of hours)
-
+    \item \textbf{Run the experiment} computation (a computationally intensive task, ).
     This encompasses the following:
     \begin{enumerate}[label=\alph*.]
-        \item \textbf{Generate perturbed graphs} (according to \autoref{sec:perturbing_graphs})
-        \item \textbf{Calculate metric values} on the generated graphs, i.e. calculating a real number ($\mathbb{R}$) for each metric for each node in each generated graph (according to \autoref{sec:evaluating_metrics}).
-        \item \textbf{Calculate robustness measures} for each metric, on collated perturbed graphs of each dataset
+        \item \textbf{Generate perturbed graphs} (according to \autoref{sec:perturbing_graphs}).
+        \item \textbf{Calculate metric values} on the generated graphs, i.e., calculate a real number ($\mathbb{R}$) for each metric for each node in each generated graph (according to \autoref{sec:evaluating_metrics}).
+        \item \textbf{Calculate robustness measures} for each metric, on collated perturbed graphs of each dataset (according to \autoref{sec:robustness_measures}).
     \end{enumerate}
 \end{enumerate}
 
@@ -328,52 +289,48 @@ All results, namely generated graphs with nodes including calculated values of e
 
 \input{figures/main_data_flow.tex}
 
-Running the experiment is a computationally intensive task, mainly due to metric evaluation (which certainly depends on the chosen metrics).
+Running the experiment is a computationally intensive task, which may, depending on the inputs and the environment, run in the order of magnitude of hours.
+This is mainly due to metric evaluation (which certainly depends on the chosen metrics).
 To mitigate this, I employed the following:
-\begin{itemize}[topsep=5pt]
+\begin{itemize}[topsep=5pt,itemsep=-2pt]
     \item Optimised the program for computation speed by applying performance engineering principles
-    \item Allow parallel computation
-    \item I ran extensive experiments on a high-performance computing facility (from \autoref{sec:computing_cluster})
+    \item Allowed parallel computation
+    \item ran experiments on a high-performance computing facility (from \autoref{sec:computing_cluster})
 \end{itemize}
 
 \autoref{fig:main_data_flow} illustrates the flow of data across the above-mentioned steps.
 
 \subsection{Loading datasets}
 
-Datasets are located, and are expected to be located, in the `data' directory in the \graffs's working directory (i.e. where the program is run).
-Each sub-directory represents a dataset identified by the sub-directory's name.
-\graffs supports loading files of two different types of files:
+\input{figures_gen/data_dir_structure2.tex}
 
+Datasets are to be located in the `data' directory in the \graffs's working directory (i.e. where the program is run).
+Each sub-directory represents a dataset identified by the sub-directory's name.
+\graffs supports loading files of two different types:
 \begin{description}[itemsep=\zerospace]
-    \item \hyperref[sec:edge_files]{\textbf{Edge files}} -- text format with each line containing a pair of adjacent nodes
-    \item \hyperref[sec:rdata_files]{\textbf{\texttt{RData} files}} -- binary files that store objects created in the R language~\cite{RCoreTeamLanguageEnvironmentStatistical2009}
+    \item \hyperref[sec:edge_files]{\textbf{Edge files}} -- text format, pair of adjacent nodes per line
+    \item \hyperref[sec:rdata_files]{\textbf{\texttt{RData} files}} -- binary files with objects created in the R language~\cite{RCoreTeamLanguageEnvironmentStatistical2009}
 \end{description}
 
-\input{figures_gen/data_dir_structure.tex}
-
-In each dataset's directory, the program looks for a file that ends with either \texttt{.RData} or \texttt{.txt}, in this order.
-Datasets may additionally contain an \texttt{info.txt} file holding a human-readable description of the dataset (that is printed in the command-line interface when the dataset is loaded).
+In each dataset's directory, the program looks for a file ending with either \texttt{.RData} or \texttt{.txt}.
+Datasets may additionally contain an \texttt{info.txt} file holding a human-readable description of the dataset.
 \autoref{fig:data_dir_structure} shows an example directory structure.
 
-The \texttt{GraphLoader} abstract class (\autoref{lst:code_graphloader}) is to be implemented in both cases.
+The \texttt{GraphLoader} abstract class (\autoref{lst:code_graphloader}) is implemented in both cases.
 \lstinputlisting[label={lst:code_graphloader}, caption={The \texttt{GraphLoader} abstract class, providing a contract for implementations to load graphs}, float=ht, language=Kotlin, firstline=6]{GraphLoader.kt}
 
+\vspace*{-0.5mm}
 \subsubsection*{Edge files}\label{sec:edge_files}
 
-A common pure format of storing network structure (without any metadata) is to list the edges line by line, with each line containing unique identifiers of two nodes.
-The set of nodes is then implicitly defined by the set of all distinct node identifiers present in the file.
-
-However, different dataset sources (\autoref{sec:datasets}) provide \texttt{.txt} edge files with the content in different formats.
-Some edge files contain a header, \texttt{\#comments}, or a third number in each line representing the edge's weight (for \hyperref[sec:scored_networks]{scored networks}).
+Listing a pair of nodes per line is a common pure format of storing network structure (without any metadata).
+The set of nodes is then implicitly defined by the set of all distinct node identifiers in the file.
+Still, edge files may contain a header, \texttt{\#comments}, or a third number in each line representing the edge's weight (for \hyperref[sec:scored_networks]{scored networks}).
 \autoref{fig:edge_file_examples} shows a number of example edge files that should be accepted by \graffs.
 
 \input{figures/edge_file_examples.tex}
 
-One way would be to distinguish different formats by the file extension, or with additional meta information.
-However, one of the goals for \graffs is to make it as versatile as possible, thus not requiring the user to manually specify a dataset's type or source is welcome.
-
-Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending GraphStream's \texttt{FileSourceEdge} simple LR parser, to allow the following:
-\begin{itemize}[topsep=5pt]
+To make \graffs as versatile as possible, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending GraphStream's \texttt{FileSourceEdge} simple LR parser, to allow for the following:
+\begin{itemize}[topsep=5pt,itemsep=-2pt]
     \item Modify the grammar to correctly parse node IDs containing dots (\texttt{.}), such as \texttt{362663.ECP\_0001} (to allow datasets from the STRING database)
     \item Ignore comment lines starting with \texttt{\#} or \texttt{\%} characters
     \item Ignore headers starting with the string \texttt{protein1} (included in graph files downloaded from the STRING database)
@@ -382,10 +339,10 @@ Hence, I implemented \texttt{FileSourceEdgeOptionalWeight} parser, extending Gra
 
 \subsubsection*{RData files}\label{sec:rdata_files}
 
-The Paper~\cite{Bozhilova2019} provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a binary file capturing a session of the R language, storing objects from the \texttt{igraph} R package.
+The Paper provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a~binary file capturing an R language session, storing objects from the \texttt{igraph} R package.
 
 To load such files, an option is to convert them manually into another \graffs-readable format, or let \graffs call R to do this conversion under the hood.
-To make \graffs as versatile as possible and not require the R software environment to be installed on the client's computer, I employed the Renjin library\footnote{Rejin official website: \url{https://www.renjin.org/}}, a \enquote{JVM-based interpreter for the R programming language}.
+To make \graffs versatile and not require the R software environment to be installed on the client's computer, I employed the Renjin library\footnote{Rejin official website: \url{https://www.renjin.org/}}, a \enquote{JVM-based interpreter for the R programming language}.
 Renjin can execute R code (as well as load RData files) within Java, without the need to install any additional platform.
 
 When an RData file is to be loaded in \graffs, a Renjin engine starts under the hood and loads desired file.
@@ -394,8 +351,8 @@ If an object whose name ends with \texttt{.df}\footnotemark{} is found, it is co
 
 \subsection{Generating graphs}
 
-First, there is the \texttt{GraphProducer} interface, which has a single method\footnotemark{}:\\ \texttt{fun produce(sourceGraph: Graph, n: Int): List<Deferred<PerturbedGraph>>}
-\footnotetext{It returns a list of \texttt{Deferred} objects from the \texttt{kotlinx.coroutines} package, so that the generation can be parallelised at a higher level in the program using \textsl{Kotlin coroutines}, as described in \autoref{sec:kotlin_coroutines}.} \\
+First, there is the \texttt{GraphProducer} interface, which has a single method:\\ \texttt{fun produce(sourceGraph: Graph, n: Int): List<Deferred<PerturbedGraph>>}.
+It returns a list of \texttt{Deferred} objects from the \texttt{kotlinx.coroutines} library, so that the generation can be parallelised at a higher level in the program using \textsl{Kotlin coroutines}, as described in \autoref{sec:kotlin_coroutines}.
 Each |GraphProducer| implementation provides a corresponding |GraphProducerFactory| object, defined as:
 % @formatter:off
 \begin{lstlisting}[language=Kotlin]
@@ -404,26 +361,20 @@ typealias GraphProducerFactory =
 \end{lstlisting}
 % @formatter:on
 
-Further, \texttt{GraphGenerator}s (from \autoref{fig:data_model_classes_diagram}), which are stored in the database, have the \texttt{method} field referencing a \texttt{GraphProducer} to use.
-
-Implementations of the methods for producing graphs as described in~\autoref{sec:perturbing_graphs} are straightforward.
-Each generated graph is in some way a copy of the input graph, with some edges deleted.
-
-\subsection{Evaluating metrics}
-
-Metrics are classes (or rather, Kotlin |object|s) implementing the |Metric| interface, with a single method \texttt{fun evaluate(graph: Graph): MetricResult?}.
-
-In the database, each |PerturbedGraph| entry stores a single serialised |Graph| object, whose nodes holds values for all metrics.
-A metric's value at each node is stored in the node's attribute map.
-
-An |Experiment| entry (those are created by the user) has a |Set<String>| field specifying which metrics to evaluate on each |PerturbedGraph|, and those metrics are again referenced by a |String| identifier.
+The \texttt{method} field of \texttt{GraphGenerator}s reference a \texttt{GraphProducer} to use, which can be either |threshold-linear| or |removing-edges| (as described in~\autoref{sec:perturbing_graphs}).
+Implementations of the graph-producing methods are straightforward.
+Each generated graph is in some way a memory-copied subset of the input graph, with some of the edges deleted.
 
 \subsection{Metric robustness}
 
-Similar to other concepts, robustness measure classes implement the |RobustnessMeasure| interface, with a single method |suspend fun evaluate(metric: MetricInfo, graphCollection: GraphCollection, metadata: GraphCollectionMetadata): Double|.
+Metrics are classes (or rather, Kotlin |object|s) implementing the |Metric| interface, with a single method \texttt{fun evaluate(graph: Graph): MetricResult?}.
+In the database, each |PerturbedGraph| entry stores a single serialised |Graph| object, whose nodes hold values for all metrics.
+A metric's value at each node is stored in the node's attribute map.
+An |Experiment| entry (those are created by the user) has a |Set<String>| field specifying which metrics to evaluate on each |PerturbedGraph|, and those metrics are again referenced by a |String| identifier.
 
+Similar to other concepts, robustness measure classes implement the |RobustnessMeasure| interface, with a single method |suspend fun evaluate(metric: MetricInfo, graphCollection: GraphCollection, metadata: GraphCollectionMetadata): Double|.
 |MetricInfo| uniquely identifies the |Metric| whose robustness to calculate.
-|GraphCollection| is an entity (from \autoref{fig:data_model_classes_diagram}) with a list of |PerturbedGraph|s of one dataset.
+|GraphCollection| is an entity corresponding to a dataset, with a list of |PerturbedGraph|s.
 |GraphCollectionMetadata| provides cached\footnotemark{} access to intermediate results regarding the particular |GraphCollection| in the context of the current |Metric|, such as the \textsl{overall ranking} of the given metric over all the perturbed graphs (see \autoref{def:overall_ranking}).
 \footnotetext{cached, as the overall ranking is calculated only once for each \texttt{GraphCollection} and each \texttt{Metric}, and used for more robustness measures}
 Each |RobustnessMeasure| returns a single |Double| value, which is the numerical result, calculated as described in \autoref{sec:robustness_measures}.
@@ -436,18 +387,21 @@ According to the definition of ranking vector (\cref{def:ranking_vector}), if we
 In The Paper, such ties were resolved \enquote{at random, independently across different metrics and different thresholds}.
 This may, however, lead to inappropriately lower robustness of metrics due to random oscillations of ranks of nodes, as well as a high degree of variability between results (especially for graphs with small number of nodes).
 
-In \graffs, I assured that ties are resolved arbitrarily but deterministically and constantly across all metrics and thresholds, and even constantly across multiple (perturbed) graphs with the same nodes (see \cref{sec:perturbing_graphs} on perturbing graphs).
+In \graffs, I assured that ties are resolved arbitrarily but deterministically and constantly across all metrics and thresholds, and even constantly across multiple perturbed graphs with the same nodes.
 This follows the~\nameref{sec:reproducibility} principle set in~\nameref{sec:design-goals}.
 
 \subsection{Visualising graphs \& producing figures}
 
-\todo{add brief description, or remove completely}
+This dissertation has charts, diagrams and visualisations of graphs from different sources.
+Plots that depend on calculating extra values in the \graffs program can be exported using the command line interface.
+Other plots relying on the code of \graffs (such as \cref{fig:simple_graph}) are generated by a custom code in the \texttt{figures} module.
+Other, independent plots, such as those in the~\nameref{ch:evaluation} chapter, are generated using Python and SQL, and the code is kept with the LaTeX sources of this dissertation.
 
 
 \section{Parallelism using Kotlin coroutines}
 \label{sec:kotlin_coroutines}
 
-Kotlin supports a concept of \textsl{suspending functions}, i.e. functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
+Kotlin supports the concept of \textsl{suspending functions}, i.e., functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
 The context in which a suspending function suspends, is called coroutine.
 Coroutines are a well-known control abstraction in programming languages~\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
 
@@ -470,7 +424,7 @@ Then the |await| suspending function called on a |Deferred| object waits for the
 Kotlin also provides other means to synchronise coroutines, such as using mutual exclusion or actors, when needed in a parallel execution.
 Mutexes are used to ensure synchronised access when persisting entities in the database.
 
-\todo{diagram similar to \url{https://s3.amazonaws.com/kukuruku-co/uploads/images/00/17/75/2016/10/09/126426.png}}
+%possibly: diagram similar to \url{https://s3.amazonaws.com/kukuruku-co/uploads/images/00/17/75/2016/10/09/126426.png}
 
 The following parts of \graffs use parallel programming with coroutines:
 \begin{itemize}[topsep=5pt]

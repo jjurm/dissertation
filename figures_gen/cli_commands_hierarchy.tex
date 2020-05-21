@@ -1,5 +1,7 @@
 \begin{figure}
-\caption{Hierarchy of supported command-line interface commands, and their brief description}
+\caption{Hierarchy of supported command-line interface commands, and their brief description.
+The essential commands for running the main pipeline (\autoref{fig:main_data_flow}) are highlighted in bold.
+        }
 \label{fig:cli_commands_hierarchy}
 \begin{flushleft}
 \setlength{\DTbaselineskip}{11pt}
@@ -27,6 +29,8 @@
 .3 prune \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Remove generated graphs and calculated robustness values of an experiment\end{minipage}.
 .2 plot \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Plot results\end{minipage}.
 .3 rank-similarity.
+.3 rank-similarity-visual.
+.3 relaxed-similarity.
 .2 db \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Manage the underlying database\end{minipage}.
 .3 test \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Test the database connection\end{minipage}.
 .3 drop \scriptsize \dotfill\ \begin{minipage}[t]{10.6cm}Reset the database schema and contents\end{minipage}.

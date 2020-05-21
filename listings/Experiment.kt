@@ -14,15 +14,18 @@ class Experiment(
 
         @ManyToOne(fetch = FetchType.EAGER)
         var generator: GraphGenerator,
-        @ElementCollection(fetch = FetchType.EAGER)
-        var metrics: Set<MetricId> = mutableSetOf(),
-        @ElementCollection(fetch = FetchType.EAGER)
-        var robustnessMeasures: Set<RobustnessMeasureId> = mutableSetOf(),
+        @ElementCollection
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var metrics: List<MetricId> = listOf(),
+        @ElementCollection
+        @LazyCollection(LazyCollectionOption.FALSE)
+        var robustnessMeasures: List<RobustnessMeasureId> = listOf(),
 
         datasets: Collection<GraphDatasetId> = listOf()
 ) : NamedEntity(name) {
 
     @OneToMany(mappedBy = "experiment", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderColumn
     @LazyCollection(LazyCollectionOption.FALSE)
     var graphCollections: MutableList<GraphCollection> = datasets.map { GraphCollection(it, this) }.toMutableList()
 

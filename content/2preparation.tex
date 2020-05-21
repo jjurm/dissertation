@@ -518,7 +518,7 @@ Following are definitions of rank robustness measures, given a metric $M$, a bas
 
 \newcommand*{\args}{\left(M \mid G, \xi, n \right)}
 \newcommand*{\astar}{A^*\!\args}
-\begin{definition}[Rank continuity]
+\begin{definition_with_break}[Rank continuity]
     \label{def:rank_continuity}
     \vspace{-0.5cm}
     \begin{flalign*}
@@ -530,7 +530,7 @@ Following are definitions of rank robustness measures, given a metric $M$, a bas
         & \xi(G) \generates{n} G_1, G_{i+1}, \dots, G_{n}, \nonumber \\
         & \operatorname{Sim}_k(\dotp, \dotp)\ \ \text{is $k$-similarity of two rankings, by~\autoref{def:k_similarity}} \nonumber
     \end{flalign*}
-\end{definition}
+\end{definition_with_break}
 
 Secondly, \textsl{rank identifiability} attempts to quantify, how well ranks induced by a metric on perturbed graphs resemble the overall ranking.
 Taking $\alpha$-relaxed $k$-similarity values between ranks of perturbed graphs and an overall ranking (with respect to a metric), rank identifiability is defined as their minimum.
@@ -556,7 +556,7 @@ $U$ is the set of the $1\%$ highest ranked nodes according to the overall rankin
 Then, for each node $v \in U$, we calculate a range of \textsl{ranks} that the node attains across the generated graphs.
 Rank instability is then the average scaled range for the nodes in $U$.
 
-\begin{definition}[Rank instability]
+\begin{definition_with_break}[Rank instability]
     \label{def:rank_instability}
     \vspace{-0.5cm}
     \begin{flalign*}
@@ -569,7 +569,7 @@ Rank instability is then the average scaled range for the nodes in $U$.
         & G = (V, E), \nonumber \\
         & \xi(G) \generates{n} G_1, G_{i+1}, \dots, G_{n} \nonumber
     \end{flalign*}
-\end{definition}
+\end{definition_with_break}
 
 Note that high values of RankContinuity and RankIdentifiability mean high robustness of a metric, whereas high values of RankInstability mean low robustness.
 

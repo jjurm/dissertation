@@ -1,4 +1,4 @@
-\begin{figure}
+\begin{wrapfigure}[7]{R}{0.27\textwidth}
 \begin{tikzpicture}%
 \draw[color=black!60!white]
 \FTdir(\FTroot,i0,data){
@@ -10,24 +10,13 @@
 \FTfile(i2,info.txt)
 \FTfile(i2,string\_ecoli\_data.RData)
 }
-\FTdir(i0,i3,facebook){
+\FTdir(i0,i3,test){
 \FTfile(i3,edges.txt)
 \FTfile(i3,info.txt)
-}
-\FTdir(i0,i4,pvivax){
-\FTfile(i4,info.txt)
-\FTfile(i4,string\_pvivax\_data.RData)
-}
-\FTdir(i0,i5,test){
-\FTfile(i5,edges.txt)
-}
-\FTdir(i0,i6,yeast){
-\FTfile(i6,info.txt)
-\FTfile(i6,string\_yeast\_data.RData)
 }
 };
 \end{tikzpicture}
 
 \caption{An example structure of the \texttt{data} directory}
 \label{fig:data_dir_structure}
-\end{figure}
+\end{wrapfigure}

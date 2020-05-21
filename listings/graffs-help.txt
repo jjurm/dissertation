@@ -41,7 +41,7 @@ Commands:
   remove  Remove an experiment, all its generated graph and any computed
           results
   run     Run an experiment
-  prune   Remove all generated graphs and calculated robustness values of an
+  prune   Remove generated graphs and calculated robustness values of an
           experiment
 
 ¦\textcolor{blue}{\$ ./graffs dataset --help}¦
@@ -52,7 +52,7 @@ Usage: graffs dataset [OPTIONS] COMMAND [ARGS]...
   Datasets are stored in the `data` folder, each dataset in a subfolder.
   Supported files are:
 
-  - *.txt with lines describing edges with optional weight in the format: NODE1 NODE2 [WEIGHT]
+  - edges.txt (or *.txt) with lines describing edges with optional weight in the format: NODE1 NODE2 [WEIGHT]
   - *.RData with an R dataframe object named *.df
 
 Options:

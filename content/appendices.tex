@@ -84,9 +84,15 @@ These definitions precede those in \cref{sec:ranking}.
 
 
 
-\chapter{Usage of \graffs}
+\chapter{Code excerpts}
 
-\lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the command-line help text of some subcommands, printed by \graffs}, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}
+\input{figures_gen/data_model_classes_diagram.tex}
+
+\lstinputlisting[label={lst:jpa_typed_query}, linerange=jpa_typed_query0-jpa_typed_query1, caption={A toy example of using typed Java Persistence API queries. Note the \texttt{Experiment\_} metamodel class generated from the \texttt{Experiment} entity by Hibernate, with (meta)fields corresponding to entities' fields.}, float, language=Kotlin]{listings.kts}
+
+\lstinputlisting[label={lst:hibernate_load_entity}, linerange=hibernate_load_entity0-hibernate_load_entity1, caption={A toy example of Hibernate loading and persisting an \texttt{Experiment} object.}, float, language=Kotlin]{listings.kts}
+
+\lstinputlisting[label={lst:graffs_cli_examples}, caption={A demonstration of the command-line help text of some subcommands, printed by \graffs}, float, basicstyle=\ttfamily\color{black}\fontsize{8pt}{8pt}\selectfont,]{graffs-help.txt}
 
 
 \chapter{Results}\label{ch:appendix_results}

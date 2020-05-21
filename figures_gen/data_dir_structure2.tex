@@ -1,0 +1,23 @@
+\begin{wrapfigure}[8]{R}{0.3\textwidth}
+    \vspace*{-5mm}
+    \scalebox{0.75}{
+        \begin{tikzpicture}%
+            \draw[color=black!60!white]
+            \FTdir(\FTroot,i0,data){
+                \FTdir(i0,i1,citation){
+                    \FTfile(i1,edges.txt)
+                    \FTfile(i1,info.txt)
+                }
+                \FTdir(i0,i2,ecoli){
+                    \FTfile(i2,string\_ecoli\_data.RData)
+                }
+                \FTdir(i0,i3,test){
+                    \FTfile(i3,edges.txt)
+                }
+            };
+        \end{tikzpicture}
+    }
+    \vspace*{-4mm}
+    \caption{An example structure of the \texttt{data} directory}
+    \label{fig:data_dir_structure}
+\end{wrapfigure}

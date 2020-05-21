@@ -67,7 +67,7 @@ def table_for_robustness(robustness_measure):
 
 
 with open("robustness_graffs_tables.tex", "w") as f:
-    f.write("\\begin{table}{\\setlength{\\tabcolsep}{5pt}\\renewcommand{\\arraystretch}{1}\n")
+    f.write("\\begin{table}[H]\n\\setlength{\\tabcolsep}{5pt}\\renewcommand{\\arraystretch}{1}\n")
 
     experiments = df['experiment'].unique()
     if len(experiments) == 1:
@@ -87,4 +87,4 @@ with open("robustness_graffs_tables.tex", "w") as f:
         latex = table_for_robustness(robustness)
         f.write(latex)
         # f.write("}\n")
-    f.write("}\\end{table}\n")
+    f.write("\\end{table}\n")
