@@ -226,8 +226,8 @@ Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the
 \subsection{Java Persistence API}
 
 The Java Persistence API~\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for the management of relational data in Java.
-It describes ways in Java to specify schemas of relational databases and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
-\textsl{Persistence} is an abstract term referring to accessing, managing, and storing entities.
+It describes ways in Java to specify a schema of a relational database and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
+\textsl{Persistence} is a term referring to accessing, managing, and storing entities.
 
 The Hibernate framework~\cite{ElliottHibernateDeveloperNotebook2004}, an object-relational mapping tool, provides a concrete implementation of JPA~\cite{BauerJavaPersistenceHibernate2015}.
 I use Hibernate as the intermediate layer between the \texttt{core} module of \graffs and the underlying H2 database that is completely abstracted away from the \graffs code (\autoref{fig:orm_kotlin_h2_diagram}).
@@ -241,18 +241,20 @@ Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{e
     JPA provides a number of Java annotations to define entities (\texttt{@Entity}), their fields (\texttt{@Column}), constraints such as foreign key constraint (\texttt{@OneToMany}, \texttt{@ManyToOne} and others), and metadata such as rules for fetching data from database (e.g. \texttt{@Basic(fetch = FetchType.LAZY)} for lazy fetching of a field).
     The data model is inferred from these annotations during compile time.
 
-    Hibernate then abstracts away also operations such as creating and updating the database schema.
-    See \autoref{lst:kotlin_experiment_entity} for a full code listing of the \texttt{Experiment} entity using JPA annotations.
+    Hibernate then abstracts away operations such as creating and updating the database schema.
+    \autoref{lst:kotlin_experiment_entity} shows the \texttt{Experiment} entity, using JPA annotations.
 
     \lstinputlisting[label={lst:kotlin_experiment_entity}, caption={The \texttt{Experiment} class written in Kotlin. Note especially the annotations which are enough to define the JPA data model.}, float, firstline=11,language=Kotlin]{Experiment.kt}
 
     \item \textbf{Metamodel generation}
 
     Taking the annotated entity classes during compile time, Hibernate generates a \textsl{metamodel} class for each entity to allow writing type-safe queries.
-    For example, the \texttt{Experiment\_} class is generated from the \texttt{Experiment} entity, with corresponding fields (such as \texttt{Experiment\_.name} of type \texttt{SingularAttribute<NamedEntity, String>}, or \texttt{Experiment\_.generator} of type \texttt{SingularAttribute<Experiment, GraphGenerator>}).
+    For example, the \texttt{Experiment\_} class is generated from \texttt{Experiment}, with corresponding fields (such as \texttt{Experiment\_.name} of type \texttt{SingularAttribute<NamedEntity, String>}, or \texttt{Experiment\_.generator} of type \texttt{SingularAttribute<Experiment, GraphGenerator>}).
     See \autoref{lst:jpa_typed_query} for an illustration how generated metamodel classes aid in writing type-safe queries.
 
     \item \textbf{Object-relational mapping}
+
+    \lstinputlisting[label={lst:hibernate_load_entity}, linerange=hibernate_load_entity0-hibernate_load_entity1, caption={A toy example of Hibernate loading and persisting an \texttt{Experiment} object.}, float, language=Kotlin]{listings.kts}
 
     The classes (\autoref{fig:data_model_classes_diagram}) themselves carry the data managed by Hibernate.
     Other modules such as \texttt{robustness} and \texttt{cli} can use entity classes, while they are also managed by Hibernate.
@@ -263,11 +265,11 @@ Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{e
 \subsection{H2 Database}
 
 I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based on SQL language) for storing entities, considering the following:
-\begin{itemize}[topsep=5pt,itemsep=-2pt]
+\begin{itemize}[topsep=4pt,itemsep=-2pt]
     \item Very fast; small footprint on the system in terms of installation complexity, program size, and cost of background maintenance
-    \item Easily embeddable, as it implements the JDBC API (Java Database Connectivity API, used by Hibernate, too)
+    \item Easily embeddable, as it implements the Java JDBC API (used by Hibernate, too)
     \item Supports in-memory databases (good for testing)
-    \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
+    \item Written purely in Java, so can be bundled in \graffs, requiring no standalone installation
 \end{itemize}
 Graphs are stored in the database as deflated serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
 One an experiment is done, SQL queries such as \autoref{lst:sql_robustness} can be used to manually retrieve the data.
@@ -317,12 +319,12 @@ Datasets may additionally contain an \texttt{info.txt} file holding a human-read
 
 \lstinputlisting[label={lst:code_graphloader}, caption={The \texttt{GraphLoader} abstract class, providing a contract for implementations to load graphs}, float=ht, language=Kotlin, firstline=6]{GraphLoader.kt}
 
-\vspace*{-0.5mm}
+\vspace*{-0.6mm}
 \subsubsection*{Edge files}\label{sec:edge_files}
-
+\vspace*{-1mm}
 Listing a pair of nodes per line is a common pure format of storing network structure (without any metadata).
 The set of nodes is implicitly defined by the set of all distinct node identifiers in the file.
-\Cref{fig:edge_file_examples} shows a number of example edge files that are accepted by \graffs.
+\Cref{fig:edge_file_examples} shows sample edge files that are accepted by \graffs.
 
 \input{figures/edge_file_examples.tex}
 
@@ -399,24 +401,20 @@ This dissertation has charts, diagrams and visualisations of graphs from differe
 
 \section{Parallelism using Kotlin coroutines}\label{sec:kotlin_coroutines}
 
-Kotlin supports the concept of \textsl{suspending functions}, i.e., functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
-The context in which a suspending function suspends is called coroutine.
+Kotlin supports the concept of \textsl{suspending functions}, i.e., functions which can pause their execution voluntarily (storing its \textsl{current continuation}) and return the control of the flow to its caller, and later continue by resuming the continuation at the suspension point.
+The context in which a suspending function suspends is called \textsl{coroutine}.
 Coroutines are a well-known control abstraction in programming languages~\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
-Asynchronous computations, delays, or IO operations can be programmed as suspending calls, i.e., functions that are allowed to \textsl{suspend} coroutine voluntarily, and return the control back to the caller, then continue whenever their \textsl{continuation} is resumed (or invoked).
+For example, asynchronous computations, delays, and IO operations can be programmed as suspending calls.
 
-Coroutines can be used even within a single thread, and thus allow a concurrent execution.
-In the case of \graffs, however, we are interested in running computation in parallel, to utilise the power of multiple CPU cores.
+Coroutines can be used even within a single thread (thus allowing a concurrent execution), but the case of \graffs we are interested in running computation in parallel, to utilise the power of multiple CPU cores.
 
 Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap~\cite{AriasFunctionalKotlinExtend2018}, as opposed to Java \texttt{Thread}s.
 They have a similar life cycle and are executed within regular threads, although they are not bound to them~\cite{TorresLearningConcurrencyKotlin2018}.
-Coroutines are also safer, e.g. failure of one operation within a \textsl{coroutine scope} triggers cancellation of other coroutines in the scope.
-Coroutines allow executing suspending functions.
+Coroutines are also safer, e.g., a failure of one operation within a \textsl{coroutine scope} triggers cancellation of other coroutines in the scope.
 
 Suspending functions in Kotlin, when compiled to Java bytecode, are regular functions accepting |Continuation<Int>| as one of the arguments.
 The |async| function (or its alternatives) takes a suspending function, creates an asynchronous coroutine executing the function and immediately returns its future result (as |Deferred<T>|).
 Then the |await| suspending function called on a |Deferred| object waits for the resulting value without blocking and resumes when the deferred computation is complete.
-
-\lstinputlisting[label={lst:kotlin_coroutines}, caption={A simplified example of creating an asynchronous task for evaluating a set of metrics on a single generated graph.}, float, language=Kotlin]{coroutines.kt}
 
 Kotlin also provides other means to synchronise coroutines, such as using mutual exclusion or actors, when needed in parallel execution.
 Mutexes are used in \graffs to ensure synchronised access when persisting entities in the database.
@@ -424,16 +422,46 @@ Mutexes are used in \graffs to ensure synchronised access when persisting entiti
 %possibly: diagram similar to \url{https://s3.amazonaws.com/kukuruku-co/uploads/images/00/17/75/2016/10/09/126426.png}
 
 The following parts of \graffs use parallel programming with coroutines:
-\begin{itemize}[topsep=5pt]
+\begin{itemize}[topsep=5pt,itemsep=-2pt]
     \item Generating graphs
     \item Evaluating metrics on graphs
-
-    \Cref{lst:kotlin_coroutines} shows an example of creating this asynchronous task.
-    It is heavily simplified; the real version handles accessing the database, asynchronous deserialisation of \texttt{Graph}, logging, measuring time statistics, and preventing duplicate metric evaluation.
-    Each |Graph| is treated individually without the need to synchronise across them, however, evaluation of metrics within one |Graph| is sequential as the GraphStream library does not support parallel access.
     \item Evaluating robustness, including calculating overall ranks, which must be calculated for each |GraphCollection| before any robustness measure is evaluated on it
     \item Generating various figures, for which an intermediate
 \end{itemize}
+
+%\lstinputlisting[label={lst:kotlin_coroutines}, caption={A simplified example of creating an asynchronous task for evaluating a set of metrics on a single generated graph.}, language=Kotlin]{coroutines.kts}
+
+% @formatter:off
+\begin{lstlisting}[language=Kotlin,label={lst:kotlin_coroutines},caption={A simplified example of creating an asynchronous task for evaluating a set of metrics on a single generated graph.}]
+/** Evaluate given metrics on the graph */
+fun CoroutineScope.evaluateMetricsAsync(
+        metrics: Collection<MetricInfo>,
+        graph: Graph,
+        callback: suspend (graph: Graph, results: List<MetricResult>) -> Unit
+): Deferred<Unit> {
+        // A list of metrics they need to be computed in, as some reuse values of others
+    val metricsToCompute: List<MetricInfo> = metrics.topologicalOrderWithDependencies()
+        return async {
+        metricsToCompute
+                // An instance of each [Metric] is created by invoking the [factory] field
+                .map { metric -> metric.factory() }
+                .run {
+                // Run evaluation on each graph, clean up auxiliary data
+                    val results: List<MetricResult> = map { it.evaluate(graph) }.filterNotNull()
+                    forEach { it.cleanup(graph) }
+                    results // Return results: flags marking the outcome of each metric
+                }
+        // Run callback (only if there are any new results)
+        .takeIf { it.isNotEmpty() }
+        ?.let { callback(graph, it) }
+    }
+}
+\end{lstlisting}
+% @formatter:on
+
+\Cref{lst:kotlin_coroutines} shows an example of creating an asynchronous task to evaluate metrics, although heavily simplified.
+The full version handles accessing the database, asynchronous deserialisation of \texttt{Graph}, logging, measuring time statistics, and preventing duplicate metric evaluation.
+|Graph|s are treated individually and in parallel, whereas the evaluation of metrics within one |Graph| is sequential as the GraphStream library does not support parallel access.
 
 
 \section{Command line interface}\label{sec:cli}
@@ -447,7 +475,7 @@ java -jar graffs.jar [ARGS]
 % @formatter:on
 
 Clikt is a \enquote{multiplatform command-line interface parsing for Kotlin}\footnote{Available at \url{https://github.com/ajalt/clikt}} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
-The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
+The library utilises several features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
 With the help of Clikt, I generated scripts allowing automatic command and parameter completion within bash.
 
 \input{figures_gen/cli_commands_hierarchy.tex}
@@ -457,4 +485,4 @@ Commands are grouped based on their context and the objects that they operate on
 Those are together structured in a tree-like hierarchy.
 The hierarchy is shown in \autoref{fig:cli_commands_hierarchy}.
 \Cref{lst:graffs_cli_examples} shows an example output of some of the commands, with the printed help text.
-Further, the \nameref{ch:evaluation} chapter also shows commands that were used to set up each experiment.
+Further, the~\nameref{ch:evaluation} chapter also shows commands that were used to set up each experiment.

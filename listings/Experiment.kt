@@ -9,8 +9,8 @@ import uk.ac.cam.jm2186.graffs.robustness.RobustnessMeasureId
 import javax.persistence.*
 
 /**
- * An evaluation of a _set of metrics_ using a set of _robustness measures_, generating graphs from a set of _datasets_
- * using a given _graph producer_.
+ * An evaluation of a _set of metrics_ using a set of _robustness measures_, generating
+ * graphs from a set of _datasets_ using a given _graph producer_.
  */
 @Entity
 class Experiment(

@@ -2,11 +2,10 @@
 fun CoroutineScope.evaluateMetricsAsync(
         metrics: Collection<MetricInfo>,
         graph: Graph,
-        callback: suspend (graph: Graph, results: List<MetricResult>) -> Unit = { _, _ -> }
+        callback: suspend (graph: Graph, results: List<MetricResult>) -> Unit
 ): Deferred<Unit> {
-    // Returns a list of metrics they need to be computed in, as some reuse values of others
+    // A list of metrics they need to be computed in, as some reuse values of others
     val metricsToCompute: List<MetricInfo> = metrics.topologicalOrderWithDependencies()
-
     return async {
         metricsToCompute
                 // An instance of each [Metric] is created by invoking the [factory] field
@@ -15,8 +14,7 @@ fun CoroutineScope.evaluateMetricsAsync(
                     // Run evaluation on each graph, clean up auxiliary data
                     val results: List<MetricResult> = map { it.evaluate(graph) }.filterNotNull()
                     forEach { it.cleanup(graph) }
-                    // Return results: flags marking the outcome of each metric
-                    results
+                    results // Return results: flags marking the outcome of each metric
                 }
                 // Run callback (only if there are any new results)
                 .takeIf { it.isNotEmpty() }

@@ -29,10 +29,10 @@ However, in order to validate whether the results produced by \graffs are legit,
 
 \phantomsection
 \label{para:how_to_compare_results}
-It is important to note that the robustness values from The Paper and \graffs should not be compared directly as there are many details that make the numerical values vary between implementations.
+It is important to note that the robustness values from The Paper and \graffs should not be compared directly as many details make the numerical values vary between implementations.
 For example, when ranking nodes according to a metric, The Paper resolved ties randomly for each perturbed graph, while my implementation resolves ties arbitrarily but predictably and constantly across all perturbed graphs of a dataset.
 The Paper also randomly resolved ties when calculating the overall ranking (\autoref{def:overall_ranking}).
-Furthermore, there are other nuances that may cause differences in numerical results, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity\footnote{Different values were used in \graffs to generalise the process. See definitions~\ref{def:k_similarity} and~\ref{def:alpha_relaxed_k_similarity}}, definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
+Furthermore, other nuances may cause differences in numerical results, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity\footnote{Different values were used in \graffs to generalise the process. See definitions~\ref{def:k_similarity} and~\ref{def:alpha_relaxed_k_similarity}}, definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
 Instead of comparing results numerically, the overall trend is to be considered.
 
 The \texttt{reproduce} experiment and the \texttt{thMedHigh} generator (producing 31 graphs at linearly spaced thresholds between 0.60 and 0.90 confidence values) were set up in the following way:
@@ -56,7 +56,7 @@ Those have reported RankContinuity and RankIdentifiability values above $0.75$ o
 \graffs equally reports these metrics as relatively stable.
 
 On the other hand, \texttt{Betweenness} and \texttt{LocalClustering} are considered unstable by The Paper (RankContinuity and RankIdentifiability significantly dropped while RankInstability increased), and the results from \graffs copy the behaviour.
-Although the RankContinuity values of \texttt{LocalClustering} are not as low as reported by The Paper, one can definitely conclude that these two metrics are equally identified as less robust by \graffs.
+Although the RankContinuity values of \texttt{LocalClustering} are not as low as reported by The Paper, one can conclude that these two metrics are equally identified as less robust by \graffs.
 
 For further thought, we can also consider the variance of robustness measures, concluding, for example, that \texttt{Redundancy} (a stable metric) has small variance in RankIdentifiability across the 3 datasets as reported by \graffs, whereas the RankContinuity and RankIdentifiability of the \texttt{Ego2Nodes} metric led to more diverse values.
 
@@ -86,7 +86,7 @@ The purpose of the \texttt{random-edges} experiment is to justify reliability an
 
 To start, I needed to choose the $\delta$ parameter for $\mathlarger{^{ER} \mathlarger{\xi}}_\delta$, the edge-removing graph generator (see \autoref{eq:edge_removing_generator}).
 Considering the distribution of confidence scores (\autoref{fig:histogram_edges}), I derived its right-to-left cumulative distribution (\autoref{fig:plot_cumulative_confidence_scores}) and differentiated to get a decrease rate at each threshold, as seen in \autoref{fig:plot_edge_deletion_per_step}.
-As calculated, the relative amount of edges deleted when increasing the threshold in $0.01$ increments (as practised in The Paper), is $4\%$ in average.
+As calculated, the relative amount of edges deleted when increasing the threshold in $0.01$ increments (as practised in The Paper), is $4\%$ on average.
 Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm.
 
 To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
@@ -108,7 +108,7 @@ We can see that all 3 robustness measures follow the expected behaviour for the 
 However, RankContinuity is not able to mark \texttt{Betweenness} as less stable, and even shows zero variance for \texttt{Betweenness}.
 
 RankContinuity is different from the other two metrics, in that it explicitly uses perturbed graphs in a sequence, considering differences between pairs of consecutive graphs.
-The different behaviour of RankContinuity can perhaps be explained by that the \texttt{random-edges} graph generator removes edges uniformly at each step, whereas \texttt{threshold-linear} removes edges according to a non-uniform distribution of edge scores.\footnote{In protein networks that were used as a baseline for this experiment, edges likely do not have all of their scores independent of each other, but rather dependent on local proximity of each edge.}
+The different behaviour of RankContinuity can perhaps be explained by that the \texttt{random-edges} graph generator removes edges uniformly at each step, whereas \texttt{threshold-linear} removes edges according to a non-uniform distribution of edge scores.\footnote{In protein networks that were used as a baseline for this experiment edges likely do not have all of their scores independent of each other, but rather dependent on local proximity of each edge.}
 
 Note again, that the results of the experiments are not expected to match numerically, due to numerous changes and generalisations in \graffs as opposed to The Paper, only to yield similar behaviour (as explained in \autoref{para:how_to_compare_results}).
 Overall, the results show that randomly removing edges is a suitable substitute for linear thresholding.
@@ -139,7 +139,7 @@ The \texttt{facebook} dataset has relatively lower RankIdentifiability of \textt
 
 \Cref{tab:robustness-continuity,tab:robustness-identifiability,tab:robustness-instability}, included in \cref{ch:appendix_results}, show the numerical results of all the results presented here, and in the previous \texttt{random-edges} experiment.
 
-There are a number of interesting observations about the new datasets.
+There are several interesting observations regarding the new datasets.
 
 \begin{enumerate}
     \item The \texttt{LocalClustering} metrics is unstable in general, but yields the same stability as other stable metrics for the \texttt{internet} dataset, thus, there must be something interestingly \textsl{different} with the hierarchy of autonomous systems of the Internet.
@@ -154,7 +154,7 @@ There are a number of interesting observations about the new datasets.
 \end{enumerate}
 
 An interesting thought for the future is finding a correlation between the robustness of metrics on graphs and their structure, or the values of some other graph metrics.
-Ideally, one would be able to reason about the robustness of a graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate graph petrurbations.
+Ideally, one would be able to reason about the robustness of a graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate graph perturbations.
 My work does not include and was not expected to include this kind of analysis due to the limits of its extent -- having enough of data finding correlations between metrics values and robustness of metrics would require an order of magnitude more evaluations.
 However, the \graffs tool I developed is powerful enough to be able to facilitate this kind of analysis, given more time, computing power and resources for further investigation, and it can easily be extended to do so.
 
@@ -170,7 +170,7 @@ The table measures total CPU times, therefore assuming that $n$ cores run in par
 This value is useful to compare the \textsl{absolute computational complexity} of each experiment, as it does not depend on the number of cores, and neither the fraction of the program that is perfectly parallelised.
 
 \Cref{fig:perf_timings_matrix} compares the logarithm of the time it took to evaluate each metric on a single graph, in average, taking measurements from the 3 experiments \texttt{reproduce}, \texttt{random-edges}, and \texttt{unscored}.
-We can see that the betweenness centrality is most computation heavy, with the computation taking more than an hour in average for a single graph generated from the \texttt{citation} dataset.
+We can see that the betweenness centrality is most computation heavy, with the computation taking more than an hour on average for a single graph generated from the \texttt{citation} dataset.
 This is presumably because the \texttt{citation} dataset is much bigger in the number of edges compared to the other used datasets.
 
 

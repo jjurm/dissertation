@@ -4,6 +4,7 @@ Usage: graffs [OPTIONS] COMMAND [ARGS]...
   Tool for evaluating Graph Metric Robustness
 
 Options:
+  -l, --license  Show the license
   -v, --version  Show the version and exit
   -h, --help     Show this message and exit
 
