@@ -84,7 +84,7 @@ I built \graffs in the Kotlin programming language, with the help of Git and Gra
     \item Safer, preventing a significant number of errors
     \item Concise, reducing the amount of boilerplate code
     \item IDE-friendly, allowing the IDE to help with software engineering
-    \item Employs functional programming paradigms~\cite{Bonev}, which allows focusing on high-level concepts
+    \item Employs functional programming paradigms~\cite{Bonev}, abstracting high-level concepts
     \item Compiles to Java byte code and so preserves other important benefits of Java: Object-Oriented, multi-threaded, platform-independent, secure and easily extensible.
 \end{itemize}
 
@@ -108,11 +108,19 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
     \item Generates HTML API documentation from the \texttt{KDoc} language\footnote{Using the \texttt{Dokka} tool, similar to \texttt{JavaDoc}}
 \end{enumerate}
 
-JUnit 5 testing framework was used to write unit tests (42 in total), making sure that the functionality of managing graphs and evaluating metrics does not diverge from what is expected.
+Unit tests are written in the JUnit 5 testing framework (42 tests in total), making sure that the functionality of managing graphs and evaluating metrics does not diverge from what is expected.
 \graffs can easily be build from sources by running |gradle build|, which downloads dependencies, compiles modules, runs tests and produces the |cli/build/libs/graffs-last.jar| file that has all necessary libraries bundled and can be run directly.
 
-A working version of \graffs is published on GitHub along with its source code.
+
 The commit hash, for example, is used to produce a commit-specific version number when packaging \graffs.
+
+CircleCI, a continuous integration service, is triggered with each commit to test the build pipeline including tests.
+
+\subsection{Licensing}
+
+In this project I used libraries with different open-source licenses: LGPLv3 (the GraphStream library, described later), LGPLv2.1 (Hibernate ORM), APSL 2.0 (Clikt, Tablesaw, and some Apache libraries \texttt{commons-*}), MPLv2.0 (H2), GPLv2 or later (Renjin), MIT (java-express).
+
+A working version of \graffs is published on GitHub along with its source code under the GPLv3 licence~\cite{gplv3} (open-source), which is in line with licences of used libraries.
 
 \subsection{Computing cluster}\label{sec:computing_cluster}
 
@@ -144,6 +152,7 @@ The project is structured in the following modules, using multi-project builds i
 
 \Cref{fig:module_dependency_matrix} shows inter-module dependencies.
 An extended dependency matrix in \cref{fig:classes_dependency_matrix} in \cref{ch:appendix_kotlin_figures} contains individual project files.
+
 
 \section{Data model}
 
@@ -196,7 +205,7 @@ This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the user creates and later refers to with their name.
 \begin{description}[itemsep=\zerospace]
     \item[\texttt{PerturbedGraph}]
-    stores a serialised version of the \texttt{Graph} object, with its metadata (how it was generated), including all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
+    stores a deflated serialised version of the \texttt{Graph} object, with its metadata (how it was generated), including all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
 
     \item[\texttt{GraphCollection}]
     represents an (ordered) collection of \texttt{PerturbedGraph}s, and keeps track of which datasets the graphs were generated from.
@@ -260,7 +269,7 @@ I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based 
     \item Supports in-memory databases (good for testing)
     \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
 \end{itemize}
-Graphs are stored in the database as serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
+Graphs are stored in the database as deflated serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
 One an experiment is done, SQL queries such as \autoref{lst:sql_robustness} can be used to manually retrieve the data.
 
 \lstinputlisting[label={lst:sql_robustness}, caption={An example of a SQL query for retrieving robustness values of the three experiments described in the~\nameref{ch:evaluation} chapter.}, float, language=SQL]{../figures/robustness_graffs.sql}
@@ -381,9 +390,11 @@ This follows the~\nameref{sec:reproducibility} principle set in~\nameref{sec:des
 \subsection{Visualising graphs \& producing figures}
 
 This dissertation has charts, diagrams and visualisations of graphs from different sources.
-Plots that depend on computations within the \graffs program can be exported using the command line interface.
-Other figures relying on the code of \graffs (such as \cref{fig:simple_graph}) are generated by a custom code in the \texttt{figures} module.
-Other, independent plots, such as those in the~\nameref{ch:evaluation} chapter, are generated using Python and SQL, and that code is kept with the LaTeX sources of this dissertation.
+\begin{itemize}[itemsep=-2pt,topsep=5pt]
+    \item Plots that depend on computations within the \graffs program can be exported using the command line interface.
+    \item Other figures relying on the code of \graffs (such as \cref{fig:simple_graph}) are generated by a custom code in the \texttt{figures} module.
+    \item Other, independent plots, such as those in the~\nameref{ch:evaluation} chapter, are generated using Python and SQL, and that code is kept with the LaTeX sources of this dissertation.
+\end{itemize}
 
 
 \section{Parallelism using Kotlin coroutines}\label{sec:kotlin_coroutines}
@@ -439,11 +450,11 @@ Clikt is a \enquote{multiplatform command line interface parsing for Kotlin}\foo
 The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
 With the help of Clikt, I generated scripts allowing automatic command and parameter completion within bash.
 
+\input{figures_gen/cli_commands_hierarchy.tex}
+
 The \graffs tool provides many commands (loading datasets, creating and accessing graph generators, creating and running experiments, and so on).
 Commands are grouped based on their context and the objects that they operate on, and can further have sub-commands.
 Those are together structured in a tree-like hierarchy.
 The hierarchy is shown in \autoref{fig:cli_commands_hierarchy}.
 \Cref{lst:graffs_cli_examples} shows an example output of some of the commands, with the printed help text.
 Further, the \nameref{ch:evaluation} chapter also shows commands that were used to set up each experiment.
-
-\input{figures_gen/cli_commands_hierarchy.tex}
