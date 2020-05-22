@@ -169,12 +169,14 @@ The performance of the experiments was measured on the \texttt{rio} computing cl
 The table measures total CPU times, therefore assuming that $n$ cores run in parallel and the machine executes no other processes in the meantime, the real (wall-clock) duration of each experiment is then $n$-times shorter.
 This value is useful to compare the \textsl{absolute computational complexity} of each experiment, as it does not depend on the number of cores, and neither the fraction of the program that is perfectly parallelised.
 
-\input{figures/perf_timings_matrix.tex}
-
 \Cref{fig:perf_timings_matrix} compares the logarithm of the time it took to evaluate each metric on a single graph, in average, taking measurements from the 3 experiments \texttt{reproduce}, \texttt{random-edges}, and \texttt{unscored}.
 We can see that the betweenness centrality is most computation-heavy, with the computation taking more than an hour on average for a single graph generated from the \texttt{citation} dataset.
 \texttt{internet} is similarly computation-heavy, but with different relative complexities of metrics.
 These hold presumably because the \texttt{citation} and \texttt{internet} datasets are much larger in the number of nodes and edges compared to the other used datasets.
+
+\bigskip
+
+\input{figures/perf_timings_matrix.tex}
 
 
 %\section{Releasing \graffs}
