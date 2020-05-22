@@ -52,7 +52,7 @@
 \usepackage{hyphenat}
 \usepackage{ragged2e}
 \usepackage{array}
-\usepackage{titlesec}
+\usepackage[nobottomtitles*]{titlesec}
 \usepackage{booktabs}
 \usepackage{epigraph}
 \usepackage{chngcntr}
@@ -77,7 +77,7 @@
     Scale = 0.87,
 ]
 \renewcommand{\ttdefault}{jbmono}
-\renewcommand*{\bibfont}{\small}
+%\renewcommand*{\bibfont}{\small}
 
 \addbibresource{refs.bib}
 \graphicspath{{figures/}{figures_gen/}{images/}}
@@ -150,7 +150,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
     \begin{minipage}{.45\linewidth}
         \begin{flushright}
             \Large \textbf{Juraj Mi\v{c}ko} \\
-            \normalsize \href{mailto:jm2186@cam.ac.uk}{jm2186@cam.ac.uk}
+            \normalsize \href{mailto:jm2186@cam.ac.uk}{jm2186}
         \end{flushright}
     \end{minipage}
 
@@ -167,7 +167,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
         Jesus College \\
         University of Cambridge \\[5mm]
         Computer Science Tripos -- Part II \\[5mm]
-        \today  % today's date
+        May 2020
     \end{center}
 
     \clearpage
@@ -189,7 +189,7 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
     \begin{tabular}{@{}l@{\hspace{2\tabcolsep}}l}
         Signed: & \hspace*{2mm}\includegraphics[width=28mm]{signature.png}\vspace{-1mm}\hspace*{2mm} \\
         \cline{2-2}
-        & \multicolumn{1}{r}{\textit{Juraj Mi\v{c}ko}} \\[3mm]
+        & \multicolumn{1}{c}{\textit{Juraj Mi\v{c}ko}} \\[3mm]
         Date: & \today
     \end{tabular}
 
@@ -204,7 +204,8 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
                 Project Title: & \textbf{Framework for Empirical Analysis} \\ & \textbf{of Graph Metric Robustness}                    \\
                 Examination: & \textbf{Computer Science Tripos -- Part II, 2020} \\
                 Word Count: & \textbf{\input{wordcount.tex}\footnote{This word count was computed using: \texttt{texcount -1 -merge -q -utf8 -sum main.tex}}}                                    \\
-                Line Count: & \textbf{5694} \footnote{This total lines of code count was computed using:\verbatiminput{count-lines.sh} } \\
+                Line Count: & \textbf{6722} \footnote{This total lines of code count was computed using:
+                    \vspace*{-3.5mm}\hspace*{7mm}\verbatiminput{count-lines.sh} from \url{https://github.com/AlDanial/cloc} } \\
                 Project Originator: & \textbf{Dr Timothy Griffin}                               \\
                 Supervisor: & \textbf{Dr Timothy Griffin}                                        \\
             \end{tabular}
@@ -224,19 +225,16 @@ texcount -1 -merge -q -utf8 -sum main.tex | tr -d '\n'
 
     \section*{Work completed}
 
-    I designed a way to analyse robustness of graph metrics on unscored networks, advancing the concept of rank robustness from the paper by Bozhilova et al.
-    I built a command-line tool \graffs from scratch in Kotlin, for carrying out large-scale computation-heavy experiments of measuring robustness of metrics, in an efficient, flexible, and reproducible way.
-    I set up a high-performance computing environment and reproduced expected results as well as derived new interesting results.
-
     The project met all success criteria.
-    As an extension, I proposed further research within this novel field and published \graffs as open-source, ready to be reused and extended.
+    I designed a way to analyse robustness of graph metrics on unscored networks, advancing the concept of rank robustness from the paper by Bozhilova et al.~\cite{Bozhilova2019}; built a command-line tool \graffs from scratch in Kotlin, for carrying out large-scale experiments of measuring robustness of metrics, in an efficient, flexible, and reproducible way; set up a high-performance computing environment; reproduced expected results and derived new interesting results about rank robustness of metrics of unscored datasets.
+    Finally, I published \graffs open-source, ready to be reused and extended, and proposed further research within this novel field.
 
 
     \section*{Special difficulties}
 
-    Due to world-wide measures related to the COVID-19 pandemic, I was held in Azerbaijan for 6 weeks, uncertain about possible repatriation travels, then spent two weeks in a compulsory government quarantine facility and in self-isolation in Slovakia, before returning home to a working environment.
+    Due to world-wide measures related to the COVID-19 pandemic, I was held in Azerbaijan for 6 weeks, uncertain about possible repatriation travels, then spent two weeks in a compulsory government quarantine facility and in self-isolation in Slovakia, before returning home to a working environment in Easter Term.
 
-    I was approved a two-week extension which largely accounted for these circumstances, and had no other special difficulties.
+    I was approved a two-week extension which accounted for these circumstances.
 
 
     \tableofcontents

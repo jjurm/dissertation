@@ -1,5 +1,4 @@
 This chapter describes first the overall structure of the project, its technical requirements and then dives into the implementation of individual modules of \graffs.
-A working version is published on GitHub\footnote{\url{https://github.com/jjurm/graffs}} along with its source code.
 
 
 \section{Overview}
@@ -96,11 +95,6 @@ Performance-wise, Kotlin is comparable to Java.
 There is one notable feature of Kotlin: properties, which are an abstraction of fields and getters/setters in classes and help decouple the implementation of the class from its interface even more.
 In UML diagrams below, properties are presented instead of fields.
 
-\subsection{Version Control System}
-
-The source code of the \graffs tool is stored in a Git repository\footnote{The repository can be found at \url{https://github.com/jjurm/graffs}}, which keeps track of all code changes and allows understanding how code changed over time as well as restoring previous versions.
-The commit hash, for example, is used to produce a commit-specific version code when packaging \graffs.
-
 \subsection{Build automation}
 
 The project uses Gradle~\cite{BerglundBuildingTestingGradle2011} for project management.
@@ -117,29 +111,28 @@ Project configuration rules are set up using the \texttt{build.gradle} files (on
 JUnit 5 testing framework was used to write unit tests (42 in total), making sure that the functionality of managing graphs and evaluating metrics does not diverge from what is expected.
 \graffs can easily be build from sources by running |gradle build|, which downloads dependencies, compiles modules, runs tests and produces the |cli/build/libs/graffs-last.jar| file that has all necessary libraries bundled and can be run directly.
 
+A working version of \graffs is published on GitHub along with its source code.
+The commit hash, for example, is used to produce a commit-specific version number when packaging \graffs.
+
 \subsection{Computing cluster}\label{sec:computing_cluster}
 
-I used a remote high-performance computing facility\footnote{sponsored by Dr Andrew Moore, from the System Research Group at the Computer Laboratory, University of Cambridge: \url{https://www.cl.cam.ac.uk/research/srg/}} provided by the Systems Research Group.
-In particular, I worked with the following servers:
+The \graffs tool is programmed to allow parallel computing using multiple threads on a single machine.
+Having experimented with a number of frameworks for high-performance computing, I chose the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}), to make \graffs portable and easy to set up.
+It is also straightforward to manually run multiple simultaneous instances of \graffs at different machines with a shared database, with each instance contributing to a different part of the evaluation.\footnote{Off-the-shelf products such Apache Spark~\cite{ZahariaApacheSparkUnified2016}, Apache Storm, and Spring Boot have native support for computation across multiple machines, but are heavyweight and require user setup.}
 
-\begin{description}[itemsep=-4pt]
-    \item[\texttt{rio.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), and 128 GiB RAM
-    \item[\texttt{nile.cl.cam.ac.uk}] server running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (24 cores in total), and 128 GiB RAM
+I used two remote high-performance computing servers\footnote{sponsored by Dr Andrew Moore, from the System Research Group at the Computer Laboratory, University of Cambridge: \url{https://www.cl.cam.ac.uk/research/srg/}}:
+
+\begin{description}[itemsep=-2pt]
+    \item[\texttt{rio.cl.cam.ac.uk}] running \textsl{Ubuntu 18}, using \textsl{4x 8-Core AMD Opteron 6128} with 16 MiB L2 cache (32 cores in total), 128 GiB RAM
+    \item[\texttt{nile.cl.cam.ac.uk}] running \textsl{Ubuntu 18}, using \textsl{2x 12-Core AMD Opteron 6168} with 12 MiB L2 cache (24 cores in total), 128 GiB RAM
 \end{description}
-
-The \graffs tool is programmed in a way which utilizes many threads to allow parallel computing.
-There are a number of frameworks that can aid in high-performance computing, and I analysed a few.
-I installed and experimented with Apache Spark~\cite{ZahariaApacheSparkUnified2016}, and investigated a number of other off-the-shelf products such as Apache Storm and Spring Boot -- although these libraries support computation across multiple machines, they are more heavyweight.
-To make \graffs portable as part of the flexibility goal, I opted in for a solution that does not require installing or setting up such framework, in particular for the \texttt{kotlinx.coroutines} library~\cite{TorresLearningConcurrencyKotlin2018} (see~\autoref{sec:kotlin_coroutines}).
-
-This has a tradeoff that distributed computing across multiple machines is not supported natively, however, \graffs is made so that it is straightforward to manually run multiple instances at different machines with a shared database, each machine contributing to a different part of the evaluation.
 
 \subsection{Project modules}
 
 \input{figures/module_dependency_matrix.tex}
 
 The project is structured in the following modules, using multi-project builds in Gradle:
-\begin{itemize}[itemsep=-2pt,topsep=5pt]
+\begin{itemize}[topsep=5pt]
     \item \texttt{api} - interfaces of structures, metrics, generators
     \item \texttt{db} - database data model
     \item \texttt{metrics} - graph metrics
@@ -149,9 +142,8 @@ The project is structured in the following modules, using multi-project builds i
     \item \texttt{figures} - code for automating generation of some figures in this report
 \end{itemize}
 
-\Cref{fig:module_dependency_matrix} shows the inter-module dependencies.
-An extended dependency matrix in \cref{fig:classes_dependency_matrix} in \cref{ch:appendix_kotlin_figures} lists all project files.
-
+\Cref{fig:module_dependency_matrix} shows inter-module dependencies.
+An extended dependency matrix in \cref{fig:classes_dependency_matrix} in \cref{ch:appendix_kotlin_figures} contains individual project files.
 
 \section{Data model}
 
@@ -204,7 +196,7 @@ This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the user creates and later refers to with their name.
 \begin{description}[itemsep=\zerospace]
     \item[\texttt{PerturbedGraph}]
-    stores a serialised version of the \texttt{Graph} object, with its metadata (how it was generated), inclucing all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
+    stores a serialised version of the \texttt{Graph} object, with its metadata (how it was generated), including all so-far evaluated metric values of nodes, and possibly a weight associated with each edge (for scored networks).
 
     \item[\texttt{GraphCollection}]
     represents an (ordered) collection of \texttt{PerturbedGraph}s, and keeps track of which datasets the graphs were generated from.
@@ -268,7 +260,7 @@ I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based 
     \item Supports in-memory databases (good for testing)
     \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
 \end{itemize}
-Graphs are stored in the database purely as serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
+Graphs are stored in the database as serialised \texttt{Graph} objects, including their \texttt{Node}s, \texttt{Edge}s and their attributes.
 One an experiment is done, SQL queries such as \autoref{lst:sql_robustness} can be used to manually retrieve the data.
 
 \lstinputlisting[label={lst:sql_robustness}, caption={An example of a SQL query for retrieving robustness values of the three experiments described in the~\nameref{ch:evaluation} chapter.}, float, language=SQL]{../figures/robustness_graffs.sql}
@@ -278,19 +270,16 @@ One an experiment is done, SQL queries such as \autoref{lst:sql_robustness} can 
 
 In this section I explain the steps a user needs to invoke to calculate robustness of metrics:
 \begin{enumerate}[topsep=5pt,itemsep=0pt]
-    \item \textbf{Obtain datasets}, for example use demo datasets downloadable by the \graffs tool or provide any custom datasets
-    \item \textbf{Define graph generator}, i.e., a way to generate new graphs from these datasets
-    \item \textbf{Define an experiment} specifying a set of datasets to start with, a graph generator to use, a set of metrics to asses, and a set of robustness measures to evaluate stability of those metrics.
-    \item \textbf{Run the experiment} computation (a computationally intensive task, ).
-    This encompasses the following:
+    \item \textbf{Obtain datasets}, i.e., use demo datasets downloadable by the \graffs tool or provide custom datasets
+    \item \textbf{Define graph generator}, a way to generate new graphs from these datasets
+    \item \textbf{Define an experiment} specifying a set of datasets, a graph generator to use, a set of metrics, and a set of robustness measures to assess stability of those metrics.
+    \item \textbf{Run the experiment}, which encompasses the following:
     \begin{enumerate}[label=\alph*.]
         \item \textbf{Generate perturbed graphs} (according to \autoref{sec:perturbing_graphs}).
         \item \textbf{Calculate metric values} on the generated graphs, i.e., calculate a real number ($\mathbb{R}$) for each metric for each node in each generated graph (according to \autoref{sec:evaluating_metrics}).
         \item \textbf{Calculate robustness measures} for each metric, on collated perturbed graphs of each dataset (according to \autoref{sec:robustness_measures}).
     \end{enumerate}
 \end{enumerate}
-
-All results, namely generated graphs with nodes including calculated values of each metric, and robustness measure results, are then stored in the database.
 
 \input{figures/main_data_flow.tex}
 
@@ -414,7 +403,7 @@ Asynchronous computations, delays, or IO operations can be programmed as suspend
 Coroutines can be used even within a single thread, and so allow a concurrent execution.
 In the case of \graffs, however, we are interested in running computation in parallel, to utilise the power of multiple CPU cores.
 A simple solution in Java would be to use |Thread|s, or a library working with threads directly.
-This would work but it's heavyweight, not very expressive and not safe (e.g. a failure of an operation in one thread will not automatically cancel following or related tasks in other threads, unless this safety is implemented manually).
+This would work but would be heavyweight, not very expressive and not safe (e.g. a failure of an operation in one thread will not automatically cancel following or related tasks in other threads, unless this safety is implemented manually).
 Another option is to use job queueing and an abstract multi-threaded executor, but then specifying inter-task execution order constraints would still be verbose, and running jobs would not be abstracted away from the code defining the jobs.
 
 Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap~\cite{AriasFunctionalKotlinExtend2018}.

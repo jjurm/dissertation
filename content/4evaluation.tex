@@ -13,6 +13,7 @@ I also completed one extension:
     \item[\done] Wrap up \graffs and release it as a library under an open-source licence
 \end{todolist}
 
+\noindent
 For the evaluation of \graffs, I designed the following 3 experiments:
 \begin{description}[itemsep=\zerospace]
     \item[\texttt{reproduce}] focuses on reproducing some results from The Paper, following the setup from The Paper as closely as possible, carried out on the 3 protein interaction networks (\texttt{pvivax}, \texttt{ecoli}, \texttt{yeast})
@@ -76,7 +77,7 @@ The $\alpha$-relaxed $k$-similarity is used for calculating \texttt{RankIdentifi
 The visual plots of the three chosen metrics in each case demonstrate that \graffs's similarity values match those of The Paper closely, in both $k$-similarity and $\alpha$-relaxed $k$-similarity.
 
 
-\section{Validation of random edge deletion}
+\section{Validation of random edge deletion}\label{sec:validate_random_edges}
 
 Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
 The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach, comparing robustness results of the same metrics, on the same datasets, but with a different graph-generating method.
