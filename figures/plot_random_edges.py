@@ -78,7 +78,7 @@ df = df.sort_values(['experiment', 'robustness', 'dataset', 'metric'])
 # %% Reproduction plot
 
 # noinspection PyTypeChecker
-fig = plt.subplots(figsize=(9, 5.8), sharex=True, squeeze=True)
+fig = plt.subplots(figsize=(9, 6.2), sharex=True, squeeze=True)
 
 gs1 = GridSpec(3, 1)
 gs1.update(hspace=0.02)

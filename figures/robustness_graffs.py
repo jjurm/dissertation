@@ -3,7 +3,7 @@ import matplotlib.font_manager as fm
 
 import matplotlib
 
-from utils import small, bf, tiny, tt, ffloat, modify_tabular
+from utils import small, bf, tiny, tt, ffloat, modify_tabular, fffloat
 
 matplotlib.rc('text', usetex=True)
 matplotlib.rcParams['mathtext.fontset'] = 'custom'
@@ -50,6 +50,8 @@ def table_for_robustness(robustness_measure):
 
     column_format = "|p{40mm}|" + "|".join(
         "c" * (len(datasets)) for experiment, datasets in experiment_datasets.items()) + "|"
+
+    float_formatter = ffloat if robustness_measure != "RankInstability" else fffloat
 
     latex = pivot.to_latex(
         escape=False,

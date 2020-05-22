@@ -25,6 +25,7 @@ dashes_source_robustness = {
 
 
 ffloat = lambda v: "%.2f" % (v)
+fffloat = lambda v: "%.3f" % (v)
 small = lambda text: "{\\small " + text + "}"
 tiny = lambda text: "{\\footnotesize " + text + "}"
 tt = lambda text: "\\texttt{" + text + "}"
