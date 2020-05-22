@@ -1,6 +1,6 @@
 This project was successful, meeting its criteria.
-I designed a way to analyse robustness of graph metrics on unscored networks.
-First I followed the approach from The Paper by Bozhilova et al.~\cite{Bozhilova2019}, and built a tool called \graffs that is capable of carrying out similar kinds of experiments of evaluating rank robustness of scored networks, such as protein interaction networks.
+I designed a way to analyse the robustness of graph metrics on unscored networks.
+First I followed the approach from The Paper by Bozhilova et al.~\cite{Bozhilova2019} and built a tool called \graffs that is capable of carrying out similar kinds of experiments of evaluating rank robustness of scored networks, such as protein interaction networks.
 Further, building on these ideas, I advanced the concept of rank robustness and made it applicable to unscored networks too, by defining a way to generate multiple graphs from a source dataset by deleting a random proportion of edges each time.
 
 As for the implementation, the command-line tool \graffs is built from scratch in Kotlin, making use of existing Java libraries.
@@ -13,7 +13,7 @@ Finally, I set up a high-performance computing environment and reproduced expect
 
 \subsection*{Lessons learned}
 
-The project allowed me to investigate not only the approaches commonly practiced, but also the reasoning why robustness measures and related ideas are important.
+The project allowed me to investigate not only the approaches commonly practised, but also the reasoning why robustness measures and related ideas are important.
 Apart from the field of bioinformatics and graph theory, building \graffs taught me a lot from the software engineering field.
 I improved my skills in technologies Kotlin, Gradle, as well as Python and LaTeX.
 Especially interesting was learning the Java Persistence API and the Hibernate framework.
@@ -21,11 +21,11 @@ Especially interesting was learning the Java Persistence API and the Hibernate f
 
 \subsection*{Future work}
 
-In this novel field of measuring robustness of metrics, there are many questions yet to be answered and approaches to be explored.
-One can extend the concept of metric robustness to different kinds of graphs (e.g. temporal), reason about different ways to perturb graphs, and use different robustness measures such as calculating Pearson correlations between metric values.
-A number of papers in the field of bioinformatics proposed evaluating reproducibility of graph metrics in uncertain brain networks using coefficient of variation, intra class correlation and other statistical measures.
+In this novel field of measuring the robustness of metrics, there are many questions yet to be answered and approaches to be explored.
+One can extend the concept of metric robustness to different kinds of graphs (e.g. temporal), reason about different ways to perturb graphs and use different robustness measures such as calculating Pearson correlations between metric values.
+A number of papers in the field of bioinformatics proposed evaluating the reproducibility of graph metrics in uncertain brain networks using the coefficient of variation, intra-class correlation and other statistical measures.
 These could be extended to (unscored) datasets of other kinds, studying which robustness measures suit each purpose best.
 
 Implementation-wise, \graffs is built in a modular way and can easily be extended to include other metrics and robustness measures.
-It would be beneficial to dive deep into inspecting performance bottlenecks of the program to optimise them, or use faster algorithms where appropriate.
+It would be beneficial to dive deep into inspecting performance bottlenecks of the program to optimise them or use faster algorithms where appropriate.
 Alternatively, it should be relatively easy to turn \graffs into a distributed program that can run synchronously across multiple machines.

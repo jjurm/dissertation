@@ -32,7 +32,7 @@ However, in order to validate whether the results produced by \graffs are legit,
 It is important to note that the robustness values from The Paper and \graffs should not be compared directly as there are many details that make the numerical values vary between implementations.
 For example, when ranking nodes according to a metric, The Paper resolved ties randomly for each perturbed graph, while my implementation resolves ties arbitrarily but predictably and constantly across all perturbed graphs of a dataset.
 The Paper also randomly resolved ties when calculating the overall ranking (\autoref{def:overall_ranking}).
-Furthermore, there are other nuances that may cause differences in numerical results, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity\footnote{Different values were used in \graffs to generalize the process. See definitions~\ref{def:k_similarity} and~\ref{def:alpha_relaxed_k_similarity}}, definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
+Furthermore, there are other nuances that may cause differences in numerical results, such as $\alpha,k$ coefficients used for $k$-similarity and $\alpha$-relaxed $k$-similarity\footnote{Different values were used in \graffs to generalise the process. See definitions~\ref{def:k_similarity} and~\ref{def:alpha_relaxed_k_similarity}}, definitions of graph metrics in special cases (such as for isolated nodes), and floating-point arithmetic.
 Instead of comparing results numerically, the overall trend is to be considered.
 
 The \texttt{reproduce} experiment and the \texttt{thMedHigh} generator (producing 31 graphs at linearly spaced thresholds between 0.60 and 0.90 confidence values) were set up in the following way:
@@ -46,7 +46,7 @@ graffs experiment run --name reproduce
 % @formatter:on
 
 As for the set of metrics, I evaluated all that were also evaluated in The Paper, apart from Closeness and Harmonic centrality (Definitions~\ref{eqn:closeness_centrality} and~\ref{eqn:harmonic_centrality}).
-These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take unreasonable amount of time to compute on large graphs.
+These two depend on the all pair shortest paths algorithm with time complexity $O({\left\lvert V \right\rvert}^3)$ that would take an unreasonable amount of time to compute on large graphs.
 
 \input{figures/plot_reproduction.tex}
 
@@ -58,7 +58,7 @@ Those have reported RankContinuity and RankIdentifiability values above $0.75$ o
 On the other hand, \texttt{Betweenness} and \texttt{LocalClustering} are considered unstable by The Paper (RankContinuity and RankIdentifiability significantly dropped while RankInstability increased), and the results from \graffs copy the behaviour.
 Although the RankContinuity values of \texttt{LocalClustering} are not as low as reported by The Paper, one can definitely conclude that these two metrics are equally identified as less robust by \graffs.
 
-For further thought, we can also consider variance of robustness measures, concluding, for example, that \texttt{Redundancy} (a stable metric) has small variance in RankIdentifiability across the 3 datasets as reported by \graffs, whereas the RankContinuity and RankIdentifiability of the \texttt{Ego2Nodes} metric led to more diverse values.
+For further thought, we can also consider the variance of robustness measures, concluding, for example, that \texttt{Redundancy} (a stable metric) has small variance in RankIdentifiability across the 3 datasets as reported by \graffs, whereas the RankContinuity and RankIdentifiability of the \texttt{Ego2Nodes} metric led to more diverse values.
 
 \subsection{Rank similarity}
 
@@ -79,14 +79,14 @@ The visual plots of the three chosen metrics in each case demonstrate that \graf
 
 \section{Validation of random edge deletion}\label{sec:validate_random_edges}
 
-Randomly deleting a small subset of edges allows us to evaluate robustness of metrics on unscored graphs.
+Randomly deleting a small subset of edges allows us to evaluate the robustness of metrics on unscored graphs.
 The purpose of the \texttt{random-edges} experiment is to justify reliability and accuracy of this approach, comparing robustness results of the same metrics, on the same datasets, but with a different graph-generating method.
 
 \input{figures/plot_edge_deletion_per_step.tex}
 
 To start, I needed to choose the $\delta$ parameter for $\mathlarger{^{ER} \mathlarger{\xi}}_\delta$, the edge-removing graph generator (see \autoref{eq:edge_removing_generator}).
 Considering the distribution of confidence scores (\autoref{fig:histogram_edges}), I derived its right-to-left cumulative distribution (\autoref{fig:plot_cumulative_confidence_scores}) and differentiated to get a decrease rate at each threshold, as seen in \autoref{fig:plot_edge_deletion_per_step}.
-As calculated, the relative amount of edges deleted when increasing the threshold in $0.01$ increments (as practiced in The Paper), is $4\%$ in average.
+As calculated, the relative amount of edges deleted when increasing the threshold in $0.01$ increments (as practised in The Paper), is $4\%$ in average.
 Thus, I set $\delta=0.04$ (proportion of edges to delete) in the random edge deletion algorithm.
 
 To make this graph generator work on unscored graphs comparably to scored graphs as in the previous experiment, I also set the \textsl{initial threshold} of each scored graph to the confidence of $0.6$.
@@ -116,7 +116,7 @@ Overall, the results show that randomly removing edges is a suitable substitute 
 
 \section{Extending to unscored datasets}
 
-Having validated that randomly removing edges is a reasonable method for generating small perturbations in unscored graphs, we can now proceed to evaluating robustness of multiple metrics on multiple interesting datasets.
+Having validated that randomly removing edges is a reasonable method for generating small perturbations in unscored graphs, we can now proceed to evaluating the  robustness of multiple metrics on multiple interesting datasets.
 For this, I used the 5 unscored datasets (described in~\autoref{sec:unscored_datasets}): \texttt{airports}, \texttt{citation}, \texttt{collab}, \texttt{facebook}, \texttt{internet}.
 
 The experiment is set up as follows:
@@ -146,16 +146,16 @@ There are a number of interesting observations about the new datasets.
     Ideally, we would be able to quantify this using some (possibly other) graph metrics.
 
     \item RankContinuity does not report \texttt{Ego2Nodes} as significantly less stable for any of the datasets, unlike other robustness measures.
-    This can, perhaps, be explained by the fact that the nodes with highest ranks induced by \texttt{Ego2Nodes} have the ego-2 network too big for the uniform edge deletion to make any significant change in their ranks ranks.
+    This can, perhaps, be explained by the fact that the nodes with highest ranks induced by \texttt{Ego2Nodes} have the ego-2 network too big for the uniform edge deletion to make any significant change in their ranks.
     \item The \texttt{facebook} belongs to the less stable datasets for most of the metrics.
-    This might be explained by the fact that in a social network, there are perhaps many similarities in the structural patterns (usual degrees of nodes, density of connected cliques or communities, etc.), as opposed to other graphs with highher diversity, and so smaller differences in absolute metric values are needed to trigger changes in ranks.
+    This might be explained by the fact that in a social network, there are perhaps many similarities in the structural patterns (usual degrees of nodes, the density of connected cliques or communities, etc.), as opposed to other graphs with higher diversity, and so smaller differences in absolute metric values are needed to trigger changes in ranks.
 
-    However, the possible explanations are not based on any statistical analysis, and are open to yet another research.
+    However, the possible explanations are not based on any statistical analysis and are open to yet another research.
 \end{enumerate}
 
-An interesting thought for the future is finding a correlation between robustness of metrics on graphs and their structure, or the values of some other graph metrics.
-Ideally, one would be able to reason about robustness of a graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate graph petrurbations.
-My work does not include, and was not expected to include this kind of analysis due to the limits of its extent -- having enough of data finding correlations between metrics values and robustness of metrics would require an order of magnitude more evaluations.
+An interesting thought for the future is finding a correlation between the robustness of metrics on graphs and their structure, or the values of some other graph metrics.
+Ideally, one would be able to reason about the robustness of a graph metrics on a graph purely based on the values of some other metrics of the graph (which themselves may be stable or unstable, too), without the need to simulate graph petrurbations.
+My work does not include and was not expected to include this kind of analysis due to the limits of its extent -- having enough of data finding correlations between metrics values and robustness of metrics would require an order of magnitude more evaluations.
 However, the \graffs tool I developed is powerful enough to be able to facilitate this kind of analysis, given more time, computing power and resources for further investigation, and it can easily be extended to do so.
 
 

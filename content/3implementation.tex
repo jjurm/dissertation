@@ -47,7 +47,7 @@ Reproducibility of \graffs is the guarantee that, given the same input, one can 
     \item \textbf{Stochastic processes}
 
     Methods based on stochastic processes or randomness must be reproducible.
-    An example of a stochastic method are graph generators.
+    Examples of stochastic methods are graph generators.
 
     \graffs makes these reproducible by generating all randomness starting off with a given seed for the generator.
 
@@ -65,10 +65,10 @@ Reproducibility of \graffs is the guarantee that, given the same input, one can 
 
 \subsection{Flexibility}
 
-The program must be flexible enough, in particular the following:
+The program must be flexible enough, in particular, the following:
 \begin{enumerate}[topsep=5pt,itemsep=0pt]
     \item Usable on all widely used machines and operating systems
-    \item Accepting input datasets (and any input parameters) in common formats, in particular those datasets mentioned in \cref{sec:datasets}
+    \item Accepting input datasets (and any input parameters) in common formats, in particular, those datasets mentioned in \cref{sec:datasets}
     \item As a library, it must provide modular access to individual parts of the program, so that it is easy to use \graffs as a dependency in future projects of a similar kind
 \end{enumerate}
 
@@ -169,11 +169,11 @@ The main concept is based on the three persisted entities:
 \end{itemize}
 
 A user can create and manage \textsl{graph generators} and \textsl{experiments} using the command line interface (see \autoref{sec:cli}).
-The \graffs tool uses a number of libraries to represent graphs in memory, define a data model, and store data in a relational database.
+The \graffs tool uses several libraries to represent graphs in memory, define a data model, and store data in a relational database.
 
 \subsection{Using GraphStream}\label{sec:graphstream}
 
-Graphs in memory are stored and manipulated by the GraphStream library~\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modeling and analysis of dynamic graphs}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
+Graphs in memory are stored and manipulated by the GraphStream library~\cite{DutotGraphStreamToolBridging2007}, a \enquote{Java library for the modelling and analysis of dynamic graphs}.\footnote{As alternatives, I also investigated and considered library JGraphT~\cite{Michail2019}, which is algorithm-focused, however, the algorithms relate mostly to walking on graph nodes and are not relevant for evaluating graph metrics.
 GraphStream also provides visualisations as opposed to JGraphT.}
 The library consists of 3 modules: \texttt{gs-core} defining the API and underlying structures, \texttt{gs-algo} with various algorithms from graph theory, and \texttt{gs-ui} containing components for visualising graphs.
 Even though library allows working with dynamic graphs (changing over time), this project only uses static graphs.
@@ -195,7 +195,7 @@ Calculated metric values of each node, as well as some metadata, is stored as ea
 \subsection{Relational model}
 
 Data such as generated graphs, evaluated metrics, robustness measure results as well as any user-defined hyper-parameters are stored in a relational database system.
-The Java Persistence API (JPA)~\cite{BiswasJavaPersistenceAPI2016} provides an abstraction for accessing relational data from Java, Hibernate~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015} is a framework that implements the inteface.
+The Java Persistence API (JPA)~\cite{BiswasJavaPersistenceAPI2016} provides an abstraction for accessing relational data from Java, Hibernate~\cite{ElliottHibernateDeveloperNotebook2004,BauerJavaPersistenceHibernate2015} is a framework that implements the interface.
 I used specifically the H2 database engine~\cite{MuellerH2DatabaseEngine2006} as the underlying storage for Hibernate.
 This abstraction is later illustrated in \autoref{fig:orm_kotlin_h2_diagram}.
 
@@ -225,7 +225,7 @@ Named entities (\texttt{Experiment}, \texttt{GraphGenerator}) are those that the
 
 \subsection{Java Persistence API}
 
-The Java Persistence API~\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for management of relational data in Java.
+The Java Persistence API~\cite{BiswasJavaPersistenceAPI2016} (JPA) is an API specification for the management of relational data in Java.
 It describes ways in Java to specify schemas of relational databases and an interface to manage and access data of a relational model (i.e. entities in tables, relations, first-order logic).
 \textsl{Persistence} is an abstract term referring to accessing, managing, and storing entities.
 
@@ -239,7 +239,7 @@ Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{e
     \item \textbf{Data model definition}, seen in \autoref{fig:data_model_diagram}
 
     JPA provides a number of Java annotations to define entities (\texttt{@Entity}), their fields (\texttt{@Column}), constraints such as foreign key constraint (\texttt{@OneToMany}, \texttt{@ManyToOne} and others), and metadata such as rules for fetching data from database (e.g. \texttt{@Basic(fetch = FetchType.LAZY)} for lazy fetching of a field).
-    Data model is inferred from these annotations during compile time.
+    The data model is inferred from these annotations during compile time.
 
     Hibernate then abstracts away also operations such as creating and updating the database schema.
     See \autoref{lst:kotlin_experiment_entity} for a full code listing of the \texttt{Experiment} entity using JPA annotations.
@@ -264,7 +264,7 @@ Further, \autoref{fig:data_model_classes_diagram} shows the underlying \textsl{e
 
 I employed the H2 relational database~\cite{MuellerH2DatabaseEngine2006} (based on SQL language) for storing entities, considering the following:
 \begin{itemize}[topsep=5pt,itemsep=-2pt]
-    \item Very fast; small footprint on the system in terms of installation complexity, program size, and cost of backround maintenance
+    \item Very fast; small footprint on the system in terms of installation complexity, program size, and cost of background maintenance
     \item Easily embeddable, as it implements the JDBC API (Java Database Connectivity API, used by Hibernate, too)
     \item Supports in-memory databases (good for testing)
     \item Written purely in Java, so can be bundled in \graffs and thus requires no other database installation in the client OS
@@ -338,11 +338,11 @@ To make \graffs as versatile as possible, I implemented \texttt{FileSourceEdgeOp
 
 The Paper provides the dataset files that were used in their research\footnote{Available at \url{http://opig.stats.ox.ac.uk/resources}}, in the \texttt{RData} format, a~binary file capturing an R language session, storing objects from the \texttt{igraph} R package.
 
-To load such files, an option is to convert them manually into another \graffs-readable format, or let \graffs call R to do this conversion under the hood.
+To load such files, an option is to convert them manually into another \graffs-readable format or let \graffs call R to do this conversion under the hood.
 To make \graffs versatile and not require the R software environment to be installed on the client's computer, I employed the Renjin library\footnote{Rejin official website: \url{https://www.renjin.org/}}, a \enquote{JVM-based interpreter for the R programming language}.
 Renjin can execute R code (as well as load RData files) within Java, without the need to install any additional platform.
 
-When an RData file is to be loaded in \graffs, a Renjin engine starts under the hood and loads desired file.
+When an RData file is to be loaded in \graffs, a Renjin engine starts under the hood and loads the desired file.
 If an object whose name ends with \texttt{.df}\footnotemark{} is found, it is converted into a GraphStream's \texttt{Graph} object.
 \footnotetext{This is to follow convention from \url{https://github.com/lbozhilova/measuring_rank_robustness/blob/c39bfed/data_prep.R}}
 
@@ -382,7 +382,7 @@ The |evaluate| function has the |suspend| modifier so that it can suspend and fi
 An important detail when using ranking vectors (e.g. for the overall ranking) is specifying how ties are resolved.
 According to the definition of ranking vector (\cref{def:ranking_vector}), if we have $v_1, v_2 \in V$ with $M(v_1) = M(v_2)$ for some metric $M$, then $\preceq$ is a valid ranking relation with either $v_1 \preceq v_2$ or $v_2 \preceq v_1$.
 In The Paper, such ties were resolved \enquote{at random, independently across different metrics and different thresholds}.
-This may, however, lead to inappropriately lower robustness of metrics due to random oscillations of ranks of nodes, as well as a high degree of variability between results (especially for graphs with small number of nodes).
+This may, however, lead to inappropriately lower robustness of metrics due to random oscillations of ranks of nodes, as well as a high degree of variability between results (especially for graphs with a small number of nodes).
 
 In \graffs, I assured that ties are resolved arbitrarily but deterministically and constantly across all metrics and thresholds, and even constantly across multiple perturbed graphs with the same nodes.
 This follows the~\nameref{sec:reproducibility} principle set in~\nameref{sec:design-goals}.
@@ -400,7 +400,7 @@ This dissertation has charts, diagrams and visualisations of graphs from differe
 \section{Parallelism using Kotlin coroutines}\label{sec:kotlin_coroutines}
 
 Kotlin supports the concept of \textsl{suspending functions}, i.e., functions which can pause their execution (storing its \textsl{current continuation}) and return the control of the flow back to its caller, and later continue by resuming the continuation at the suspension point.
-The context in which a suspending function suspends, is called coroutine.
+The context in which a suspending function suspends is called coroutine.
 Coroutines are a well-known control abstraction in programming languages~\cite{MouraRevisitingCoroutines2009} that can easily be implemented in higher-order languages using continuations\cite{HaynesContinuationsCoroutines1984}.
 Asynchronous computations, delays, or IO operations can be programmed as suspending calls, i.e., functions that are allowed to \textsl{suspend} coroutine voluntarily, and return the control back to the caller, then continue whenever their \textsl{continuation} is resumed (or invoked).
 
@@ -409,16 +409,16 @@ In the case of \graffs, however, we are interested in running computation in par
 
 Kotlin coroutines are \textsl{lightweight threads} -- spawning coroutines is fast and cheap~\cite{AriasFunctionalKotlinExtend2018}, as opposed to Java \texttt{Thread}s.
 They have a similar life cycle and are executed within regular threads, although they are not bound to them~\cite{TorresLearningConcurrencyKotlin2018}.
-Coroutines are also safer, e.g. a failure of one operation within a \textsl{coroutine scope} triggers cancellation of other coroutines in the scope.
+Coroutines are also safer, e.g. failure of one operation within a \textsl{coroutine scope} triggers cancellation of other coroutines in the scope.
 Coroutines allow executing suspending functions.
 
 Suspending functions in Kotlin, when compiled to Java bytecode, are regular functions accepting |Continuation<Int>| as one of the arguments.
 The |async| function (or its alternatives) takes a suspending function, creates an asynchronous coroutine executing the function and immediately returns its future result (as |Deferred<T>|).
-Then the |await| suspending function called on a |Deferred| object waits for the resulting value without blocking, and resumes when the deferred computation is complete.
+Then the |await| suspending function called on a |Deferred| object waits for the resulting value without blocking and resumes when the deferred computation is complete.
 
 \lstinputlisting[label={lst:kotlin_coroutines}, caption={A simplified example of creating an asynchronous task for evaluating a set of metrics on a single generated graph.}, float, language=Kotlin]{coroutines.kt}
 
-Kotlin also provides other means to synchronise coroutines, such as using mutual exclusion or actors, when needed in a parallel execution.
+Kotlin also provides other means to synchronise coroutines, such as using mutual exclusion or actors, when needed in parallel execution.
 Mutexes are used in \graffs to ensure synchronised access when persisting entities in the database.
 
 %possibly: diagram similar to \url{https://s3.amazonaws.com/kukuruku-co/uploads/images/00/17/75/2016/10/09/126426.png}
@@ -429,7 +429,7 @@ The following parts of \graffs use parallel programming with coroutines:
     \item Evaluating metrics on graphs
 
     \Cref{lst:kotlin_coroutines} shows an example of creating this asynchronous task.
-    It is heavily simplified; the real verion handles accessing the database, asynchronous deserialisation of \texttt{Graph}, logging, measuring time statistics, and preventing duplicate metric evaluation.
+    It is heavily simplified; the real version handles accessing the database, asynchronous deserialisation of \texttt{Graph}, logging, measuring time statistics, and preventing duplicate metric evaluation.
     Each |Graph| is treated individually without the need to synchronise across them, however, evaluation of metrics within one |Graph| is sequential as the GraphStream library does not support parallel access.
     \item Evaluating robustness, including calculating overall ranks, which must be calculated for each |GraphCollection| before any robustness measure is evaluated on it
     \item Generating various figures, for which an intermediate
@@ -438,7 +438,7 @@ The following parts of \graffs use parallel programming with coroutines:
 
 \section{Command line interface}\label{sec:cli}
 
-The \graffs tool is built as a program with rich and intuitive command-line interface.
+The \graffs tool is built as a program with a rich and intuitive command-line interface.
 The program is pre-packaged in a \texttt{.jar} file, built for Java 8 or higher, so running it involves running the shell command:
 % @formatter:off
 \begin{lstlisting}[language=bash,style=light]
@@ -446,7 +446,7 @@ java -jar graffs.jar [ARGS]
 \end{lstlisting}
 % @formatter:on
 
-Clikt is a \enquote{multiplatform command line interface parsing for Kotlin}\footnote{Available at \url{https://github.com/ajalt/clikt}} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
+Clikt is a \enquote{multiplatform command-line interface parsing for Kotlin}\footnote{Available at \url{https://github.com/ajalt/clikt}} library that I used for defining commands, their behaviour, description, and hierarchy, in a structured way.
 The library utilises a number of features of the Kotlin language, such as delegated properties, extension functions, and default arguments, resulting in a cleaner code that uses the library.
 With the help of Clikt, I generated scripts allowing automatic command and parameter completion within bash.
 
