@@ -1,7 +1,7 @@
 # Part II Project - dissertation
 *Framework for empirical analysis of graph metric robustness.*
 
-This project is done as part of the Part II Project (3rd year) of the Computer Science Tripos at the **University of Cambridge**.
+This project is done as part of the Part II Project (3rd year) of the Computer Science Tripos at the **University of Cambridge**, supervised by [Dr Timothy Griffin](https://www.cl.cam.ac.uk/~tgg22/).
 
 ## Report
 
